@@ -1,0 +1,18 @@
+hara-design
+Copyright 2026 Nanhara (无锡南荒科技)
+
+This product bundles design content and adapts the design workflow from:
+
+  Open Design — https://github.com/nexu-io/open-design
+  Copyright the Open Design authors, licensed under the Apache License, Version 2.0.
+
+The bundled design systems (skills/design/references/design-systems/), skill recipes
+(skills/design/references/skills/), craft rules (skills/design/references/craft/), and
+device frames (frames/) are copied from Open Design. The staged design quality workflow
+in skills/design/SKILL.md is adapted from Open Design's prompt layer
+(apps/daemon/src/prompts/), re-targeted from its web UI to the hara CLI.
+
+Open Design in turn credits:
+  - alchaincyf/huashu-design (Junior-Designer mode, anti-AI-slop)
+  - op7418/guizang-ppt-skill (deck framework, P0 self-check)
+  - VoltAgent/awesome-design-md and bergside/awesome-design-skills (design systems)

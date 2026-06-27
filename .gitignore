@@ -1,0 +1,7 @@
+node_modules/
+.DS_Store
+*.log
+.hara/
+# local artifact output dirs
+**/.hara/design/
+preview/.cache/
