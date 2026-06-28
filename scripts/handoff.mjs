@@ -184,6 +184,58 @@ ${sections.join("\n") || "- _(no top-level regions detected — decompose from r
 - **Responsive:** mobile → desktop behavior
 `);
 
+// ---- interactions.md: detect interactive signals, scaffold the state/handlers/routes spec ----
+const counts = {
+  buttons: (html.match(/<button\b|class=["'][^"']*\bbtn\b|role=["']button["']/gi) || []).length,
+  forms: (html.match(/<form\b/gi) || []).length,
+  inputs: (html.match(/<(input|select|textarea)\b/gi) || []).length,
+  links: (html.match(/<a\b[^>]*href=/gi) || []).length,
+  scripts: (html.match(/<script\b(?![^>]*\bsrc=)/gi) || []).length,
+  react: /text\/babel|react(-dom)?(\.|@)/i.test(html),
+  screens: (html.match(/\?screen=|\/screens\//gi) || []).length,
+  frames: (html.match(/\/frames\/[a-z-]+\.html/gi) || []).length,
+  tweaks: /--motion|--density|EDITMODE-BEGIN|data-tweak/i.test(html),
+  dataAttrs: [...new Set((html.match(/\bdata-[a-z-]+=/gi) || []).map((s) => s.toLowerCase()))],
+  localStorage: /localStorage/.test(html),
+};
+const interactive = counts.buttons + counts.forms + counts.inputs + counts.scripts > 0 || counts.react || counts.screens > 0;
+const tier = counts.screens > 1 ? "flow (multi-screen)" : counts.react || counts.scripts > 0 ? "stateful" : "static";
+const intLines = [`# Interactions — ${basename(inPath)}`, "",
+  "> SKELETON — the design skill fills this in so a frontend agent rebuilds the **behavior**, not just the visuals.",
+  "> Reference \`reference.html\` for the working interactions; describe state, handlers, transitions, and navigation.", "",
+  `## Detected`,
+  `- **Interaction tier:** ${tier}`,
+  `- buttons: ${counts.buttons} · forms: ${counts.forms} · inputs: ${counts.inputs} · links: ${counts.links}`,
+  `- inline scripts: ${counts.scripts}${counts.react ? " · **React** (UMD+Babel) present" : ""}${counts.localStorage ? " · uses localStorage" : ""}`,
+  `- screens/frames: ${counts.screens} screen refs, ${counts.frames} device frames${counts.tweaks ? " · **Tweaks** live-knobs panel present" : ""}`,
+  counts.dataAttrs.length ? `- data-attributes: ${counts.dataAttrs.join(", ")}` : "",
+  "",
+  "## State model (fill in)",
+  "For each stateful component: the state it owns + initial value.",
+  "```",
+  "TabBar      { activeTab: 'overview' | 'usage' | 'billing' = 'overview' }",
+  "ThemeToggle { mode: 'light' | 'dark' = 'light' }   // persisted to localStorage",
+  "```",
+  "",
+  "## Event handlers (fill in)",
+  "`selector` → `event` → effect (state change / navigation / side-effect).",
+  "```",
+  ".tab            → click  → setActiveTab(tab)",
+  ".theme-toggle   → change → setMode($value); localStorage['theme']=$value",
+  "form.signup     → submit → validate(); POST /api/signup; show loading→success|error",
+  "```",
+  "",
+  "## Navigation / routes (fill in — for flows)",
+  counts.screens > 0
+    ? "Map which element navigates to which screen.\n```\nscreens/01-onboarding.html  --[.next]-->  screens/02-paywall.html\nscreens/02-paywall.html     --[.subscribe]-->  screens/03-home.html\n```"
+    : "_(single screen — no inter-screen navigation)_",
+  "",
+  "## Motion & a11y",
+  "- Transitions/animations (durations; scale with `--motion-mult`; honor `prefers-reduced-motion`).",
+  "- Keyboard: focus order, focus-visible, Esc/Enter behaviors. ARIA roles/labels for custom controls.",
+  ""];
+writeFileSync(join(outDir, "interactions.md"), intLines.filter((l) => l !== "").join("\n") + "\n");
+
 // ---- HANDOFF.md (the AGENTS.md-style brief for the downstream frontend agent) ----
 writeFileSync(join(outDir, "HANDOFF.md"), `# Design handoff — build this for real
 
@@ -197,17 +249,22 @@ always reference the tokens.**
   \`{alias}\` references). The single source of truth for color/type/spacing/radius.
 - **\`theme/\`** — the tokens pre-mapped for your stack:${targets.map((t) => `\n  - \`${({ css: "tokens.css", tailwind: "tailwind.config.js", swiftui: "Theme.swift", flutter: "app_theme.dart" })[t]}\` (${t})`).join("")}
 - **\`components.md\`** — the component inventory: names, props, variants, states, responsive rules, tokens used.
+- **\`interactions.md\`** — the **behavior**: state model, event handlers, navigation/routes, motion + a11y. Rebuild
+  these, not just the visuals.
 
 ## How to build
 1. Wire the theme file for your stack into the project (Tailwind: merge \`tailwind.config.js\`; CSS: import
    \`tokens.css\`; SwiftUI/Flutter: add the tokens file). Use token names, not raw values.
 2. Implement each component in \`components.md\` — match structure, props, states, and responsive behavior.
-3. Compose the page/screen to match \`reference.html\` (layout, spacing rhythm, hierarchy).
-4. Verify against \`reference.html\` at mobile + desktop widths. Keep the single-accent / restraint discipline.
+3. Wire the **interactions** in \`interactions.md\` — state, event handlers, navigation, transitions; honor
+   \`prefers-reduced-motion\` and keyboard/ARIA. Diff behavior against \`reference.html\`.
+4. Compose the page/screen to match \`reference.html\` (layout, spacing rhythm, hierarchy).
+5. Verify against \`reference.html\` at mobile + desktop widths, and exercise the interactions. Keep the
+   single-accent / restraint discipline.
 
 ## Target stack
 ${targets.join(", ")}  ·  (regenerate for another stack: \`hara-design handoff reference.html --target <stack>\`)
 `);
 
 console.log(`Handoff written → ${outDir}`);
-console.log(`  tokens.json (${flat.length} tokens) · reference.html · theme/{${targets.join(",")}} · components.md · HANDOFF.md`);
+console.log(`  tokens.json (${flat.length} tokens) · reference.html · theme/{${targets.join(",")}} · components.md · interactions.md (${tier}) · HANDOFF.md`);
