@@ -93,7 +93,7 @@ hara-design handoff .hara/design/<slug>/index.html --target tailwind   # or css 
   checklist → critique → emit), adapted to the CLI.
 - `skills/design/references/design-systems/` — **151** `DESIGN.md` systems + an `INDEX.md` (regenerate with
   `node scripts/build-ds-index.mjs`).
-- `skills/design/references/skills/` — **158** recipe `SKILL.md` (landing, dashboard, deck, mobile, report…).
+- `skills/design/references/skills/` — **219** recipe `SKILL.md` (landing, dashboard, deck, mobile, report…).
 - `skills/design/references/craft/` — anti-AI-slop / color / typography rules.
 - `frames/` — pixel-accurate device frames (iPhone, Android, iPad, MacBook, browser) for multi-screen prototypes.
 - `preview/server.mjs` — zero-dependency static + live-reload preview server.

@@ -198,6 +198,9 @@ Frames available: `iphone-15-pro.html` (390×844), `android-pixel.html` (412×90
 `macbook.html`, `browser-chrome.html`. The single-screen `mobile-app` recipe already inlines an iPhone frame.
 
 ## Decks
+For lots of ready slide looks, browse the **PPT theme templates** under `references/skills/html-ppt-*` (40+ themes
+— brutalist, editorial, retro, grid, poster…) and the canonical deck bases in `references/templates/`
+(`deck-framework.html`, `kami-deck.html`) — pick one matching the vibe and adapt it.
 For `kind=deck`, use a deck recipe (`simple-deck` / `guizang-ppt` / `replit-deck`): copy its `assets/template.html`
 framework **verbatim** (scale-to-fit, prev/next, counter, keyboard, position-restore, print) before authoring any
 slide — never re-derive the scaling/nav script. Then fill `<section class="slide">` slots. Slides are 1-indexed;
