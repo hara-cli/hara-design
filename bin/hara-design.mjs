@@ -26,7 +26,7 @@ function opt(name, def) {
   return i >= 0 && rest[i + 1] ? rest[i + 1] : def;
 }
 function positional() {
-  const valueFlags = new Set(["port", "out"]);
+  const valueFlags = new Set(["port", "out", "target"]);
   for (let i = 0; i < rest.length; i++) {
     const a = rest[i];
     if (a.startsWith("--")) continue;
@@ -56,6 +56,9 @@ function usage() {
   hara-design preview [dir] [--port N] [--open]   live preview server on a design dir
   hara-design open    [dir] [--port N]            preview + open the browser
   hara-design export  <index.html> [--out f.pdf]  print an artifact to PDF
+  hara-design handoff <index.html> [--target all|css|tailwind|swiftui|flutter] [--out dir]
+                                                  emit an agent-consumable design handoff
+                                                  (DTCG tokens + theme + components.md + HANDOFF.md)
 
 dir defaults to the newest .hara/design/<slug>/ under the current directory.`);
 }
@@ -85,6 +88,14 @@ if (cmd === "preview" || cmd === "open") {
   const args = [join(root, "scripts", "export.mjs"), "--in", inFile];
   const out = opt("out");
   if (out) args.push("--out", out);
+  const child = spawn("node", args, { stdio: "inherit" });
+  child.on("exit", (code) => process.exit(code ?? 0));
+} else if (cmd === "handoff") {
+  const inFile = positional();
+  if (!inFile) { console.error("usage: hara-design handoff <index.html> [--out dir] [--target all|css|tailwind|swiftui|flutter]"); process.exit(2); }
+  const args = [join(root, "scripts", "handoff.mjs"), "--in", inFile];
+  const out = opt("out"); if (out) args.push("--out", out);
+  const target = opt("target"); if (target) args.push("--target", target);
   const child = spawn("node", args, { stdio: "inherit" });
   child.on("exit", (code) => process.exit(code ?? 0));
 } else {

@@ -152,6 +152,24 @@ slide — never re-derive the scaling/nav script. Then fill `<section class="sli
 tag them `data-screen-label="01 Title"`; persist position to localStorage (the seeds already do); no 3+ same-theme
 slides in a row; headlines ≥36px, body ≥22px.
 
+## Export & handoff (when the user wants to ship it for real)
+The CLI helper is `hara-design` (or `node <skill dir>/../../{scripts,preview}/…`):
+- **PDF**: `hara-design export <artifact dir>/index.html` — headless-Chrome print (decks print as slides).
+- **Agent handoff** (hand the design to a *frontend coding agent* to build the production app): run
+  `hara-design handoff <artifact dir>/index.html --target <css|tailwind|swiftui|flutter|all>`. This **mechanically**
+  emits a `handoff/` folder: `reference.html` (ground truth), `tokens.json` (DTCG, with `{alias}` refs from the
+  artifact's `:root`), `theme/<target>` (Tailwind/CSS/SwiftUI/Flutter, tokens resolved), and **skeletons**
+  `components.md` + `HANDOFF.md`.
+
+  **Then YOU fill the judgment half** (the scaffold can't):
+  1. **`components.md`** — decompose `reference.html` into real components: for each, a name, element selector,
+     **props** (TS-ish types), variants, interactive states (hover/active/disabled/loading), responsive behavior,
+     and **which tokens it uses** (reference by token name like `color.accent` / `space.md`, never raw hex).
+  2. **`HANDOFF.md`** — set the target stack; tell the downstream agent to **rebuild to match `reference.html`
+     using the `theme/` tokens only**; add decomposition order, accessibility notes, and any do/don'ts.
+  The goal: a frontend agent opens `handoff/`, reads `HANDOFF.md` + `components.md`, imports `theme/<target>`, and
+  builds the real app faithfully. Keep tokens authoritative; describe structure precisely.
+
 ## Don't
 - Don't recreate copyrighted/branded UIs verbatim — build something original in the *spirit* of a reference.
 - Don't surprise-add sections/copy the user didn't ask for — ask first.

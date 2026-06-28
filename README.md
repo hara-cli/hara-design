@@ -55,12 +55,20 @@ The preview hot-reloads on every file change.
 the browser. Before finalizing, hara self-checks against the recipe's **P0 checklist + a 5-dimension critique**
 (anti-AI-slop). Add your own systems/recipes under `skills/design/references/` (then `npm run build-index`).
 
-**5. Export**:
+**5. Export & handoff**:
 ```bash
-hara-design export .hara/design/<slug>/index.html            # → PDF (headless Chrome; decks print as slides)
-hara-design export .hara/design/<slug>/index.html --out out.pdf
+# PDF (headless Chrome; decks print as slides)
+hara-design export  .hara/design/<slug>/index.html [--out out.pdf]
+
+# Agent handoff — hand the design to a FRONTEND CODING AGENT to build the production app:
+hara-design handoff .hara/design/<slug>/index.html --target tailwind   # or css | swiftui | flutter | all
 ```
-*(Design-asset bundle + agent-consumable, per-framework design handoff — React/Tailwind/SwiftUI/… — is in progress.)*
+`handoff` emits a `handoff/` folder a downstream agent can build from:
+- `reference.html` — the design (visual ground truth)
+- `tokens.json` — design tokens in [DTCG](https://www.designtokens.org) format (`{alias}` refs)
+- `theme/<target>` — tokens pre-mapped for your stack (`tailwind.config.js` / `tokens.css` / `Theme.swift` / `app_theme.dart`)
+- `components.md` + `HANDOFF.md` — the skill fills these with the component breakdown + build instructions, so a
+  frontend agent reads the folder and rebuilds the app faithfully, using token references (never raw values).
 
 ## What's inside
 - `skills/design/SKILL.md` — the driver: the staged design quality workflow (brief → direction → plan → build →
