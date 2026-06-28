@@ -1,6 +1,6 @@
 {
   "name": "@nanhara/hara-design",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Design in the hara CLI — generate self-contained HTML in 138 brand-grade design systems, preview live, export to PDF / assets / design tokens. A hara plugin.",
   "license": "Apache-2.0",
   "type": "module",
