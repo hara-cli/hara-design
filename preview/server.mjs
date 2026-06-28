@@ -117,6 +117,24 @@ const server = createServer(async (req, res) => {
       res.end(gallery);
       return;
     }
+    // no index.html yet + not a library → a "designing…" placeholder that auto-upgrades to the device preview
+    // the moment the agent writes index.html (so the web is meaningful the whole time the CLI works)
+    res.writeHead(200, { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" });
+    res.end(`<!doctype html><meta charset=utf-8><title>Designing… · hara-design</title>
+<style>
+ html,body{margin:0;height:100%;background:#0c0d10;color:#e8eaed;font:15px/1.6 system-ui,-apple-system,sans-serif}
+ .wrap{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:2rem}
+ .dot{width:38px;height:38px;border-radius:50%;border:3px solid #23262e;border-top-color:#5b8cff;animation:spin .9s linear infinite}
+ @keyframes spin{to{transform:rotate(360deg)}}
+ h1{font-size:19px;font-weight:600;margin:0} p{color:#8b90a0;margin:0;max-width:42ch}
+ code{font-family:ui-monospace,Menlo,monospace;color:#aab1c4}
+</style>
+<div class="wrap"><div class="dot"></div>
+ <h1>🎨 Designing…</h1>
+ <p>Your design will appear here live as hara builds it. Keep driving in the terminal — this page updates on every change.</p>
+ <p><code>${esc(artifactDir)}</code></p>
+</div>${LIVERELOAD}`);
+    return;
   }
   // any other path → the artifact dir (sibling assets, screens/, or <slug>/ opened from the gallery)
   const rel = path.replace(/^\/+/, "");

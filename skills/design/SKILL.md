@@ -113,20 +113,19 @@ with live thumbnails; `--global` for `~/.hara/design`). If the user says "open m
 pricing page", find it under `.hara/design/`, open the preview, resume. **Deliver** = the dir itself (git) /
 `hara-design export` (PDF) / `hara-design handoff` (frontend-agent package).
 
-### Stage 5 — Preview (launch once, then it auto-reloads)
-Right after the first `index.html` exists, start the live preview as a **background job**, pointed at the design's
-directory (the **project root** for a standalone project, or **`.hara/design/<slug>`** for embedded). The server is
-at `<skill dir>/../../preview/server.mjs` (the plugin's `preview/` folder):
+### Stage 5 — Preview (launch it EARLY — the user watches it build)
+**Bring the live preview up as early as you can, before writing content** — it shows a "🎨 Designing…" placeholder
+until the file lands, then auto-upgrades to the live design. So the user has the web open the whole time you work.
+- **Standalone project** (dir = cwd, known up front): launch it at the very start (right after `/design`).
+- **Embedded**: the moment you've decided the artifact dir (after brief/direction), `mkdir -p` it and launch — then build into it.
+Start it as a **background job** (server at `<skill dir>/../../preview/server.mjs`):
 ```
 node "<skill dir>/../../preview/server.mjs" --dir "<absolute path to the design dir>" --port 4321
 ```
-(Equivalently, for a standalone project the user can just run `hara-design open .`.)
-Read the job's first stdout line (`Preview: http://127.0.0.1:<port>`) for the actual URL, give it to the user, and
-(on macOS) you may `open` it. **Keep this job running for the whole session.** Every later `write_file`/`edit_file`
-to `index.html` (or any file in that dir) makes the browser reload automatically — so to iterate, just edit the
-file; don't restart the server. Kill the job when the user is done. (The preview is for the *user's browser*; do
-**not** `web_fetch` localhost — if you need to inspect your own output, use the Playwright/computer tools against
-`http://127.0.0.1:<port>`.)
+Read the job's first stdout line for the URL, give it to the user (you may `open` it on macOS), and **keep it
+running the whole session**. Every later write/edit hot-reloads the browser — to iterate, just edit the file.
+(Equivalently the user can run `hara-design open .`.) Don't `web_fetch` localhost; to inspect your own output use
+the Playwright/computer tools against `127.0.0.1:<port>`. Kill the job when the user is done.
 
 ---
 
