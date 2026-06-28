@@ -12,6 +12,7 @@
 import { spawn, execFileSync } from "node:child_process";
 import { existsSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
+import { homedir } from "node:os";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -53,20 +54,20 @@ function defaultDir() {
 function usage() {
   console.log(`hara-design — local helper for the design plugin
 
-  hara-design preview [dir] [--port N] [--open]   live preview server on a design dir
-  hara-design open    [dir] [--port N]            preview + open the browser
-  hara-design export  <index.html> [--out f.pdf]  print an artifact to PDF
+  hara-design init    [name]                       scaffold THIS directory as a design project (basic webpage)
+  hara-design preview [dir] [--port N] [--open]    live preview server on a design dir
+  hara-design open    [dir] [--port N]             preview + open the browser
+  hara-design gallery [dir] [--global] [--port N]  browse all designs under a library root (read-only)
+  hara-design export  <index.html> [--out f.pdf]   print an artifact to PDF
   hara-design handoff <index.html> [--target all|css|tailwind|swiftui|flutter] [--out dir]
-                                                  emit an agent-consumable design handoff
-                                                  (DTCG tokens + theme + components.md + HANDOFF.md)
+                                                   emit an agent-consumable design handoff
+                                                   (DTCG tokens + theme + components.md + HANDOFF.md)
 
 dir defaults to the newest .hara/design/<slug>/ under the current directory.`);
 }
 
-if (cmd === "preview" || cmd === "open") {
-  const dir = resolve(positional() || defaultDir());
-  const port = opt("port", "4321");
-  const wantOpen = cmd === "open" || flag("open");
+// start the preview/gallery server on a dir; auto-open the browser when wantOpen
+function startServer(dir, wantOpen, port) {
   const child = spawn("node", [join(root, "preview", "server.mjs"), "--dir", dir, "--port", port], { stdio: ["ignore", "pipe", "inherit"] });
   let opened = false;
   child.stdout.on("data", (b) => {
@@ -82,6 +83,16 @@ if (cmd === "preview" || cmd === "open") {
     }
   });
   child.on("exit", (code) => process.exit(code ?? 0));
+}
+
+if (cmd === "init") {
+  const child = spawn("node", [join(root, "scripts", "init.mjs"), ...(positional() ? [positional()] : [])], { stdio: "inherit" });
+  child.on("exit", (code) => process.exit(code ?? 0));
+} else if (cmd === "preview" || cmd === "open") {
+  startServer(resolve(positional() || defaultDir()), cmd === "open" || flag("open"), opt("port", "4321"));
+} else if (cmd === "gallery") {
+  const dir = flag("global") ? join(homedir(), ".hara", "design") : resolve(positional() || join(process.cwd(), ".hara", "design"));
+  startServer(dir, !flag("no-open"), opt("port", "4321"));
 } else if (cmd === "export") {
   const inFile = positional();
   if (!inFile) { console.error("usage: hara-design export <index.html> [--out f.pdf]"); process.exit(2); }

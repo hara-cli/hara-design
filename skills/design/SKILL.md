@@ -93,12 +93,19 @@ brief. No filler. Show something visible early (a wireframe pass is fine — say
 `<slug>` = a short kebab name for this design). Always write the canonical page to that exact path — the preview
 server watches it. Supporting files (screens/, css, images) go beside it in the same dir.
 
-### Resume / open an existing design (edit anytime)
-Designs persist on disk at `.hara/design/<slug>/`. To reopen one later (new session or same) and keep editing:
-launch its preview (`hara-design open` for the newest, or `hara-design preview .hara/design/<slug>`), read the
-current `index.html`, and continue editing it — every save hot-reloads the browser. No need to regenerate from
-scratch; skip Stages 1–3 and go straight to editing + the quality gate. If the user just says "open my design" /
-"keep editing the pricing page", find it under `.hara/design/`, open the preview, and resume.
+### A design is a self-contained directory = the deliverable asset
+Each design (its `index.html` + assets + any `handoff/`) is self-contained and git-trackable — the **directory is
+the deliverable**. Two homes: *embedded* `.hara/design/<slug>/` inside a code project, or a *standalone design
+project* (the whole dir IS the design). To start a standalone project, scaffold the current dir:
+`hara-design init [name]` (basic starter `index.html` + README) — then design it by talking to hara.
+
+### Resume / open / browse (edit anytime)
+Designs persist on disk. To reopen one and keep editing: `hara-design open` (newest) or `hara-design preview
+.hara/design/<slug>`, read the current `index.html`, and continue editing — every save hot-reloads. Skip Stages
+1–3; go straight to editing + the quality gate. To **browse all designs**: `hara-design gallery` (read-only library
+with live thumbnails; `--global` for `~/.hara/design`). If the user says "open my design" / "keep editing the
+pricing page", find it under `.hara/design/`, open the preview, resume. **Deliver** = the dir itself (git) /
+`hara-design export` (PDF) / `hara-design handoff` (frontend-agent package).
 
 ### Stage 5 — Preview (launch once, then it auto-reloads)
 Right after the first `index.html` exists, start the live preview as a **background job**. The server is at

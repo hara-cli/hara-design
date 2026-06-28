@@ -17,9 +17,9 @@
 // First stdout line is "Preview: http://127.0.0.1:<port>" so the launcher can read the chosen port.
 
 import { createServer } from "node:http";
-import { readFile, stat } from "node:fs/promises";
+import { readFile, stat, readdir } from "node:fs/promises";
 import { watch } from "node:fs";
-import { join, normalize, extname, dirname } from "node:path";
+import { join, normalize, extname, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -99,16 +99,78 @@ const server = createServer(async (req, res) => {
     const abs = safeJoin(framesDir, path.slice("/frames/".length));
     if (abs && (await serveFile(res, abs))) return;
   }
-  // artifact dir
+  // single-design dir → serve its index.html (+ subpaths). GET /<slug>/ opens a design from the library.
   const rel = path === "/" ? "index.html" : path.replace(/^\/+/, "");
   const abs = safeJoin(artifactDir, rel);
   if (abs && (await serveFile(res, abs, { injectReload: true }))) return;
+
+  // library root (no index.html here, but <slug>/index.html subdirs) → a read-only gallery
+  if (path === "/") {
+    const gallery = await renderGallery(artifactDir);
+    if (gallery) {
+      res.writeHead(200, { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" });
+      res.end(gallery);
+      return;
+    }
+  }
 
   res.writeHead(404, { "content-type": "text/html; charset=utf-8" });
   res.end(`<!doctype html><meta charset=utf-8><body style="font:16px system-ui;padding:3rem;color:#555">
     <h2>hara-design preview</h2><p>No <code>${rel}</code> in <code>${artifactDir}</code> yet.</p>
     <p>Waiting — the page reloads automatically when the file appears.</p>${LIVERELOAD}`);
 });
+
+// Read-only gallery: list <slug>/ subdirs that contain index.html (the design library). null if none.
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+async function renderGallery(root) {
+  let entries;
+  try {
+    entries = await readdir(root, { withFileTypes: true });
+  } catch {
+    return null;
+  }
+  const cards = [];
+  for (const e of entries) {
+    if (!e.isDirectory()) continue;
+    const idx = join(root, e.name, "index.html");
+    try {
+      const st = await stat(idx);
+      if (!st.isFile()) continue;
+      const head = (await readFile(idx, "utf8")).slice(0, 2000);
+      const m = /<title>([^<]*)<\/title>/i.exec(head);
+      cards.push({ slug: e.name, title: (m && m[1].trim()) || e.name, mtime: st.mtimeMs });
+    } catch {
+      /* skip */
+    }
+  }
+  if (!cards.length) return null;
+  cards.sort((a, b) => b.mtime - a.mtime);
+  const items = cards
+    .map(
+      (c) => `<a class="card" href="/${encodeURIComponent(c.slug)}/">
+      <div class="thumb"><iframe src="/${encodeURIComponent(c.slug)}/index.html" tabindex="-1" scrolling="no" loading="lazy"></iframe></div>
+      <div class="meta"><div class="t">${esc(c.title)}</div><div class="s">${esc(c.slug)}</div></div></a>`,
+    )
+    .join("\n");
+  return `<!doctype html><meta charset=utf-8><title>Designs · hara-design</title>
+<style>
+ :root{--bg:#0c0d10;--fg:#e8eaed;--muted:#8b90a0;--border:#23262e;--card:#15171c}
+ *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,sans-serif}
+ header{padding:26px 32px;border-bottom:1px solid var(--border)} header h1{margin:0;font-size:18px;font-weight:600}
+ header p{margin:4px 0 0;color:var(--muted);font-size:13px}
+ .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;padding:24px 32px}
+ .card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .15s,transform .15s}
+ .card:hover{border-color:#3a3f4b;transform:translateY(-2px)}
+ .thumb{position:relative;aspect-ratio:16/10;overflow:hidden;background:#fff;border-bottom:1px solid var(--border)}
+ .thumb iframe{position:absolute;top:0;left:0;width:1280px;height:800px;border:0;transform:scale(.219);transform-origin:top left;pointer-events:none}
+ .meta{padding:11px 14px} .meta .t{font-weight:540;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .meta .s{color:var(--muted);font-size:12px;font-family:ui-monospace,Menlo,monospace;margin-top:2px}
+</style>
+<header><h1>Designs</h1><p>${cards.length} design${cards.length > 1 ? "s" : ""} in ${esc(root)} — click to open &amp; edit (live-reloads)</p></header>
+<div class="grid">${items}</div>${LIVERELOAD}`;
+}
 
 // debounced reload broadcast on any change in the artifact dir
 let timer = null;

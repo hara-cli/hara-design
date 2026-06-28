@@ -44,12 +44,20 @@ hara
 hara locks a short brief, picks/confirms a **design system**, writes `index.html` to `.hara/design/<slug>/`,
 and starts the live preview — open the printed `http://127.0.0.1:<port>`.
 
-**3. Open / preview** (any existing design dir, outside a session):
+**A design is a self-contained directory = the deliverable asset.** Two ways to keep them:
+- *Embedded* — `.hara/design/<slug>/` inside an existing project (a design alongside code).
+- *Standalone project* — make the current directory itself the design (the whole dir IS the asset):
+  ```bash
+  hara-design init [name]   # scaffold THIS dir: a basic index.html + README, ready to design & deliver
+  ```
+
+**3. Open / preview / browse**:
 ```bash
 hara-design open                 # newest .hara/design/<slug> under cwd, opens the browser
 hara-design preview ./path/to/dir --port 4321
+hara-design gallery [--global]   # browse ALL your designs (read-only library); --global = ~/.hara/design
 ```
-The preview hot-reloads on every file change.
+The preview hot-reloads on every file change; the gallery lists every design with a live thumbnail (click to open & edit).
 
 **4. Develop / iterate** — just talk to hara ("make the hero bigger, narrow the sidebar"); each edit auto-reloads
 the browser. Before finalizing, hara self-checks against the recipe's **P0 checklist + a 5-dimension critique**
