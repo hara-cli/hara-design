@@ -22,21 +22,45 @@ you (hara CLI) ──talk──▶ hara (the design engine)
               preview/server.mjs ──live-reload──▶ your browser
 ```
 
-## Install
+## Local workflow — install · open · develop · export
 
+**1. Install the plugin** (into `~/.hara/plugins/design`):
 ```bash
-hara plugin install file:/path/to/hara-design     # → ~/.hara/plugins/design
-# then, in any hara session:
-hara
-> /design   # (or just describe what you want to design)
+hara plugin add github:hara-cli/hara-design      # from GitHub
+# — or, developing locally, from a clone:
+hara plugin add file:~/work/projects/hara/hara-design
 ```
+Optional — get the `hara-design` helper command (preview/export from anywhere):
+```bash
+cd hara-design && npm link        # provides the global `hara-design` command
+```
+Verify: `hara doctor` lists `design` under skills and plugins.
 
-## How a session goes
-1. You describe what you want ("a dark crypto-trading dashboard").
-2. hara locks a quick brief (it asks a few questions in the CLI), picks/confirms a **design system**, and plans.
-3. hara writes `index.html` to `.hara/design/<slug>/` and starts the preview server — open the printed URL.
-4. You iterate by talking to hara ("make the hero bigger, narrow the sidebar") — the browser auto-reloads.
-5. Before finalizing, hara self-checks against the recipe's P0 checklist + a 5-dimension critique (anti-AI-slop).
+**2. Design — talk to hara** (in any hara session):
+```
+hara
+> a dark, modern-minimal landing page for a developer log-search tool, use the linear-app design system
+```
+hara locks a short brief, picks/confirms a **design system**, writes `index.html` to `.hara/design/<slug>/`,
+and starts the live preview — open the printed `http://127.0.0.1:<port>`.
+
+**3. Open / preview** (any existing design dir, outside a session):
+```bash
+hara-design open                 # newest .hara/design/<slug> under cwd, opens the browser
+hara-design preview ./path/to/dir --port 4321
+```
+The preview hot-reloads on every file change.
+
+**4. Develop / iterate** — just talk to hara ("make the hero bigger, narrow the sidebar"); each edit auto-reloads
+the browser. Before finalizing, hara self-checks against the recipe's **P0 checklist + a 5-dimension critique**
+(anti-AI-slop). Add your own systems/recipes under `skills/design/references/` (then `npm run build-index`).
+
+**5. Export**:
+```bash
+hara-design export .hara/design/<slug>/index.html            # → PDF (headless Chrome; decks print as slides)
+hara-design export .hara/design/<slug>/index.html --out out.pdf
+```
+*(Design-asset bundle + agent-consumable, per-framework design handoff — React/Tailwind/SwiftUI/… — is in progress.)*
 
 ## What's inside
 - `skills/design/SKILL.md` — the driver: the staged design quality workflow (brief → direction → plan → build →

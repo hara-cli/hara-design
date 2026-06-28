@@ -1,0 +1,27 @@
+{
+  "name": "@nanhara/hara-design",
+  "version": "0.1.0",
+  "description": "Design in the hara CLI — generate self-contained HTML in 138 brand-grade design systems, preview live, export to PDF / assets / design tokens. A hara plugin.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": {
+    "hara-design": "bin/hara-design.mjs"
+  },
+  "scripts": {
+    "preview": "node preview/server.mjs",
+    "export": "node scripts/export.mjs",
+    "build-index": "node scripts/build-ds-index.mjs"
+  },
+  "files": [
+    "bin",
+    "preview",
+    "scripts",
+    "frames",
+    "skills",
+    "plugin.json",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}
