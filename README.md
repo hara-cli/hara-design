@@ -24,17 +24,27 @@ you (hara CLI) ──talk──▶ hara (the design engine)
 
 ## Local workflow — install · open · develop · export
 
-**1. Install the plugin** (into `~/.hara/plugins/design`):
+**1. Install** — two equivalent paths. Both give the `design` skill **and** the `hara-design` command.
+
 ```bash
-hara plugin add github:hara-cli/hara-design      # from GitHub
-# — or, developing locally, from a clone:
-hara plugin add file:~/work/projects/hara/hara-design
+# A) via hara (recommended) — installs the skill into ~/.hara/plugins/design AND
+#    links the `hara-design` command into ~/.hara/bin
+hara plugin add github:hara-cli/hara-design
+# one-time, so the command is on PATH:
+echo 'export PATH="$HOME/.hara/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
+
+# B) via npm — global command, then register the plugin
+npm i -g @nanhara/hara-design
+hara-design install                # = hara plugin add (registers the skill)
 ```
-Optional — get the `hara-design` helper command (preview/export from anywhere):
-```bash
-cd hara-design && npm link        # provides the global `hara-design` command
-```
-Verify: `hara doctor` lists `design` under skills and plugins.
+Developing locally (a clone): `hara plugin add file:~/work/projects/hara/hara-design` (also links the command).
+
+> **Where does `hara-design` come from?** It's **this plugin/package** — *not* bundled with `hara` (the CLI) itself.
+> `hara plugin add` links it into `~/.hara/bin`; `npm i -g @nanhara/hara-design` installs it the npm way. You don't
+> strictly need it: inside hara just use `/design` (the agent calls the scripts by path); for manual preview/export
+> you can always run `node ~/.hara/plugins/design/{preview/server.mjs,scripts/export.mjs}` directly.
+
+Verify: `hara doctor` lists `design` under skills + plugins; `hara-design` runs from your shell.
 
 **2. Design — talk to hara** (in any hara session):
 ```

@@ -54,6 +54,7 @@ function defaultDir() {
 function usage() {
   console.log(`hara-design — local helper for the design plugin
 
+  hara-design install                              register this package as the hara design plugin
   hara-design init    [name]                       scaffold THIS directory as a design project (basic webpage)
   hara-design preview [dir] [--port N] [--open]    live preview server on a design dir
   hara-design open    [dir] [--port N]             preview + open the browser
@@ -108,6 +109,15 @@ if (cmd === "init") {
   const out = opt("out"); if (out) args.push("--out", out);
   const target = opt("target"); if (target) args.push("--target", target);
   const child = spawn("node", args, { stdio: "inherit" });
+  child.on("exit", (code) => process.exit(code ?? 0));
+} else if (cmd === "install") {
+  // register this package as a hara plugin (handy after `npm i -g @nanhara/hara-design`)
+  const child = spawn("hara", ["plugin", "add", `file:${root}`], { stdio: "inherit" });
+  child.on("error", () => { console.error("`hara` not found — install hara first: npm i -g @nanhara/hara"); process.exit(1); });
+  child.on("exit", (code) => process.exit(code ?? 0));
+} else if (cmd === "uninstall") {
+  const child = spawn("hara", ["plugin", "remove", "design"], { stdio: "inherit" });
+  child.on("error", () => { console.error("`hara` not found."); process.exit(1); });
   child.on("exit", (code) => process.exit(code ?? 0));
 } else {
   usage();
