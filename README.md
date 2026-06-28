@@ -8,6 +8,10 @@ systems**, and you preview it **live in your browser**. You drive entirely from 
 It ships as a hara **plugin**: one `design` skill + a tiny live-reload preview server + a catalog of design
 systems, skill recipes, craft rules, and device frames.
 
+![A landing page the design skill generated from a one-line brief in the linear-app design system](docs/demo-nimbus.png)
+
+> Above: generated end-to-end from a one-line brief in the `linear-app` system, rendered live in the preview.
+
 ```
 you (hara CLI) ──talk──▶ hara (the design engine)
                               │ writes index.html

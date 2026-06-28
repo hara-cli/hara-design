@@ -12,15 +12,18 @@ making slides be a slide designer; when making an app be an interaction designer
 brief is a deck. One accent, used at most twice. Restraint over ornament — *one* decisive flourish per design is
 what separates a real piece from a sketch.
 
-This skill's **reference library** lives at:
+This skill's **reference library** is the `references/` folder **inside this skill's own directory** — the
+absolute path is given to you as "Skill directory (absolute): …" right above these instructions. Read everything
+from `<skill dir>/references/`:
 
 ```
-~/.hara/plugins/design/skills/design/references/
-├── design-systems/INDEX.md      ← scan this to pick a system; then read <id>/DESIGN.md
+<skill dir>/references/
+├── design-systems/INDEX.md       ← scan this to pick a system; then read <id>/DESIGN.md
 ├── design-systems/<id>/DESIGN.md ← the chosen system's full spec (palette, type, components, layout…)
-├── skills/<recipe>/             ← per-output recipe: SKILL.md + assets/template.html + references/{layouts,checklist}.md
+├── skills/<recipe>/              ← per-output recipe: SKILL.md + assets/template.html + references/{layouts,checklist}.md
 └── craft/{anti-ai-slop,color,typography}.md
 ```
+(If you ever can't resolve it, find it: `find ~/.hara <project>/.hara -path '*/design/references/design-systems/INDEX.md' 2>/dev/null`.)
 Device frames for multi-screen prototypes are served at `/frames/<device>.html` (see "Multi-screen" below).
 
 > **These references were authored for a web tool. Two translations always apply** (the rest is followed as-is):
@@ -91,9 +94,10 @@ brief. No filler. Show something visible early (a wireframe pass is fine — say
 server watches it. Supporting files (screens/, css, images) go beside it in the same dir.
 
 ### Stage 5 — Preview (launch once, then it auto-reloads)
-Right after the first `index.html` exists, start the live preview as a **background job**:
+Right after the first `index.html` exists, start the live preview as a **background job**. The server is at
+`<skill dir>/../../preview/server.mjs` (the plugin's `preview/` folder):
 ```
-node ~/.hara/plugins/design/preview/server.mjs --dir "<absolute path to .hara/design/<slug>>" --port 4321
+node "<skill dir>/../../preview/server.mjs" --dir "<absolute path to .hara/design/<slug>>" --port 4321
 ```
 Read the job's first stdout line (`Preview: http://127.0.0.1:<port>`) for the actual URL, give it to the user, and
 (on macOS) you may `open` it. **Keep this job running for the whole session.** Every later `write_file`/`edit_file`
