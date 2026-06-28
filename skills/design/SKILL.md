@@ -1,6 +1,6 @@
 ---
 name: design
-description: Design in the CLI — generate beautiful, self-contained HTML (landing pages, dashboards, app prototypes, slide decks, reports) in any of 138 brand-grade design systems, previewed live in the browser. USE WHEN the user asks to design / mock up / build a landing page / website / dashboard / UI / app screen / prototype / slide deck / pitch / poster / marketing page, or says /design.
+description: Design in the CLI — generate beautiful, self-contained HTML (landing pages, dashboards, app prototypes, slide decks, reports) in any of 151 brand-grade design systems, previewed live in the browser. USE WHEN the user asks to design / mock up / build a landing page / website / dashboard / UI / app screen / prototype / slide deck / pitch / poster / marketing page, or says /design.
 when_to_use: the user wants a designed HTML artifact (page, prototype, deck, dashboard) and will iterate on it; you generate + refine it from the CLI and they watch it live in their browser.
 ---
 
