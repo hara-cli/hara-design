@@ -89,15 +89,27 @@ seed to **`<artifact dir>/index.html`**, replace the six `:root` tokens with the
 paste section/screen/slide skeletons from `layouts.md` and fill `[REPLACE]` with **real, specific copy** from the
 brief. No filler. Show something visible early (a wireframe pass is fine — say it's a wireframe).
 
-**Where to write (decide once, then it's the invariant):**
-- **Standalone design project** — the directory IS the design (the user ran `hara-design init` here, there's an
-  `index.html` at the project root, the dir is empty/dedicated, or the user says "this project is the design"):
-  write the canonical page to **`./index.html`** at the project root. The directory itself is the deliverable asset.
-  Supporting files (screens/, css, images) go beside it. Preview with `hara-design open .`.
-- **Embedded** — designing inside a larger code project: write to **`./.hara/design/<slug>/index.html`**
-  (`<slug>` = a short kebab name). Preview that slug dir.
-If unsure, ask the user one line ("make this folder the design, or keep it under .hara/design/?"). Always keep
-writing to the SAME path the preview server watches.
+**Where to write — DETECT the context first, then it's the invariant.** Never pollute a real code repo, but keep
+each design self-contained + recoverable.
+- **Standalone design project** — cwd is empty, holds only design artifacts, was `hara-design init`-ed, or the user
+  says "this dir is the design": write the canonical page to **`./index.html`** at the root. The directory IS the
+  deliverable; supporting files (screens/, css, images) beside it. **Gallery/preview root = `.`** (`hara-design open .`).
+- **Embedded — inside a real code project** (cwd OR any ancestor has a code/VCS marker — `.git/`, `package.json`,
+  `pyproject.toml`, `Cargo.toml`, `go.mod`, a `src/` tree…): write each design to **`./.hara/design/<slug>/index.html`**
+  (`<slug>` = short kebab; auto-suffix `-2` on collision, never overwrite). **Gallery/preview root = `.hara/design/`**
+  (`hara-design gallery`). If `.git/` exists, idempotently ensure a **single `.hara/` line in `.gitignore`**
+  (append-only; skip if already covered) — designs are scratch, so never touch the repo's tracked tree.
+- **Ambiguous** (non-empty, no code markers, no design artifacts): treat as standalone, but say one line — "designing
+  here as a standalone project; run inside a repo to keep designs under `.hara/design/`."
+
+Designs are **scratch by default**. To make one a committable artifact, copy its self-contained dir into the visible
+tree (default `design/<slug>/`) — but if `design/` (or that slug) already exists, **suffix or ask; never overwrite or
+merge**. Always write to the SAME path the preview server watches.
+
+**On entering design mode, do this FIRST (before the brief):** open the gallery rooted at this context's design dir
+(embedded → `hara-design gallery`; standalone → `hara-design open .`) so any **existing progress is visible at once**;
+tell the user in one line where designs live here + what already exists, then offer to *continue* one or *start new*.
+(Nothing yet → the preview shows the "Designing…" placeholder.)
 
 ### A design is a self-contained directory = the deliverable asset
 Each design (its `index.html` + assets + any `handoff/`) is self-contained and git-trackable — the **directory is
