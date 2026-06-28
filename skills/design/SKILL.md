@@ -89,9 +89,15 @@ seed to **`<artifact dir>/index.html`**, replace the six `:root` tokens with the
 paste section/screen/slide skeletons from `layouts.md` and fill `[REPLACE]` with **real, specific copy** from the
 brief. No filler. Show something visible early (a wireframe pass is fine — say it's a wireframe).
 
-**Artifact dir (the one invariant):** write to **`./.hara/design/<slug>/index.html`** (project-relative;
-`<slug>` = a short kebab name for this design). Always write the canonical page to that exact path — the preview
-server watches it. Supporting files (screens/, css, images) go beside it in the same dir.
+**Where to write (decide once, then it's the invariant):**
+- **Standalone design project** — the directory IS the design (the user ran `hara-design init` here, there's an
+  `index.html` at the project root, the dir is empty/dedicated, or the user says "this project is the design"):
+  write the canonical page to **`./index.html`** at the project root. The directory itself is the deliverable asset.
+  Supporting files (screens/, css, images) go beside it. Preview with `hara-design open .`.
+- **Embedded** — designing inside a larger code project: write to **`./.hara/design/<slug>/index.html`**
+  (`<slug>` = a short kebab name). Preview that slug dir.
+If unsure, ask the user one line ("make this folder the design, or keep it under .hara/design/?"). Always keep
+writing to the SAME path the preview server watches.
 
 ### A design is a self-contained directory = the deliverable asset
 Each design (its `index.html` + assets + any `handoff/`) is self-contained and git-trackable — the **directory is
@@ -108,11 +114,13 @@ pricing page", find it under `.hara/design/`, open the preview, resume. **Delive
 `hara-design export` (PDF) / `hara-design handoff` (frontend-agent package).
 
 ### Stage 5 — Preview (launch once, then it auto-reloads)
-Right after the first `index.html` exists, start the live preview as a **background job**. The server is at
-`<skill dir>/../../preview/server.mjs` (the plugin's `preview/` folder):
+Right after the first `index.html` exists, start the live preview as a **background job**, pointed at the design's
+directory (the **project root** for a standalone project, or **`.hara/design/<slug>`** for embedded). The server is
+at `<skill dir>/../../preview/server.mjs` (the plugin's `preview/` folder):
 ```
-node "<skill dir>/../../preview/server.mjs" --dir "<absolute path to .hara/design/<slug>>" --port 4321
+node "<skill dir>/../../preview/server.mjs" --dir "<absolute path to the design dir>" --port 4321
 ```
+(Equivalently, for a standalone project the user can just run `hara-design open .`.)
 Read the job's first stdout line (`Preview: http://127.0.0.1:<port>`) for the actual URL, give it to the user, and
 (on macOS) you may `open` it. **Keep this job running for the whole session.** Every later `write_file`/`edit_file`
 to `index.html` (or any file in that dir) makes the browser reload automatically — so to iterate, just edit the
