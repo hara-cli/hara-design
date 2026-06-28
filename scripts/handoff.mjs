@@ -41,6 +41,8 @@ function parseRoot(src) {
   return vars;
 }
 const vars = parseRoot(html);
+// breakpoints the design actually uses (from its @media queries) — so the frontend agent rebuilds the shifts
+const breakpoints = [...new Set([...html.matchAll(/@media[^{]*?(?:max|min)-width:\s*(\d+)px/gi)].map((m) => parseInt(m[1], 10)))].sort((a, b) => a - b);
 if (Object.keys(vars).length === 0) {
   console.error(`No :root custom properties found in ${inPath}. The artifact should define design tokens in :root.`);
   process.exit(1);
@@ -171,6 +173,12 @@ writeFileSync(join(outDir, "components.md"), `# Components — ${basename(inPath
 > variants, interactive states (hover/active/disabled/loading), responsive behavior, and which **tokens** it uses
 > (reference tokens by name, e.g. \`color.accent\`, never raw hex).
 
+## Breakpoints
+Design these viewports (the reference uses ${breakpoints.length ? "@media at " + breakpoints.map((b) => b + "px").join(", ") : "fluid/clamp, no explicit @media"}):
+- **390px** (mobile): single column, stacked, touch-friendly spacing, no horizontal scroll.
+- **1280px** (desktop): full multi-column grids, expanded spacing.
+${breakpoints.length ? "Shift layout at: " + breakpoints.map((b) => "≤" + b + "px").join(", ") + "." : "Add explicit breakpoints if the layout needs to shift."}
+
 ## Inventory (auto-detected regions — refine into real components)
 ${sections.join("\n") || "- _(no top-level regions detected — decompose from reference.html)_"}
 
@@ -181,7 +189,7 @@ ${sections.join("\n") || "- _(no top-level regions detected — decompose from r
 - **Props:** \`name: type\` …
 - **Variants / states:** …
 - **Tokens used:** \`color.…\`, \`space.…\`, \`fontSize.…\`
-- **Responsive:** mobile → desktop behavior
+- **Responsive:** 390px (mobile) → 1280px (desktop) — what changes (columns, sizes, hidden/shown)
 `);
 
 // ---- interactions.md: detect interactive signals, scaffold the state/handlers/routes spec ----

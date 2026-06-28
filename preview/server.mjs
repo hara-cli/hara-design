@@ -18,7 +18,7 @@
 
 import { createServer } from "node:http";
 import { readFile, stat, readdir } from "node:fs/promises";
-import { watch } from "node:fs";
+import { watch, existsSync } from "node:fs";
 import { join, normalize, extname, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -99,13 +99,18 @@ const server = createServer(async (req, res) => {
     const abs = safeJoin(framesDir, path.slice("/frames/".length));
     if (abs && (await serveFile(res, abs))) return;
   }
-  // single-design dir → serve its index.html (+ subpaths). GET /<slug>/ opens a design from the library.
-  const rel = path === "/" ? "index.html" : path.replace(/^\/+/, "");
-  const abs = safeJoin(artifactDir, rel);
-  if (abs && (await serveFile(res, abs, { injectReload: true }))) return;
-
-  // library root (no index.html here, but <slug>/index.html subdirs) → a read-only gallery
+  // GET /__artifact → the design's index.html itself (loaded inside the device-preview iframe; live-reloads)
+  if (path === "/__artifact") {
+    const abs = safeJoin(artifactDir, "index.html");
+    if (abs && (await serveFile(res, abs, { injectReload: true }))) return;
+  }
+  // GET / → device-preview chrome (single design: phone/tablet/desktop toggle) OR gallery (library root)
   if (path === "/") {
+    if (existsSync(join(artifactDir, "index.html"))) {
+      res.writeHead(200, { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" });
+      res.end(await deviceChrome(artifactDir));
+      return;
+    }
     const gallery = await renderGallery(artifactDir);
     if (gallery) {
       res.writeHead(200, { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" });
@@ -113,12 +118,69 @@ const server = createServer(async (req, res) => {
       return;
     }
   }
+  // any other path → the artifact dir (sibling assets, screens/, or <slug>/ opened from the gallery)
+  const rel = path.replace(/^\/+/, "");
+  const abs = safeJoin(artifactDir, rel);
+  if (abs && (await serveFile(res, abs, { injectReload: true }))) return;
 
   res.writeHead(404, { "content-type": "text/html; charset=utf-8" });
   res.end(`<!doctype html><meta charset=utf-8><body style="font:16px system-ui;padding:3rem;color:#555">
     <h2>hara-design preview</h2><p>No <code>${rel}</code> in <code>${artifactDir}</code> yet.</p>
     <p>Waiting — the page reloads automatically when the file appears.</p>${LIVERELOAD}`);
 });
+
+// Device-preview chrome: a toolbar (phone/tablet/desktop/full) wrapping the artifact in a resizable iframe
+// (src=/__artifact, which live-reloads), so the user sees mobile + desktop effects with one click.
+async function deviceChrome(root) {
+  let title = "Preview";
+  try {
+    const head = (await readFile(join(root, "index.html"), "utf8")).slice(0, 2000);
+    const m = /<title>([^<]*)<\/title>/i.exec(head);
+    if (m && m[1].trim()) title = m[1].trim();
+  } catch {
+    /* default title */
+  }
+  return `<!doctype html><meta charset=utf-8><title>${esc(title)} · preview</title>
+<style>
+ :root{--bg:#0c0d10;--bar:#15171c;--fg:#e8eaed;--muted:#8b90a0;--border:#23262e;--accent:#5b8cff}
+ *{box-sizing:border-box} html,body{margin:0;height:100%}
+ body{background:var(--bg);color:var(--fg);font:13px system-ui,-apple-system,sans-serif;display:flex;flex-direction:column}
+ .bar{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--bar);border-bottom:1px solid var(--border)}
+ .bar .title{font-weight:560;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:38vw}
+ .bar .sp{flex:1}
+ .seg{display:flex;background:#0f1116;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+ .seg button{appearance:none;background:transparent;color:var(--muted);border:0;padding:6px 12px;font:inherit;cursor:pointer}
+ .seg button:hover{color:var(--fg)} .seg button.on{background:var(--accent);color:#fff}
+ .w{font-family:ui-monospace,Menlo,monospace;color:var(--muted);min-width:62px;text-align:right}
+ .stage{flex:1;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:18px}
+ .frame{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 24px 70px -34px #000;height:100%;transition:width .15s ease}
+ .frame.full{border-radius:0;box-shadow:none;border:0}
+ iframe{display:block;border:0;width:100%;height:100%;background:#fff}
+</style>
+<div class="bar">
+ <span class="title">${esc(title)}</span>
+ <div class="seg" id="seg">
+  <button data-w="390">📱 Phone</button>
+  <button data-w="834">▭ Tablet</button>
+  <button data-w="1280" class="on">🖥 Desktop</button>
+  <button data-w="0">↔ Full</button>
+ </div>
+ <span class="sp"></span><span class="w" id="w">1280px</span>
+</div>
+<div class="stage"><div class="frame" id="frame" style="width:1280px"><iframe src="/__artifact"></iframe></div></div>
+<script>
+ var frame=document.getElementById('frame'),wl=document.getElementById('w'),seg=document.getElementById('seg');
+ function set(w){
+   if(w&&w>0){frame.style.width=w+'px';frame.classList.remove('full');wl.textContent=w+'px';}
+   else{frame.style.width='100%';frame.classList.add('full');wl.textContent='Full';}
+   [].forEach.call(seg.children,function(b){b.classList.toggle('on',String(w)===b.dataset.w);});
+   try{localStorage.setItem('hara-design-w',String(w));}catch(e){}
+ }
+ seg.addEventListener('click',function(e){var b=e.target.closest('button');if(b)set(parseInt(b.dataset.w,10));});
+ var s=parseInt((function(){try{return localStorage.getItem('hara-design-w');}catch(e){return null;}})()||'1280',10);
+ set(isNaN(s)?1280:s);
+</script>`;
+}
 
 // Read-only gallery: list <slug>/ subdirs that contain index.html (the design library). null if none.
 function esc(s) {

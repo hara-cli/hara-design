@@ -177,6 +177,16 @@ persists to `localStorage`. Great for "try a few directions."
 
 **Always include the relevant states**: hover, focus-visible (keyboard), active/pressed, disabled, and loading/empty where it applies.
 
+## Responsive — design for BOTH ends (mobile + desktop), and verify both
+Unless the brief is explicitly mobile-only or a fixed canvas, every web design must work at **phone (~390px)** AND
+**desktop (~1280px+)** — not just "it reflows." Deliberately design both: fluid type (`clamp()`), grids that
+collapse to one column on phone, touch-friendly spacing, no horizontal scroll, readable hierarchy at both widths
+(the recipe seeds ship a `@media (max-width: 920px)` breakpoint — keep it working, add more if needed).
+**Verify both before finalizing**: the preview has a device toggle (Phone / Tablet / Desktop / Full) in its
+toolbar — check the design at Phone and Desktop, fix what breaks. This is part of the quality gate (P0: "responsive
+at 390 and 1280"). Note: the `mobile-app` recipe is a **fixed 390px iPhone frame** (mockup, not responsive) — for a
+product that must work on phone *and* web, use `web-prototype`/`dashboard` (responsive), not `mobile-app`.
+
 ## Multi-screen / multi-device — use the shared frames, don't redraw
 For "same app across devices" or "screens 1→2→3 side by side": write each inner screen to
 `<artifact dir>/screens/<n>-<name>.html`, then in `index.html` embed the device frames with a **root-absolute**
