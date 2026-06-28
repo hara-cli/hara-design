@@ -144,6 +144,19 @@ Any dimension < 3/5 is a regression: fix the weakest, re-score. Two passes is no
 
 ---
 
+## Iterating with the user (CLI-native, borrowed from Claude Design)
+After a render, make iteration cheap:
+- **Offer tunable knobs.** Print the **3–5 variables most worth changing for THIS design** (e.g. "accent hue ·
+  hero spacing · heading scale · density · light/dark") and invite "say which to change." This is the CLI version of
+  on-the-fly sliders — surface the right knobs instead of making the user guess.
+- **Variations when exploring.** If the user is still choosing a direction, offer **2–3 differentiated variants** in
+  ONE pass (different color / type personality / rhythm): write each to `<artifact dir>/v1/index.html`,
+  `v2/index.html`, `v3/index.html`, then point the preview at `<artifact dir>` (`hara-design preview <artifact
+  dir>`) — the gallery shows them **side-by-side** to compare. Pick one to continue, then drop the others.
+- **Let them point (click-to-reference).** Tell the user: in the preview, click **🔎 Inspect**, then click any
+  element to copy a reference (e.g. `button.btn-primary "Start free"`) — they paste it back and say what to change.
+  Visual pointing, while input stays in the CLI.
+
 ## Anti-AI-slop (audit every artifact)
 - ❌ Aggressive purple/violet gradient backgrounds   ❌ a gradient on every background
 - ❌ Generic emoji feature icons (✨ 🚀 🎯)            ❌ an icon next to every heading

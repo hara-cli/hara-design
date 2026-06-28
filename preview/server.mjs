@@ -43,7 +43,7 @@ const MIME = {
   ".map": "application/json",
 };
 
-const LIVERELOAD = `<script src="/__livereload.js"></script>`;
+const LIVERELOAD = `<script src="/__livereload.js"></script><script src="/__refpick.js"></script>`;
 
 // keep the path inside its root — reject traversal
 function safeJoin(root, urlPath) {
@@ -86,6 +86,11 @@ const server = createServer(async (req, res) => {
   if (path === "/__livereload.js") {
     res.writeHead(200, { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" });
     res.end(await readFile(join(here, "livereload.js")));
+    return;
+  }
+  if (path === "/__refpick.js") {
+    res.writeHead(200, { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" });
+    res.end(await readFile(join(here, "refpick.js")));
     return;
   }
   if (path === "/__reload") {
@@ -174,6 +179,10 @@ async function deviceChrome(root) {
  .frame{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 24px 70px -34px #000;height:100%;transition:width .15s ease}
  .frame.full{border-radius:0;box-shadow:none;border:0}
  iframe{display:block;border:0;width:100%;height:100%;background:#fff}
+ .ins{appearance:none;background:#0f1116;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer}
+ .ins:hover{color:var(--fg)} .ins.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+ .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#15171c;border:1px solid var(--border);color:var(--fg);padding:10px 14px;border-radius:9px;font-size:13px;max-width:80vw;box-shadow:0 16px 40px -20px #000;opacity:0;transition:opacity .2s;pointer-events:none}
+ .toast.show{opacity:1} .toast code{font-family:ui-monospace,Menlo,monospace;color:#9fc1ff}
 </style>
 <div class="bar">
  <span class="title">${esc(title)}</span>
@@ -183,11 +192,14 @@ async function deviceChrome(root) {
   <button data-w="1280" class="on">🖥 Desktop</button>
   <button data-w="0">↔ Full</button>
  </div>
+ <button class="ins" id="insp" title="Click an element to copy a reference you can paste into hara">🔎 Inspect</button>
  <span class="sp"></span><span class="w" id="w">1280px</span>
 </div>
-<div class="stage"><div class="frame" id="frame" style="width:1280px"><iframe src="/__artifact"></iframe></div></div>
+<div class="stage"><div class="frame" id="frame" style="width:1280px"><iframe id="pv" src="/__artifact"></iframe></div></div>
+<div class="toast" id="toast"></div>
 <script>
  var frame=document.getElementById('frame'),wl=document.getElementById('w'),seg=document.getElementById('seg');
+ var pv=document.getElementById('pv'),insp=document.getElementById('insp'),toast=document.getElementById('toast'),tt;
  function set(w){
    if(w&&w>0){frame.style.width=w+'px';frame.classList.remove('full');wl.textContent=w+'px';}
    else{frame.style.width='100%';frame.classList.add('full');wl.textContent='Full';}
@@ -195,6 +207,13 @@ async function deviceChrome(root) {
    try{localStorage.setItem('hara-design-w',String(w));}catch(e){}
  }
  seg.addEventListener('click',function(e){var b=e.target.closest('button');if(b)set(parseInt(b.dataset.w,10));});
+ var inspecting=false;
+ function tellFrame(){try{pv.contentWindow.postMessage({haraInspect:inspecting},'*');}catch(e){}}
+ insp.addEventListener('click',function(){inspecting=!inspecting;insp.classList.toggle('on',inspecting);tellFrame();
+   if(inspecting)showToast('Inspect on — click an element to copy a reference for hara');});
+ pv.addEventListener('load',tellFrame); // re-arm after live-reload
+ function showToast(html){toast.innerHTML=html;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show');},3200);}
+ window.addEventListener('message',function(e){if(e.data&&e.data.haraCopied){showToast('Copied → paste into hara: <code>'+String(e.data.haraCopied).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];})+'</code>');}});
  var s=parseInt((function(){try{return localStorage.getItem('hara-design-w');}catch(e){return null;}})()||'1280',10);
  set(isNaN(s)?1280:s);
 </script>`;
