@@ -106,6 +106,12 @@ Designs are **scratch by default**. To make one a committable artifact, copy its
 tree (default `design/<slug>/`) — but if `design/` (or that slug) already exists, **suffix or ask; never overwrite or
 merge**. Always write to the SAME path the preview server watches.
 
+**Up-front committable (explicit intent only).** If, in a code repo, the user signals from the start that the design
+is a tracked deliverable — words like *commit · visible · tracked · into the repo · `design/`* — skip scratch and
+write straight to visible **`design/<slug>/`** (same never-overwrite rule), so there's no promote step later. Without
+such intent, default to hidden `.hara/design/` scratch. (This is recognized *intent in plain language*, NOT a flag to
+parse — and it's inert in a standalone/empty dir, which is already visible.)
+
 **On entering design mode, do this FIRST (before the brief):** open the gallery rooted at this context's design dir
 (embedded → `hara-design gallery`; standalone → `hara-design open .`) so any **existing progress is visible at once**;
 tell the user in one line where designs live here + what already exists, then offer to *continue* one or *start new*.
