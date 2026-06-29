@@ -74,20 +74,37 @@ html[data-frame="web"][data-chrome="none"][data-view="detail"] .hara-titlebar{ d
 
 .proto-toast{ position:fixed; left:50%; bottom:6%; transform:translateX(-50%); background:#222633; color:#fff; padding:11px 16px; border-radius:11px; font:14px system-ui; opacity:0; transition:opacity .2s; pointer-events:none; z-index:9999 }
 .proto-toast.show{ opacity:1 }
+/* motion primitives — opt-in via data-* (proto.js seeds --hara-i); the reduce-motion rule below disables them */
+@keyframes hara-rise{ from{ opacity:0; transform:translateY(14px) } to{ opacity:1; transform:none } }
+[data-stagger] > *{ animation:hara-rise .42s both cubic-bezier(.22,.61,.36,1); animation-delay:calc(var(--hara-i,0) * 55ms) }
+[data-press]{ transition:transform .09s ease } [data-press]:active{ transform:scale(.96) }
 @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important } }
 
-/* ── FIXED designer PDF (print): cover + each screen framed on its own page ── */
+/* ── FIXED designer PDF (print): 首页 cover + 介绍 intro + 一拼 N-up contact sheet ── */
 .hara-print{ display:none }
 @media print{
   @page{ size:A4 portrait; margin:0 }
   html,body{ background:#fff!important; height:auto!important }
   .hara-stage{ display:none!important }
   .hara-print{ display:block }
-  .hara-print-cover{ height:296mm; display:flex; flex-direction:column; justify-content:center; padding:0 28mm; background:#0c0d12; color:#fff; break-after:page }
-  .hara-print-cover .t{ font:800 42px/1.1 system-ui } .hara-print-cover .s{ color:#8b90a0; margin-top:12px; font:15px system-ui; letter-spacing:.04em }
-  .hara-print-page{ height:296mm; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; break-after:page; padding:16mm; background:#f6f7fa }
-  .hara-print-bezel{ width:380px; height:800px; border-radius:48px; padding:12px; background:#000; overflow:hidden; box-shadow:0 30px 80px -34px #000 }
-  .hara-print-bezel [data-route]{ display:block!important; position:relative!important; inset:auto!important; width:100%!important; height:100%!important; overflow:hidden; border-radius:38px }
-  .hara-print-bezel .hara-card-inner{ transform:none!important; width:100%!important; height:100%!important; pointer-events:none }
-  .hara-print-label{ font:600 13px system-ui; color:#555; letter-spacing:.04em }
+  .hara-print .ch{ display:flex; align-items:center; gap:6px; font:600 11px system-ui }
+  .hara-print .ch i{ width:16px; height:16px; border-radius:4px }
+  /* 首页 cover */
+  .hara-print-cover{ height:296mm; display:flex; flex-direction:column; justify-content:center; gap:16px; padding:0 28mm; background:#0c0d12; color:#fff; break-after:page }
+  .hara-print-cover .t{ font:800 44px/1.05 system-ui } .hara-print-cover .s{ color:#8b90a0; font:15px system-ui; letter-spacing:.04em }
+  .hara-print-cover .sw{ display:flex; flex-wrap:wrap; gap:18px; margin-top:10px } .hara-print-cover .ch{ color:#cfd3df } .hara-print-cover .ch i{ box-shadow:inset 0 0 0 1px rgba(255,255,255,.18) }
+  /* 介绍 intro — tokens + screen index, no prose */
+  .hara-print-intro{ height:296mm; display:grid; grid-template-columns:1fr 1fr; gap:18mm; padding:26mm 22mm; background:#f6f7fa; color:#222; break-after:page }
+  .hara-print-intro h3{ font:700 12px system-ui; letter-spacing:.09em; text-transform:uppercase; color:#8a8f9c; margin:0 0 14px }
+  .hara-print-intro .sw{ display:flex; flex-direction:column; gap:9px } .hara-print-intro .ch{ color:#444 } .hara-print-intro .ch i{ box-shadow:inset 0 0 0 1px rgba(0,0,0,.12) }
+  .hara-print-intro ol{ margin:0; padding-left:20px; font:14px/1.9 system-ui; color:#333 }
+  /* 一拼 contact sheet — N device thumbnails per page (tall 2×3, wide 2×2) */
+  .hara-print-grid{ height:296mm; display:grid; grid-template-columns:repeat(2,1fr); gap:9mm 12mm; padding:13mm; align-content:start; justify-items:center; background:#f6f7fa; break-after:page }
+  .hara-print-thumb{ display:flex; flex-direction:column; gap:3mm; align-items:center; min-width:0 }
+  /* the clone IS the card (same pattern as the on-screen board): width = --vw*--ts, inner scaled to fit, clipped */
+  .hara-print-card{ width:calc(var(--vw)*var(--ts))!important; height:calc(var(--vh)*var(--ts))!important; min-width:0; overflow:hidden; border-radius:14px; background:#0c0d12; box-shadow:0 10px 24px -14px #000;
+    position:static!important; inset:auto!important; display:block!important; transform:none!important; cursor:auto!important }
+  .hara-print-card::after{ content:none!important }
+  .hara-print-card .hara-card-inner{ width:var(--vw)!important; height:var(--vh)!important; transform:scale(var(--ts))!important; transform-origin:top left!important; overflow:hidden; pointer-events:none }
+  .hara-print-glabel{ font:600 11px system-ui; color:#555 }
 }

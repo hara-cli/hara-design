@@ -36,19 +36,34 @@
     // Detail leaves it full-size + scrollable.
     screens.forEach(function (s) { var inner = mk("div", "hara-card-inner"); while (s.firstChild) inner.appendChild(s.firstChild); s.appendChild(inner); });
     fitBoard();
+    // motion: data-stagger → its direct children rise in sequence (CSS keyframe; re-fires when a Detail screen
+    // re-shows because it was display:none; honors prefers-reduced-motion). Author just adds the attribute.
+    [].forEach.call(d.querySelectorAll("[data-stagger]"), function (g) { [].forEach.call(g.children, function (c, k) { c.style.setProperty("--hara-i", k); }); });
     docEl.dataset.view = parts.indexOf("showcase") >= 0 ? "grid" : "detail";
 
-    // FIXED designer PDF layout (shown only in print): a cover + each screen framed on its own page with its
-    // label. Export inlines proto + prints this — a consistent, designer-grade page-by-page PDF (not an
-    // agent-improvised deck). Built once from clones; never interactive.
-    var pr = mk("div", "hara-print");
-    pr.innerHTML = '<div class="hara-print-cover"><div class="t">' + esc((d.title || "Design")) + '</div><div class="s">' + esc(parts.join(" ")) + " · " + screens.length + " screens</div></div>";
-    screens.forEach(function (s) {
-      var pg = mk("div", "hara-print-page"), bz = mk("div", "hara-print-bezel"), lb = mk("div", "hara-print-label");
-      var clone = s.cloneNode(true); clone.hidden = false; clone.classList.add("is-active");
-      bz.appendChild(clone); lb.textContent = s.dataset.screenLabel || s.dataset.route;
-      pg.appendChild(bz); pg.appendChild(lb); pr.appendChild(pg);
-    });
+    // FIXED designer PDF (print only): 首页 cover + 介绍 intro + 一拼 N-up contact sheet — all auto-derived from
+    // title + meta + screen labels + :root tokens (no agent-authored PDF copy). Built once from clones; never
+    // interactive. Export inlines proto + prints this → a dense, consistent designer deliverable.
+    var pr = mk("div", "hara-print"), pvw = parseFloat(getComputedStyle(docEl).getPropertyValue("--vw")) || 393;
+    function tok(n) { return getComputedStyle(docEl).getPropertyValue(n).trim(); }
+    function chips(names) { return names.map(function (n) { var v = tok(n); return v ? '<div class="ch"><i style="background:' + esc(v) + '"></i><b>' + esc(v) + "</b></div>" : ""; }).join(""); }
+    var pal = ["--bg", "--surface", "--accent", "--accent-2", "--fg", "--muted"];
+    var metaLine = parts.join(" · ") + " · " + screens.length + " screens";
+    pr.innerHTML =
+      '<div class="hara-print-cover"><div class="t">' + esc(d.title || "Design") + '</div><div class="s">' + esc(metaLine) + '</div><div class="sw">' + chips(pal) + "</div></div>" +
+      '<div class="hara-print-intro"><div class="col"><h3>Design tokens</h3><div class="sw">' + chips(pal) + '</div></div><div class="col"><h3>' + esc(metaLine) + "</h3><ol>" +
+      screens.map(function (s) { return "<li>" + esc(s.dataset.screenLabel || s.dataset.route) + "</li>"; }).join("") + "</ol></div></div>";
+    var wide = frame === "web", per = wide ? 4 : 6, cardPx = wide ? 302 : 128; // tall phones 2×3 (34mm), wide web 2×2 (80mm)
+    for (var pp = 0; pp < screens.length; pp += per) {
+      var g = mk("div", "hara-print-grid"); g.dataset.aspect = wide ? "wide" : "tall"; g.style.setProperty("--ts", (cardPx / pvw).toFixed(4));
+      screens.slice(pp, pp + per).forEach(function (s, k) {
+        var th = mk("div", "hara-print-thumb"), lb = mk("div", "hara-print-glabel");
+        var c = s.cloneNode(true); c.hidden = false; c.classList.add("hara-print-card", "is-active"); // the clone IS the card
+        lb.textContent = (pp + k + 1) + ". " + (s.dataset.screenLabel || s.dataset.route);
+        th.appendChild(c); th.appendChild(lb); g.appendChild(th);
+      });
+      pr.appendChild(g);
+    }
     d.body.appendChild(pr);
   }
 

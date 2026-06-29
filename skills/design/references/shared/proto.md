@@ -20,7 +20,15 @@ standalone — still self-contained, but frozen, never agent-authored.
 | **Select / stepper** | group `[data-select-group]` with options `[data-select]` (one gets `.is-selected`); `[data-step="+1"]`/`"-1"` bumps the group's `[data-value]`. |
 | **Toast** | `data-toast="Saved ✓"` on any control → a transient toast. (≥1 per flow — proof it did something.) |
 
-Style the states yourself: `.is-active`, `.is-open`, `.is-selected`, and a **press** feel (`button:active{transform:scale(.98)}`), `:focus-visible`, and a `.proto-toast{ /* fixed, bottom-center */ }` + `.proto-toast.show{opacity:1}`.
+Style the states yourself: `.is-active`, `.is-open`, `.is-selected`, `:focus-visible`, and a `.proto-toast{ /* fixed, bottom-center */ }` + `.proto-toast.show{opacity:1}`.
+
+**Motion (opt-in, zero-config — the framework provides these, honoring `prefers-reduced-motion`):**
+| Want | Markup |
+|---|---|
+| **Stagger-in** a list/grid | add `data-stagger` to the container → its direct children rise (fade + slide-up) in sequence on show; re-fires when a screen re-shows |
+| **Press feedback** | add `data-press` to a button/card → tap-scale (`:active` → scale .96) |
+
+The screen→screen route change is the **one flourish** — `data-stagger`/`data-press` are subtle accents, not a reason to pile on more animation.
 
 ## View modes (the preview drives these; you just author screens)
 The read-only preview can switch how the screens lay out — **flow** (one screen, walk it), **grid** (all screens), **zoom** (one enlarged). You don't build the toggle; just make each screen a `[data-route]` section. `proto.js` exposes the current screen on `document.documentElement.dataset.route` and a `window.__proto.current()` getter so the preview always knows which screen you're on.
