@@ -75,8 +75,8 @@ the browser. Before finalizing, hara self-checks against the recipe's **P0 check
 
 **5. Export & handoff**:
 ```bash
-# PDF (headless Chrome; decks print as slides)
-hara-design export  .hara/design/<slug>/index.html [--out out.pdf]
+# Self-contained interactive HTML (frozen proto inlined; opens anywhere, no server/Chrome)
+hara-design export  .hara/design/<slug>/index.html [--out out.html]
 
 # Agent handoff — hand the design to a FRONTEND CODING AGENT to build the production app:
 hara-design handoff .hara/design/<slug>/index.html --target tailwind   # or css | swiftui | flutter | all
@@ -97,7 +97,7 @@ hara-design handoff .hara/design/<slug>/index.html --target tailwind   # or css 
 - `skills/design/references/craft/` — anti-AI-slop / color / typography rules.
 - `frames/` — pixel-accurate device frames (iPhone, Android, iPad, MacBook, browser) for multi-screen prototypes.
 - `preview/server.mjs` — zero-dependency static + live-reload preview server.
-- `scripts/build-ds-index.mjs` — regenerate the design-systems index. `scripts/export.mjs` — print to PDF.
+- `scripts/build-ds-index.mjs` — regenerate the design-systems index. `scripts/export.mjs` — bundle a self-contained interactive HTML.
 
 ## Credits / license
 Apache-2.0. Design content + the design workflow are adapted from

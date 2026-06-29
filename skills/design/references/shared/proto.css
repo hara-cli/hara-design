@@ -80,20 +80,8 @@ html[data-frame="web"][data-chrome="none"][data-view="detail"] .hara-titlebar{ d
 [data-press]{ transition:transform .09s ease } [data-press]:active{ transform:scale(.96) }
 @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important } }
 
-/* ── FIXED designer PDF (print): 首页 cover + 介绍 intro + 一拼 N-up contact sheet ── */
-.hara-print{ display:none }
-@media print{
-  @page{ size:A4 portrait; margin:0 }
-  html,body{ background:#f3eee2!important; height:auto!important }   /* warm paper */
-  .hara-stage{ display:none!important }
-  .hara-print{ display:block; color:#1e1b16; font-family:system-ui }
-  /* 一拼 contact sheet — dark device plates on warm paper (tall 2×3, wide 2×2) */
-  .hara-print-grid{ height:296mm; display:grid; grid-template-columns:repeat(2,1fr); gap:10mm 16mm; padding:18mm 26mm; align-content:start; justify-items:center; background:#f3eee2; break-after:page }
-  .hara-print-thumb{ display:flex; flex-direction:column; gap:3mm; align-items:center; min-width:0 }
-  /* the clone IS the card (same pattern as the on-screen board): width = --vw*--ts, inner scaled to fit, clipped */
-  .hara-print-card{ width:calc(var(--vw)*var(--ts))!important; height:calc(var(--vh)*var(--ts))!important; min-width:0; overflow:hidden; border-radius:16px; background:var(--bg,#0c0d12); box-shadow:0 9px 24px -13px rgba(40,30,10,.5);
-    position:static!important; inset:auto!important; display:block!important; transform:none!important; cursor:auto!important }
-  .hara-print-card::after{ content:none!important }
-  .hara-print-card .hara-card-inner{ width:var(--vw)!important; height:var(--vh)!important; transform:scale(var(--ts))!important; transform-origin:top left!important; overflow:hidden; pointer-events:none }
-  .hara-print-glabel{ font:600 11px system-ui; color:#6b6354 }
-}
+/* ── standalone EXPORT toggle — proto.js self-mounts this only when the file is opened directly (no host chrome),
+   so an exported single HTML can still flip Grid ⇄ 真机. Hidden inside the preview iframe (host chrome owns it). ── */
+.hara-export-toggle{ position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:99999; display:flex; gap:2px; padding:3px; border-radius:11px; background:rgba(20,22,30,.82); backdrop-filter:blur(8px); box-shadow:0 6px 22px -10px #000 }
+.hara-export-toggle button{ border:0; cursor:pointer; font:600 12px system-ui; color:#c9cdd9; background:transparent; padding:6px 13px; border-radius:8px }
+.hara-export-toggle button.on{ background:#5b6cff; color:#fff }

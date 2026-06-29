@@ -132,7 +132,7 @@ Designs persist on disk. To reopen one and keep editing: `hara-design open` (new
 1–3; go straight to editing + the quality gate. To **browse all designs**: `hara-design gallery` (read-only library
 with live thumbnails; `--global` for `~/.hara/design`). If the user says "open my design" / "keep editing the
 pricing page", find it under `.hara/design/`, open the preview, resume. **Deliver** = the dir itself (git) /
-`hara-design export` (PDF) / `hara-design handoff` (frontend-agent package).
+`hara-design export` (self-contained HTML) / `hara-design handoff` (frontend-agent package).
 
 ### Stage 5 — Preview (launch it EARLY — the user watches it build)
 **Bring the live preview up as early as you can, before writing content** — it shows a "🎨 Designing…" placeholder
@@ -278,7 +278,7 @@ slides in a row; headlines ≥36px, body ≥22px.
 
 ## Export & handoff (when the user wants to ship it for real)
 The CLI helper is `hara-design` (or `node <skill dir>/../../{scripts,preview}/…`):
-- **PDF**: `hara-design export <artifact dir>/index.html` — headless-Chrome print. A prototype prints a one-page **一拼 contact sheet** of device thumbnails (the per-screen token/index narrative lives in the handoff folder below); decks print as slides.
+- **HTML**: `hara-design export <artifact dir>/index.html` — bundles a **self-contained interactive HTML** (the frozen proto.css/js inlined): the prototype opens anywhere (double-click, email, static host), fully interactive (device frame, Grid board + 真机 tap-through, forms/modals), no server or Chrome. proto.js self-mounts a Grid/真机 toggle when opened standalone.
 - **Client proposal PDF** (share the design with a client / non-technical stakeholder — product narrative + the
   screens explained + design rationale + roadmap): use the **`design-proposal`** recipe
   (`references/skills/design-proposal/`) — fill its `template.html`, embed screen PNGs, then `hara-design export

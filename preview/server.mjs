@@ -126,23 +126,23 @@ const server = createServer(async (req, res) => {
     const abs = safeJoin(artifactDir, "index.html");
     if (abs && (await serveFile(res, abs, { injectReload: true }))) return;
   }
-  // GET /__export → render the current design to PDF (headless Chrome) and stream it as a download. A view-time
-  // utility (like the browser's own Print-to-PDF): read-only — it neither edits the design nor drives the agent.
+  // GET /__export → bundle the current design into a SELF-CONTAINED interactive HTML (frozen proto inlined) and
+  // stream it as a download. Read-only — it neither edits the design nor drives the agent.
   if (path === "/__export") {
     const src = join(artifactDir, "index.html");
     if (!existsSync(src)) { res.writeHead(404, { "content-type": "text/plain" }); res.end("no index.html to export"); return; }
-    const out = join(tmpdir(), `hara-design-${process.pid}-${Date.now()}.pdf`);
+    const out = join(tmpdir(), `hara-design-${process.pid}-${Date.now()}.html`);
     execFile("node", [join(here, "..", "scripts", "export.mjs"), "--in", src, "--out", out], { timeout: 60_000 }, async (err) => {
       if (err || !existsSync(out)) {
         res.writeHead(500, { "content-type": "text/plain" });
-        res.end("PDF export failed — is Chrome/Chromium installed? (set CHROME_BIN)");
+        res.end("HTML export failed");
         return;
       }
       try {
-        const pdf = await readFile(out);
+        const buf = await readFile(out);
         const name = (basename(artifactDir) || "design").replace(/[^\w.-]/g, "_");
-        res.writeHead(200, { "content-type": "application/pdf", "content-disposition": `attachment; filename="${name}.pdf"`, "content-length": pdf.length });
-        res.end(pdf);
+        res.writeHead(200, { "content-type": "text/html; charset=utf-8", "content-disposition": `attachment; filename="${name}.html"`, "content-length": buf.length });
+        res.end(buf);
       } catch {
         res.writeHead(500, { "content-type": "text/plain" });
         res.end("read failed");
@@ -260,7 +260,7 @@ async function deviceChrome(root) {
  <button class="ins" id="insp" title="Click an element to copy a reference you can paste into hara">🔎 Inspect</button>
  ${isProto ? `<button class="ins" id="a11y" title="Check color contrast (WCAG AA)">⚠</button>
  <button class="ins" id="share" title="Copy a link that reopens this exact screen">🔗</button>` : ""}
- <button class="ins" id="pdf" title="Download a designer page-per-screen PDF">⬇ PDF</button>
+ <button class="ins" id="exp" title="Download a self-contained interactive HTML (opens anywhere, no server)">⬇ HTML</button>
  <span class="sp"></span><span class="w" id="w">${initLabel}</span>
 </div>
 <div class="stage"><div class="frame ${defaultW ? "" : "full"}" id="frame" style="width:${defaultW ? defaultW + "px" : "100%"}"><iframe id="pv" src="/__artifact"></iframe></div></div>
@@ -280,13 +280,13 @@ async function deviceChrome(root) {
  function tellView(){try{pv.contentWindow.postMessage({haraView:curView},'*');}catch(e){}}
  function setActive(v){curView=v;if(vseg)[].forEach.call(vseg.children,function(x){x.classList.toggle('on',x.dataset.v===v);});}
  if(vseg)vseg.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;setActive(b.dataset.v);tellView();});
- // ⬇ PDF — fetch + download in place with feedback (export takes a few seconds; don't navigate away silently)
- var pdfBtn=document.getElementById('pdf');
- if(pdfBtn)pdfBtn.addEventListener('click',function(){showToast('Generating PDF… (a few seconds)');
+ // ⬇ HTML — download a self-contained interactive HTML (frozen proto inlined; opens anywhere, no server)
+ var expBtn=document.getElementById('exp');
+ if(expBtn)expBtn.addEventListener('click',function(){showToast('Bundling HTML…');
    fetch('/__export').then(function(r){if(!r.ok)throw 0;return r.blob();}).then(function(b){
-     var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=document.title.replace(/ · preview$/,'')+'.pdf';a.click();
-     setTimeout(function(){URL.revokeObjectURL(a.href);},3000);showToast('PDF downloaded ✓');
-   }).catch(function(){showToast('PDF export failed — is Chrome/Chromium installed? (set CHROME_BIN)');});});
+     var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=document.title.replace(/ · preview$/,'')+'.html';a.click();
+     setTimeout(function(){URL.revokeObjectURL(a.href);},3000);showToast('HTML downloaded ✓');
+   }).catch(function(){showToast('HTML export failed');});});
  // ④ theme · a11y · share-link
  var a11y=document.getElementById('a11y'),share=document.getElementById('share');
  var linting=false,route='';

@@ -40,23 +40,6 @@
     // re-shows because it was display:none; honors prefers-reduced-motion). Author just adds the attribute.
     [].forEach.call(d.querySelectorAll("[data-stagger]"), function (g) { [].forEach.call(g.children, function (c, k) { c.style.setProperty("--hara-i", k); }); });
     docEl.dataset.view = parts.indexOf("showcase") >= 0 ? "grid" : "detail";
-
-    // FIXED designer PDF (print only): a one-page 一拼 contact sheet — N device thumbnails per A4 page, each the
-    // whole screen + its numbered label. Built once from clones; never interactive. Export inlines proto + prints
-    // this. (No cover/intro — the token/screen-index narrative is covered by the DTCG export + handoff folder.)
-    var pr = mk("div", "hara-print"), pvw = parseFloat(getComputedStyle(docEl).getPropertyValue("--vw")) || 393;
-    var wide = frame === "web", per = wide ? 4 : 6, cardPx = wide ? 302 : 128; // tall phones 2×3 (34mm), wide web 2×2 (80mm)
-    for (var pp = 0; pp < screens.length; pp += per) {
-      var g = mk("div", "hara-print-grid"); g.dataset.aspect = wide ? "wide" : "tall"; g.style.setProperty("--ts", (cardPx / pvw).toFixed(4));
-      screens.slice(pp, pp + per).forEach(function (s, k) {
-        var th = mk("div", "hara-print-thumb"), lb = mk("div", "hara-print-glabel");
-        var c = s.cloneNode(true); c.hidden = false; c.classList.add("hara-print-card", "is-active"); // the clone IS the card
-        lb.textContent = (pp + k + 1) + ". " + (s.dataset.screenLabel || s.dataset.route);
-        th.appendChild(c); th.appendChild(lb); g.appendChild(th);
-      });
-      pr.appendChild(g);
-    }
-    d.body.appendChild(pr);
   }
 
   // ── 2. routing ──
@@ -85,6 +68,8 @@
     } else { // detail: one interactive screen in the device frame
       show(cur() || screens[0].dataset.route, false);
     }
+    var et = d.querySelector(".hara-export-toggle"); // keep the standalone toggle (if mounted) in sync
+    if (et) [].forEach.call(et.children, function (x) { x.classList.toggle("on", x.dataset.v === v); });
     post({ haraViewNow: v });
   }
   // board scaling: --s = card width / device width (wrap-then-scale)
@@ -105,7 +90,7 @@
     [].forEach.call(d.querySelectorAll("[data-contrast-fail]"), function (el) { el.style.outline = ""; el.removeAttribute("data-contrast-fail"); });
     if (!on) { toast("a11y off"); return; }
     var bad = 0;
-    [].forEach.call(d.querySelectorAll(".hara-viewport *, .hara-print *"), function (el) {
+    [].forEach.call(d.querySelectorAll(".hara-viewport *"), function (el) {
       if (el.children.length || !el.textContent.trim() || el.offsetParent === null) return;
       var fg = rgb(getComputedStyle(el).color), bg = bgOf(el);
       if (fg && bg && ratio(fg, bg) < 4.5) { el.style.outline = "2px solid #ff5b5b"; el.setAttribute("data-contrast-fail", ""); bad++; }
@@ -156,5 +141,14 @@
   function mk(t, c) { var n = d.createElement(t); n.className = c; return n; }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function post(o) { try { parent.postMessage(o, "*"); } catch (_) {} }
+  // standalone export: when opened directly (no host chrome — not in the preview iframe), self-mount a minimal
+  // Grid/真机 toggle so the exported single file is fully usable. In the preview, parent !== window so the host owns it.
+  if (screens.length > 1 && window.parent === window) {
+    var eseg = mk("div", "hara-export-toggle");
+    ["grid", "detail"].forEach(function (v) { var b = mk("button", ""); b.dataset.v = v; b.textContent = v === "grid" ? "▦ Grid" : "📱 真机"; eseg.appendChild(b); });
+    eseg.addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) setView(b.dataset.v); });
+    d.body.appendChild(eseg);
+    setView(docEl.dataset.view); // reflect the starting view in the toggle
+  }
   window.__proto = { current: cur, screens: screens.map(function (s) { return s.dataset.route; }), setView: setView };
 })();
