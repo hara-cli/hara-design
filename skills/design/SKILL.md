@@ -257,6 +257,10 @@ slides in a row; headlines ≥36px, body ≥22px.
 ## Export & handoff (when the user wants to ship it for real)
 The CLI helper is `hara-design` (or `node <skill dir>/../../{scripts,preview}/…`):
 - **PDF**: `hara-design export <artifact dir>/index.html` — headless-Chrome print (decks print as slides).
+- **Client proposal PDF** (share the design with a client / non-technical stakeholder — product narrative + the
+  screens explained + design rationale + roadmap): use the **`design-proposal`** recipe
+  (`references/skills/design-proposal/`) — fill its `template.html`, embed screen PNGs, then `hara-design export
+  proposal.html`. This is storytelling for a client, distinct from the code-handoff below.
 - **Agent handoff** (hand the design to a *frontend coding agent* to build the production app): run
   `hara-design handoff <artifact dir>/index.html --target <css|tailwind|swiftui|flutter|all>`. This **mechanically**
   emits a `handoff/` folder: `reference.html` (ground truth), `tokens.json` (DTCG, with `{alias}` refs from the

@@ -1,0 +1,136 @@
+<!doctype html>
+<!--
+  Design proposal → PDF.  Author: fill every {{…}} slot, drop screen PNGs into the .shot <img> slots
+  (relative paths under proposal-assets/), set --accent to the design's brand color, then:
+      hara-design export proposal.html --out proposal.pdf
+  Each <section class="page"> becomes one landscape print page. Keep @page + the print-color rule.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>{{Product}} — Design Proposal</title>
+<style>
+  :root{ --accent:#5b8cff; --ink:#15171c; --muted:#5c6270; --line:#e6e8ee; --bg:#fff; --soft:#f6f7f9; }
+  @page{ size:297mm 210mm; margin:0; }           /* A4 landscape, full-bleed */
+  *{ box-sizing:border-box; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  html,body{ margin:0; color:var(--ink); background:var(--bg);
+    font:16px/1.6 -apple-system,"SF Pro Text","PingFang SC",system-ui,sans-serif; }
+  .page{ position:relative; width:297mm; height:210mm; padding:18mm 20mm; overflow:hidden; break-after:page; }
+  .page:last-child{ break-after:auto; }
+  h1,h2,h3{ margin:0; line-height:1.15; letter-spacing:-.01em; }
+  .eyebrow{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); font-weight:700; }
+  .lead{ font-size:19px; color:var(--muted); max-width:60ch; }
+  .muted{ color:var(--muted); }
+  .accent{ color:var(--accent); }
+  .rule{ height:3px; width:54px; background:var(--accent); border-radius:2px; margin:14px 0; }
+  /* Cover */
+  .cover{ background:var(--ink); color:#fff; display:flex; flex-direction:column; justify-content:center; }
+  .cover .brand{ font-size:13px; letter-spacing:.18em; text-transform:uppercase; color:#aab2c5; }
+  .cover h1{ font-size:64px; font-weight:800; margin-top:10px; }
+  .cover .tag{ font-size:22px; color:#c7ccd8; margin-top:14px; max-width:44ch; }
+  .cover .foot{ position:absolute; left:20mm; right:20mm; bottom:16mm; display:flex; justify-content:space-between;
+    color:#8b90a0; font-size:14px; border-top:1px solid #2a2e38; padding-top:12px; }
+  .cover .glow{ position:absolute; inset:0; background:radial-gradient(60% 80% at 78% 18%, color-mix(in srgb,var(--accent) 38%, transparent), transparent 70%); }
+  /* Section header */
+  .head{ display:flex; align-items:baseline; gap:14px; }
+  .num{ font-variant-numeric:tabular-nums; font-weight:800; color:var(--accent); font-size:15px; }
+  .page h2{ font-size:34px; font-weight:750; }
+  /* Screens grid */
+  .shots{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:18px; }
+  .shot{ border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--soft); }
+  .shot img{ display:block; width:100%; height:118mm; object-fit:cover; object-position:top center; background:#0c0d10; }
+  .shot .cap{ padding:11px 14px; } .shot .cap b{ display:block; font-size:15px; } .shot .cap p{ margin:4px 0 0; font-size:13px; color:var(--muted); }
+  /* Two-column explain */
+  .cols{ display:grid; grid-template-columns:1.1fr 1fr; gap:26px; margin-top:18px; align-items:start; }
+  .cards{ display:grid; gap:12px; }
+  .card{ border:1px solid var(--line); border-radius:12px; padding:14px 16px; }
+  .card b{ font-size:15px; } .card p{ margin:5px 0 0; font-size:14px; color:var(--muted); }
+  .swatches{ display:flex; gap:10px; margin-top:8px; }
+  .sw{ width:34px; height:34px; border-radius:8px; border:1px solid var(--line); }
+  ul.steps{ margin:16px 0 0; padding:0; list-style:none; display:grid; gap:12px; }
+  ul.steps li{ display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start; }
+  ul.steps .ph{ font-weight:800; color:var(--accent); font-variant-numeric:tabular-nums; }
+</style>
+</head>
+<body>
+
+<!-- ░░ COVER ░░ -->
+<section class="page cover">
+  <div class="glow"></div>
+  <div class="brand">{{Client / Studio}} · Design Proposal</div>
+  <h1>{{Product}}</h1>
+  <div class="tag">{{One-line value proposition — what it does, for whom.}}</div>
+  <div class="foot"><span>{{Prepared for: Client}}</span><span>{{Date}} · {{Design system}}</span></div>
+</section>
+
+<!-- ░░ OVERVIEW ░░ -->
+<section class="page">
+  <div class="head"><span class="num">01</span><span class="eyebrow">Overview</span></div>
+  <div class="rule"></div>
+  <h2>{{What it is, in one line.}}</h2>
+  <p class="lead" style="margin-top:14px">{{2–3 sentences in the CLIENT's language: the job it does, who it's for, why it matters. No designer jargon.}}</p>
+  <div class="cols" style="margin-top:26px">
+    <div class="cards">
+      <div class="card"><b>{{Audience}}</b><p>{{Who uses it and the context.}}</p></div>
+      <div class="card"><b>{{Core job}}</b><p>{{The one thing it makes easy.}}</p></div>
+    </div>
+    <div class="cards">
+      <div class="card"><b>{{Scope}}</b><p>{{N screens · platform · what's included.}}</p></div>
+      <div class="card"><b>{{Design system}}</b><p>{{System name — the visual language chosen.}}</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ THE SCREENS ░░  (duplicate this page if you have >3 key screens) -->
+<section class="page">
+  <div class="head"><span class="num">02</span><span class="eyebrow">The screens</span></div>
+  <div class="rule"></div>
+  <div class="shots">
+    <div class="shot"><img src="proposal-assets/screen-1.png" alt=""><div class="cap"><b>{{Screen 1 name}}</b><p>{{What the user does here, and why it's designed this way.}}</p></div></div>
+    <div class="shot"><img src="proposal-assets/screen-2.png" alt=""><div class="cap"><b>{{Screen 2 name}}</b><p>{{…}}</p></div></div>
+    <div class="shot"><img src="proposal-assets/screen-3.png" alt=""><div class="cap"><b>{{Screen 3 name}}</b><p>{{…}}</p></div></div>
+  </div>
+</section>
+
+<!-- ░░ DESIGN RATIONALE ░░ -->
+<section class="page">
+  <div class="head"><span class="num">03</span><span class="eyebrow">Design rationale</span></div>
+  <div class="rule"></div>
+  <h2>Why this design works</h2>
+  <div class="cols" style="margin-top:18px">
+    <div class="cards">
+      <div class="card"><b>{{Decision 1}}</b><p>{{The choice + the reason it serves the user / brand.}}</p></div>
+      <div class="card"><b>{{Decision 2}}</b><p>{{…}}</p></div>
+      <div class="card"><b>{{Decision 3}}</b><p>{{…}}</p></div>
+    </div>
+    <div>
+      <div class="card">
+        <b>Visual language — {{Design system}}</b>
+        <p>{{Why this system fits the brand's tone.}}</p>
+        <div class="swatches">
+          <div class="sw" style="background:var(--accent)"></div>
+          <div class="sw" style="background:#222"></div>
+          <div class="sw" style="background:#f0f0f3"></div>
+          <div class="sw" style="background:{{accent-2}}"></div>
+        </div>
+        <p style="margin-top:10px">Type: {{Typeface}} · Spacing/rhythm: {{note}}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ ROADMAP / NEXT STEPS ░░ -->
+<section class="page">
+  <div class="head"><span class="num">04</span><span class="eyebrow">Roadmap &amp; next steps</span></div>
+  <div class="rule"></div>
+  <h2>From here to launch</h2>
+  <ul class="steps" style="margin-top:22px">
+    <li><span class="ph">P1</span><div><b>{{Phase 1}}</b> — {{deliverable + rough timing}}</div></li>
+    <li><span class="ph">P2</span><div><b>{{Phase 2}}</b> — {{…}}</div></li>
+    <li><span class="ph">P3</span><div><b>{{Phase 3}}</b> — {{…}}</div></li>
+  </ul>
+  <p class="lead" style="margin-top:26px">{{What you need from the client to proceed.}}</p>
+</section>
+
+</body>
+</html>
