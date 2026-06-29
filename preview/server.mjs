@@ -263,7 +263,7 @@ async function deviceChrome(root) {
  ${isProto ? `<button class="ins" id="thm" title="Toggle dark / light (the design opts in via [data-theme] tokens)">☾</button>
  <button class="ins" id="a11y" title="Check color contrast (WCAG AA)">⚠</button>
  <button class="ins" id="share" title="Copy a link that reopens this exact screen + view">🔗</button>` : ""}
- <a class="ins" href="/__export" style="text-decoration:none" title="Download this design as a PDF (designer page-per-screen)">⬇ PDF</a>
+ <button class="ins" id="pdf" title="Download a designer page-per-screen PDF">⬇ PDF</button>
  <span class="sp"></span><span class="w" id="w">${initLabel}</span>
 </div>
 <div class="stage"><div class="frame ${defaultW ? "" : "full"}" id="frame" style="width:${defaultW ? defaultW + "px" : "100%"}"><iframe id="pv" src="/__artifact"></iframe></div></div>
@@ -284,6 +284,13 @@ async function deviceChrome(root) {
  if(vseg)vseg.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
    [].forEach.call(vseg.children,function(x){x.classList.toggle('on',x===b);});
    var v=b.dataset.v; if(v==='present'){present=true;curView='flow';}else{present=false;curView=v;} tellView();});
+ // ⬇ PDF — fetch + download in place with feedback (export takes a few seconds; don't navigate away silently)
+ var pdfBtn=document.getElementById('pdf');
+ if(pdfBtn)pdfBtn.addEventListener('click',function(){showToast('Generating PDF… (a few seconds)');
+   fetch('/__export').then(function(r){if(!r.ok)throw 0;return r.blob();}).then(function(b){
+     var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=document.title.replace(/ · preview$/,'')+'.pdf';a.click();
+     setTimeout(function(){URL.revokeObjectURL(a.href);},3000);showToast('PDF downloaded ✓');
+   }).catch(function(){showToast('PDF export failed — is Chrome/Chromium installed? (set CHROME_BIN)');});});
  // ④ theme · a11y · share-link
  var thm=document.getElementById('thm'),a11y=document.getElementById('a11y'),share=document.getElementById('share');
  var theme='dark',linting=false,route='';
