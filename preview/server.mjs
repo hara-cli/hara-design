@@ -31,6 +31,10 @@ function arg(name, def) {
 }
 const artifactDir = normalize(arg("dir", process.cwd()));
 const wantPort = parseInt(arg("port", "4321"), 10);
+// The launcher detaches us (spawn detached + unref) right after reading the URL line, closing its read end
+// of our stdout pipe. We never write stdout post-startup, but guard EPIPE so a stray write can't crash a
+// backgrounded preview.
+process.stdout.on("error", () => {});
 
 const MIME = {
   ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8",

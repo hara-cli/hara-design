@@ -114,8 +114,11 @@ parse — and it's inert in a standalone/empty dir, which is already visible.)
 
 **On entering design mode, do this FIRST (before the brief):** open the gallery rooted at this context's design dir
 (embedded → `hara-design gallery`; standalone → `hara-design open .`) so any **existing progress is visible at once**;
-tell the user in one line where designs live here + what already exists, then offer to *continue* one or *start new*.
-(Nothing yet → the preview shows the "Designing…" placeholder.)
+tell the user in one line where designs live here + what already exists. **Then, if the user has NOT already given a
+brief, STOP and ask one short question — "continue <X> or start something new?" — and wait for their reply.** Don't
+start designing on your own. (If they DID give a brief in the same message, skip the question and go build it.)
+This first step should be quick: open the preview, one line of status, one question — then yield. (Nothing exists yet
+→ the preview shows the "🎨 Designing…" placeholder; still ask brief-or-new.)
 
 ### A design is a self-contained directory = the deliverable asset
 Each design (its `index.html` + assets + any `handoff/`) is self-contained and git-trackable — the **directory is
@@ -136,14 +139,19 @@ pricing page", find it under `.hara/design/`, open the preview, resume. **Delive
 until the file lands, then auto-upgrades to the live design. So the user has the web open the whole time you work.
 - **Standalone project** (dir = cwd, known up front): launch it at the very start (right after `/design`).
 - **Embedded**: the moment you've decided the artifact dir (after brief/direction), `mkdir -p` it and launch — then build into it.
-Start it as a **background job** (server at `<skill dir>/../../preview/server.mjs`):
+
+**ALWAYS launch via the `hara-design` command — it is on your PATH.** Do NOT construct a `node …/preview/server.mjs`
+path (you will get it wrong, and it will waste a turn). The command **returns immediately** (the server detaches into
+the background) and prints `Preview: http://127.0.0.1:<port>`:
 ```
-node "<skill dir>/../../preview/server.mjs" --dir "<absolute path to the design dir>" --port 4321
+hara-design open .                 # standalone: serve the cwd, open the browser
+hara-design gallery                # embedded: serve .hara/design/ (the gallery of every slug)
+hara-design preview <dir>          # serve a specific design dir
 ```
-Read the job's first stdout line for the URL, give it to the user (you may `open` it on macOS), and **keep it
-running the whole session**. Every later write/edit hot-reloads the browser — to iterate, just edit the file.
-(Equivalently the user can run `hara-design open .`.) Don't `web_fetch` localhost; to inspect your own output use
-the Playwright/computer tools against `127.0.0.1:<port>`. Kill the job when the user is done.
+Give the user the printed URL. It is **already backgrounded** — do NOT wrap it in `&`, `sleep`, or a background job,
+and do NOT wait on it (that's the old hang). Every later write/edit hot-reloads the browser — to iterate, just edit
+the file. `hara-design stop` ends it. Don't `web_fetch` localhost; to inspect your own output use the
+Playwright/computer tools against `127.0.0.1:<port>`.
 
 ---
 

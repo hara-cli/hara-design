@@ -68,22 +68,34 @@ dir defaults to the newest .hara/design/<slug>/ under the current directory.`);
 }
 
 // start the preview/gallery server on a dir; auto-open the browser when wantOpen
+// Launch the preview server DETACHED, then exit. The server is long-running; if we stayed attached,
+// `hara-design open` would block forever — which HANGS an agent's turn when the design skill launches it
+// (the bug Jeff hit: "/design … working 100s"). So: spawn detached, read the chosen URL off stdout, open
+// the browser, print it, unref + exit. The server keeps running in the background; `hara-design stop` ends it.
 function startServer(dir, wantOpen, port) {
-  const child = spawn("node", [join(root, "preview", "server.mjs"), "--dir", dir, "--port", port], { stdio: ["ignore", "pipe", "inherit"] });
-  let opened = false;
-  child.stdout.on("data", (b) => {
-    const s = b.toString();
-    process.stdout.write(s);
-    if (wantOpen && !opened) {
-      const m = /http:\/\/127\.0\.0\.1:\d+/.exec(s);
-      if (m) {
-        opened = true;
-        const openCmd = process.platform === "darwin" ? "open" : process.platform === "win32" ? "start" : "xdg-open";
-        try { execFileSync(openCmd, [m[0]]); } catch { /* user can open manually */ }
-      }
-    }
+  const child = spawn("node", [join(root, "preview", "server.mjs"), "--dir", dir, "--port", port], {
+    stdio: ["ignore", "pipe", "ignore"],
+    detached: true,
   });
-  child.on("exit", (code) => process.exit(code ?? 0));
+  let done = false;
+  const finish = (url) => {
+    if (done) return;
+    done = true;
+    if (url && wantOpen) {
+      const openCmd = process.platform === "darwin" ? "open" : process.platform === "win32" ? "start" : "xdg-open";
+      try { execFileSync(openCmd, [url]); } catch { /* user can open manually */ }
+    }
+    console.log(url ? `Preview: ${url}  ·  running in background — stop with: hara-design stop` : "Preview server started in background.");
+    try { child.stdout.destroy(); } catch {}
+    child.unref();
+    process.exit(0);
+  };
+  child.stdout.on("data", (b) => {
+    const m = /http:\/\/127\.0\.0\.1:\d+/.exec(b.toString());
+    if (m) finish(m[0]);
+  });
+  child.on("error", () => finish(null));
+  setTimeout(() => finish(null), 5000); // safety net: detach even if the URL line never arrives
 }
 
 if (cmd === "init") {
@@ -94,6 +106,11 @@ if (cmd === "init") {
 } else if (cmd === "gallery") {
   const dir = flag("global") ? join(homedir(), ".hara", "design") : resolve(positional() || join(process.cwd(), ".hara", "design"));
   startServer(dir, !flag("no-open"), opt("port", "4321"));
+} else if (cmd === "stop") {
+  // kill background preview server(s) started by `open`/`preview`/`gallery`
+  const child = spawn("pkill", ["-f", join(root, "preview", "server.mjs")], { stdio: "ignore" });
+  child.on("exit", (code) => { console.log(code === 0 ? "Stopped the preview server." : "No preview server running."); process.exit(0); });
+  child.on("error", () => { console.log("No preview server running."); process.exit(0); });
 } else if (cmd === "export") {
   const inFile = positional();
   if (!inFile) { console.error("usage: hara-design export <index.html> [--out f.pdf]"); process.exit(2); }
