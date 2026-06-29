@@ -17,10 +17,12 @@
 // First stdout line is "Preview: http://127.0.0.1:<port>" so the launcher can read the chosen port.
 
 import { createServer } from "node:http";
-import { readFile, stat, readdir } from "node:fs/promises";
+import { readFile, stat, readdir, unlink } from "node:fs/promises";
 import { watch, existsSync } from "node:fs";
 import { join, normalize, extname, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
+import { execFile } from "node:child_process";
+import { tmpdir } from "node:os";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const framesDir = join(here, "..", "frames");
@@ -114,6 +116,32 @@ const server = createServer(async (req, res) => {
   if (path === "/__artifact") {
     const abs = safeJoin(artifactDir, "index.html");
     if (abs && (await serveFile(res, abs, { injectReload: true }))) return;
+  }
+  // GET /__export → render the current design to PDF (headless Chrome) and stream it as a download. A view-time
+  // utility (like the browser's own Print-to-PDF): read-only — it neither edits the design nor drives the agent.
+  if (path === "/__export") {
+    const src = join(artifactDir, "index.html");
+    if (!existsSync(src)) { res.writeHead(404, { "content-type": "text/plain" }); res.end("no index.html to export"); return; }
+    const out = join(tmpdir(), `hara-design-${process.pid}-${Date.now()}.pdf`);
+    execFile("node", [join(here, "..", "scripts", "export.mjs"), "--in", src, "--out", out], { timeout: 60_000 }, async (err) => {
+      if (err || !existsSync(out)) {
+        res.writeHead(500, { "content-type": "text/plain" });
+        res.end("PDF export failed — is Chrome/Chromium installed? (set CHROME_BIN)");
+        return;
+      }
+      try {
+        const pdf = await readFile(out);
+        const name = (basename(artifactDir) || "design").replace(/[^\w.-]/g, "_");
+        res.writeHead(200, { "content-type": "application/pdf", "content-disposition": `attachment; filename="${name}.pdf"`, "content-length": pdf.length });
+        res.end(pdf);
+      } catch {
+        res.writeHead(500, { "content-type": "text/plain" });
+        res.end("read failed");
+      } finally {
+        unlink(out).catch(() => {});
+      }
+    });
+    return;
   }
   // GET / → in --catalog mode: the design-system catalog (click a card → copies its id to paste into hara)
   if (path === "/" && catalog) {
@@ -216,6 +244,7 @@ async function deviceChrome(root) {
   <button data-w="0" class="on">↔ Full</button>
  </div>` : ""}
  <button class="ins" id="insp" title="Click an element to copy a reference you can paste into hara">🔎 Inspect</button>
+ <a class="ins" href="/__export" style="text-decoration:none" title="Download this design as a PDF">⬇ PDF</a>
  <span class="sp"></span><span class="w" id="w">${initLabel}</span>
 </div>
 <div class="stage"><div class="frame ${defaultW ? "" : "full"}" id="frame" style="width:${defaultW ? defaultW + "px" : "100%"}"><iframe id="pv" src="/__artifact"></iframe></div></div>
