@@ -84,21 +84,9 @@ html[data-frame="web"][data-chrome="none"][data-view="detail"] .hara-titlebar{ d
 .hara-print{ display:none }
 @media print{
   @page{ size:A4 portrait; margin:0 }
-  html,body{ background:#f3eee2!important; height:auto!important }   /* warm paper — a printed design dossier */
+  html,body{ background:#f3eee2!important; height:auto!important }   /* warm paper */
   .hara-stage{ display:none!important }
   .hara-print{ display:block; color:#1e1b16; font-family:system-ui }
-  .hara-print .ch{ display:flex; align-items:center; gap:7px; font:600 11px system-ui; color:#5b5446 }
-  .hara-print .ch i{ width:15px; height:15px; border-radius:4px; box-shadow:inset 0 0 0 1px rgba(0,0,0,.18) }
-  /* 首页 cover — warm paper, dark ink, a brand-accent rule */
-  .hara-print-cover{ height:296mm; display:flex; flex-direction:column; justify-content:center; gap:14px; padding:0 30mm; background:#f3eee2; break-after:page }
-  .hara-print-cover .rule{ width:62px; height:5px; border-radius:3px; background:var(--accent,#8B5CF6) }
-  .hara-print-cover .t{ font:800 46px/1.04 system-ui; color:#15120c; letter-spacing:-.01em } .hara-print-cover .s{ color:#6f6757; font:15px system-ui; letter-spacing:.04em }
-  .hara-print-cover .sw{ display:flex; flex-wrap:wrap; gap:18px; margin-top:16px }
-  /* 介绍 intro — tokens + screen index, no prose */
-  .hara-print-intro{ height:296mm; display:grid; grid-template-columns:1fr 1fr; gap:18mm; padding:32mm 30mm; background:#f3eee2; color:#2a261e; break-after:page }
-  .hara-print-intro h3{ font:700 12px system-ui; letter-spacing:.09em; text-transform:uppercase; color:#8a8170; margin:0 0 16px }
-  .hara-print-intro .sw{ display:flex; flex-direction:column; gap:11px } .hara-print-intro .ch{ color:#4a4538 }
-  .hara-print-intro ol{ margin:0; padding-left:20px; font:14px/1.95 system-ui; color:#3a352b }
   /* 一拼 contact sheet — dark device plates on warm paper (tall 2×3, wide 2×2) */
   .hara-print-grid{ height:296mm; display:grid; grid-template-columns:repeat(2,1fr); gap:10mm 16mm; padding:18mm 26mm; align-content:start; justify-items:center; background:#f3eee2; break-after:page }
   .hara-print-thumb{ display:flex; flex-direction:column; gap:3mm; align-items:center; min-width:0 }

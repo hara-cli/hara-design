@@ -41,18 +41,10 @@
     [].forEach.call(d.querySelectorAll("[data-stagger]"), function (g) { [].forEach.call(g.children, function (c, k) { c.style.setProperty("--hara-i", k); }); });
     docEl.dataset.view = parts.indexOf("showcase") >= 0 ? "grid" : "detail";
 
-    // FIXED designer PDF (print only): 首页 cover + 介绍 intro + 一拼 N-up contact sheet — all auto-derived from
-    // title + meta + screen labels + :root tokens (no agent-authored PDF copy). Built once from clones; never
-    // interactive. Export inlines proto + prints this → a dense, consistent designer deliverable.
+    // FIXED designer PDF (print only): a one-page 一拼 contact sheet — N device thumbnails per A4 page, each the
+    // whole screen + its numbered label. Built once from clones; never interactive. Export inlines proto + prints
+    // this. (No cover/intro — the token/screen-index narrative is covered by the DTCG export + handoff folder.)
     var pr = mk("div", "hara-print"), pvw = parseFloat(getComputedStyle(docEl).getPropertyValue("--vw")) || 393;
-    function tok(n) { return getComputedStyle(docEl).getPropertyValue(n).trim(); }
-    function chips(names) { return names.map(function (n) { var v = tok(n); return v ? '<div class="ch"><i style="background:' + esc(v) + '"></i><b>' + esc(v) + "</b></div>" : ""; }).join(""); }
-    var pal = ["--bg", "--surface", "--accent", "--accent-2", "--fg", "--muted"];
-    var metaLine = parts.join(" · ") + " · " + screens.length + " screens";
-    pr.innerHTML =
-      '<div class="hara-print-cover"><div class="rule"></div><div class="t">' + esc(d.title || "Design") + '</div><div class="s">' + esc(metaLine) + '</div><div class="sw">' + chips(pal) + "</div></div>" +
-      '<div class="hara-print-intro"><div class="col"><h3>Design tokens</h3><div class="sw">' + chips(pal) + '</div></div><div class="col"><h3>' + esc(metaLine) + "</h3><ol>" +
-      screens.map(function (s) { return "<li>" + esc(s.dataset.screenLabel || s.dataset.route) + "</li>"; }).join("") + "</ol></div></div>";
     var wide = frame === "web", per = wide ? 4 : 6, cardPx = wide ? 302 : 128; // tall phones 2×3 (34mm), wide web 2×2 (80mm)
     for (var pp = 0; pp < screens.length; pp += per) {
       var g = mk("div", "hara-print-grid"); g.dataset.aspect = wide ? "wide" : "tall"; g.style.setProperty("--ts", (cardPx / pvw).toFixed(4));

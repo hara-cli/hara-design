@@ -278,7 +278,7 @@ slides in a row; headlines ≥36px, body ≥22px.
 
 ## Export & handoff (when the user wants to ship it for real)
 The CLI helper is `hara-design` (or `node <skill dir>/../../{scripts,preview}/…`):
-- **PDF**: `hara-design export <artifact dir>/index.html` — headless-Chrome print (decks print as slides).
+- **PDF**: `hara-design export <artifact dir>/index.html` — headless-Chrome print. A prototype prints a one-page **一拼 contact sheet** of device thumbnails (the per-screen token/index narrative lives in the handoff folder below); decks print as slides.
 - **Client proposal PDF** (share the design with a client / non-technical stakeholder — product narrative + the
   screens explained + design rationale + roadmap): use the **`design-proposal`** recipe
   (`references/skills/design-proposal/`) — fill its `template.html`, embed screen PNGs, then `hara-design export
