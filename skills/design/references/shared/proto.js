@@ -50,7 +50,7 @@
     var pal = ["--bg", "--surface", "--accent", "--accent-2", "--fg", "--muted"];
     var metaLine = parts.join(" · ") + " · " + screens.length + " screens";
     pr.innerHTML =
-      '<div class="hara-print-cover"><div class="t">' + esc(d.title || "Design") + '</div><div class="s">' + esc(metaLine) + '</div><div class="sw">' + chips(pal) + "</div></div>" +
+      '<div class="hara-print-cover"><div class="rule"></div><div class="t">' + esc(d.title || "Design") + '</div><div class="s">' + esc(metaLine) + '</div><div class="sw">' + chips(pal) + "</div></div>" +
       '<div class="hara-print-intro"><div class="col"><h3>Design tokens</h3><div class="sw">' + chips(pal) + '</div></div><div class="col"><h3>' + esc(metaLine) + "</h3><ol>" +
       screens.map(function (s) { return "<li>" + esc(s.dataset.screenLabel || s.dataset.route) + "</li>"; }).join("") + "</ol></div></div>";
     var wide = frame === "web", per = wide ? 4 : 6, cardPx = wide ? 302 : 128; // tall phones 2×3 (34mm), wide web 2×2 (80mm)

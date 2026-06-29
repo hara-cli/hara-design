@@ -84,27 +84,28 @@ html[data-frame="web"][data-chrome="none"][data-view="detail"] .hara-titlebar{ d
 .hara-print{ display:none }
 @media print{
   @page{ size:A4 portrait; margin:0 }
-  html,body{ background:#fff!important; height:auto!important }
+  html,body{ background:#f3eee2!important; height:auto!important }   /* warm paper — a printed design dossier */
   .hara-stage{ display:none!important }
-  .hara-print{ display:block }
-  .hara-print .ch{ display:flex; align-items:center; gap:6px; font:600 11px system-ui }
-  .hara-print .ch i{ width:16px; height:16px; border-radius:4px }
-  /* 首页 cover */
-  .hara-print-cover{ height:296mm; display:flex; flex-direction:column; justify-content:center; gap:16px; padding:0 28mm; background:#0c0d12; color:#fff; break-after:page }
-  .hara-print-cover .t{ font:800 44px/1.05 system-ui } .hara-print-cover .s{ color:#8b90a0; font:15px system-ui; letter-spacing:.04em }
-  .hara-print-cover .sw{ display:flex; flex-wrap:wrap; gap:18px; margin-top:10px } .hara-print-cover .ch{ color:#cfd3df } .hara-print-cover .ch i{ box-shadow:inset 0 0 0 1px rgba(255,255,255,.18) }
+  .hara-print{ display:block; color:#1e1b16; font-family:system-ui }
+  .hara-print .ch{ display:flex; align-items:center; gap:7px; font:600 11px system-ui; color:#5b5446 }
+  .hara-print .ch i{ width:15px; height:15px; border-radius:4px; box-shadow:inset 0 0 0 1px rgba(0,0,0,.18) }
+  /* 首页 cover — warm paper, dark ink, a brand-accent rule */
+  .hara-print-cover{ height:296mm; display:flex; flex-direction:column; justify-content:center; gap:14px; padding:0 30mm; background:#f3eee2; break-after:page }
+  .hara-print-cover .rule{ width:62px; height:5px; border-radius:3px; background:var(--accent,#8B5CF6) }
+  .hara-print-cover .t{ font:800 46px/1.04 system-ui; color:#15120c; letter-spacing:-.01em } .hara-print-cover .s{ color:#6f6757; font:15px system-ui; letter-spacing:.04em }
+  .hara-print-cover .sw{ display:flex; flex-wrap:wrap; gap:18px; margin-top:16px }
   /* 介绍 intro — tokens + screen index, no prose */
-  .hara-print-intro{ height:296mm; display:grid; grid-template-columns:1fr 1fr; gap:18mm; padding:26mm 22mm; background:#f6f7fa; color:#222; break-after:page }
-  .hara-print-intro h3{ font:700 12px system-ui; letter-spacing:.09em; text-transform:uppercase; color:#8a8f9c; margin:0 0 14px }
-  .hara-print-intro .sw{ display:flex; flex-direction:column; gap:9px } .hara-print-intro .ch{ color:#444 } .hara-print-intro .ch i{ box-shadow:inset 0 0 0 1px rgba(0,0,0,.12) }
-  .hara-print-intro ol{ margin:0; padding-left:20px; font:14px/1.9 system-ui; color:#333 }
-  /* 一拼 contact sheet — N device thumbnails per page (tall 2×3, wide 2×2) */
-  .hara-print-grid{ height:296mm; display:grid; grid-template-columns:repeat(2,1fr); gap:9mm 12mm; padding:13mm; align-content:start; justify-items:center; background:#f6f7fa; break-after:page }
+  .hara-print-intro{ height:296mm; display:grid; grid-template-columns:1fr 1fr; gap:18mm; padding:32mm 30mm; background:#f3eee2; color:#2a261e; break-after:page }
+  .hara-print-intro h3{ font:700 12px system-ui; letter-spacing:.09em; text-transform:uppercase; color:#8a8170; margin:0 0 16px }
+  .hara-print-intro .sw{ display:flex; flex-direction:column; gap:11px } .hara-print-intro .ch{ color:#4a4538 }
+  .hara-print-intro ol{ margin:0; padding-left:20px; font:14px/1.95 system-ui; color:#3a352b }
+  /* 一拼 contact sheet — dark device plates on warm paper (tall 2×3, wide 2×2) */
+  .hara-print-grid{ height:296mm; display:grid; grid-template-columns:repeat(2,1fr); gap:10mm 16mm; padding:18mm 26mm; align-content:start; justify-items:center; background:#f3eee2; break-after:page }
   .hara-print-thumb{ display:flex; flex-direction:column; gap:3mm; align-items:center; min-width:0 }
   /* the clone IS the card (same pattern as the on-screen board): width = --vw*--ts, inner scaled to fit, clipped */
-  .hara-print-card{ width:calc(var(--vw)*var(--ts))!important; height:calc(var(--vh)*var(--ts))!important; min-width:0; overflow:hidden; border-radius:14px; background:#0c0d12; box-shadow:0 10px 24px -14px #000;
+  .hara-print-card{ width:calc(var(--vw)*var(--ts))!important; height:calc(var(--vh)*var(--ts))!important; min-width:0; overflow:hidden; border-radius:16px; background:#0c0d12; box-shadow:0 9px 24px -13px rgba(40,30,10,.5);
     position:static!important; inset:auto!important; display:block!important; transform:none!important; cursor:auto!important }
   .hara-print-card::after{ content:none!important }
   .hara-print-card .hara-card-inner{ width:var(--vw)!important; height:var(--vh)!important; transform:scale(var(--ts))!important; transform-origin:top left!important; overflow:hidden; pointer-events:none }
-  .hara-print-glabel{ font:600 11px system-ui; color:#555 }
+  .hara-print-glabel{ font:600 11px system-ui; color:#6b6354 }
 }
