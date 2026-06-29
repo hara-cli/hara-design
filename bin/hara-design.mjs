@@ -73,6 +73,9 @@ dir defaults to the newest .hara/design/<slug>/ under the current directory.`);
 // (the bug Jeff hit: "/design … working 100s"). So: spawn detached, read the chosen URL off stdout, open
 // the browser, print it, unref + exit. The server keeps running in the background; `hara-design stop` ends it.
 function startServer(dir, wantOpen, port, catalog) {
+  // Free the requested port first so a re-open REPLACES a stale server (running servers don't pick up new code;
+  // otherwise the old one keeps the port and you keep seeing old output — the bug Jeff kept hitting).
+  try { execFileSync("bash", ["-c", `lsof -ti:${port} 2>/dev/null | xargs kill -9 2>/dev/null`], { stdio: "ignore", timeout: 4000 }); } catch { /* nothing on the port */ }
   const sargs = [join(root, "preview", "server.mjs"), "--dir", dir, "--port", port];
   if (catalog) sargs.push("--catalog");
   const child = spawn("node", sargs, {
