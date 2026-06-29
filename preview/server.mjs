@@ -206,23 +206,25 @@ const server = createServer(async (req, res) => {
 async function deviceChrome(root) {
   let title = "Preview";
   let device = ""; // <meta name="hara-preview" content="phone|tablet|desktop"> → fixed width, no toggle (not responsive)
+  let isProto = false; // a framework prototype (has <section data-route>): the injected proto.js mounts the device frame
   try {
-    const head = (await readFile(join(root, "index.html"), "utf8")).slice(0, 4000);
+    const html = await readFile(join(root, "index.html"), "utf8");
+    const head = html.slice(0, 4000);
     const tm = /<title>([^<]*)<\/title>/i.exec(head);
     if (tm && tm[1].trim()) title = tm[1].trim();
     const dm = /<meta\s+name=["']hara-preview["']\s+content=["']([^"']+)["']/i.exec(head);
     if (dm) device = dm[1].trim().toLowerCase();
+    isProto = /\sdata-route\s*=/.test(html);
   } catch {
     /* defaults */
   }
   const WIDTHS = { phone: 390, tablet: 834, desktop: 1280 };
   const fixed = Object.prototype.hasOwnProperty.call(WIDTHS, device);
-  const defaultW = fixed ? WIDTHS[device] : 0; // 0 = Full. Default Full so a wide design is NEVER clipped at a fake 1280.
-  // The device switcher is signal for exactly ONE case: a genuinely responsive web page you must check at 390 vs
-  // 1280. For fixed mockups, self-arranged showcases, decks, galleries it's noise — so it's OFF unless the design
-  // declares content="responsive". (phone/tablet/desktop → fixed width, no toggle; showcase/absent → Full, no toggle.)
-  const showToggle = device === "responsive";
-  const initLabel = defaultW ? defaultW + "px" : "Full";
+  // A prototype mounts its OWN bezel (proto.js) → the outer frame is Full and the toolbar shows VIEW modes, not
+  // device widths. Otherwise: device switcher only for content="responsive"; else Full, no toggle.
+  const defaultW = isProto ? 0 : fixed ? WIDTHS[device] : 0;
+  const showToggle = !isProto && device === "responsive";
+  const initLabel = isProto ? "Flow" : defaultW ? defaultW + "px" : "Full";
   return `<!doctype html><meta charset=utf-8><title>${esc(title)} · preview</title>
 <style>
  :root{--bg:#0c0d10;--bar:#15171c;--fg:#e8eaed;--muted:#8b90a0;--border:#23262e;--accent:#5b8cff}
@@ -246,7 +248,12 @@ async function deviceChrome(root) {
 </style>
 <div class="bar">
  <span class="title">${esc(title)}</span>
- ${showToggle ? `<div class="seg" id="seg">
+ ${isProto ? `<div class="seg" id="vseg">
+  <button data-v="grid">▦ Grid</button>
+  <button data-v="flow" class="on">▶ Flow</button>
+  <button data-v="detail">⛶ Detail</button>
+  <button data-v="present">📱 真机</button>
+ </div>` : showToggle ? `<div class="seg" id="seg">
   <button data-w="390">📱 Phone</button>
   <button data-w="834">▭ Tablet</button>
   <button data-w="1280">🖥 Desktop</button>
@@ -268,11 +275,17 @@ async function deviceChrome(root) {
    try{localStorage.setItem('hara-design-w',String(w));}catch(e){}
  }
  if(seg)seg.addEventListener('click',function(e){var b=e.target.closest('button');if(b)set(parseInt(b.dataset.w,10));});
+ // view modes (prototype): post {haraView}/{haraPresent} to the injected proto.js runtime in the iframe
+ var vseg=document.getElementById('vseg'),curView='flow',present=false;
+ function tellView(){try{pv.contentWindow.postMessage({haraView:curView,haraPresent:present},'*');}catch(e){}}
+ if(vseg)vseg.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+   [].forEach.call(vseg.children,function(x){x.classList.toggle('on',x===b);});
+   var v=b.dataset.v; if(v==='present'){present=true;curView='flow';}else{present=false;curView=v;} tellView();});
  var inspecting=false;
  function tellFrame(){try{pv.contentWindow.postMessage({haraInspect:inspecting},'*');}catch(e){}}
  insp.addEventListener('click',function(){inspecting=!inspecting;insp.classList.toggle('on',inspecting);tellFrame();
    if(inspecting)showToast('Inspect on — click an element to copy a reference for hara');});
- pv.addEventListener('load',tellFrame); // re-arm after live-reload
+ pv.addEventListener('load',function(){tellFrame();if(vseg)tellView();}); // re-arm after live-reload
  function showToast(html){toast.innerHTML=html;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show');},3200);}
  window.addEventListener('message',function(e){if(e.data&&e.data.haraCopied){showToast('Copied → paste into hara: <code>'+String(e.data.haraCopied).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];})+'</code>');}});
  var DEFAULT_W=${defaultW}, SHOW_TOGGLE=${showToggle};
