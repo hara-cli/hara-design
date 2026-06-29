@@ -10,7 +10,7 @@ html{ --vw:393px; --vh:852px; --statusbar-h:48px; --s:0.585 }   /* proto.js over
 
 .hara-stage{ position:relative; min-height:100%; display:flex; align-items:flex-start; justify-content:center; padding:20px; background:#0b0c10 }
 .hara-frame{ position:relative; background:#000 }
-.hara-viewport{ position:relative; overflow:hidden; background:#fff; width:100%; height:100% }
+.hara-viewport{ position:relative; overflow:hidden; background:var(--bg,#fff); width:100%; height:100% }  /* paint the design's own bg so short screens don't leak a generic card color */
 .hara-chrome>*{ position:absolute; left:0; right:0; z-index:6; pointer-events:none; display:none }  /* shown per frame, DETAIL only */
 .hara-card-inner{ transform-origin:top left }  /* a passthrough wrapper; only the board sizes+scales+clips it */
 html[data-view="detail"] .hara-card-inner{ width:100% }  /* Detail: content flows, the [data-route] scrolls */
@@ -33,7 +33,7 @@ html[data-view="grid"] .hara-chrome{ display:none }
 html[data-view="grid"] [data-route]{
   position:relative; inset:auto; display:block; overflow:hidden; cursor:pointer;
   width:calc(var(--vw)*var(--s)); height:calc(var(--vh)*var(--s));
-  border-radius:26px; background:#0c0d12; box-shadow:0 18px 50px -24px #000, 0 0 0 1px rgba(255,255,255,.05); transition:transform .15s, box-shadow .15s }
+  border-radius:26px; background:var(--bg,#0c0d12); box-shadow:0 18px 50px -24px #000, 0 0 0 1px rgba(255,255,255,.05); transition:transform .15s, box-shadow .15s }
 html[data-view="grid"] [data-route]:hover{ transform:translateY(-5px); box-shadow:0 28px 66px -22px #000, 0 0 0 2px var(--accent,#6c8cff) }
 html[data-view="grid"] .hara-card-inner{ width:var(--vw); min-height:var(--vh); transform:scale(var(--s)); overflow:hidden; pointer-events:none }
 html[data-view="grid"] [data-route]::after{
@@ -103,7 +103,7 @@ html[data-frame="web"][data-chrome="none"][data-view="detail"] .hara-titlebar{ d
   .hara-print-grid{ height:296mm; display:grid; grid-template-columns:repeat(2,1fr); gap:10mm 16mm; padding:18mm 26mm; align-content:start; justify-items:center; background:#f3eee2; break-after:page }
   .hara-print-thumb{ display:flex; flex-direction:column; gap:3mm; align-items:center; min-width:0 }
   /* the clone IS the card (same pattern as the on-screen board): width = --vw*--ts, inner scaled to fit, clipped */
-  .hara-print-card{ width:calc(var(--vw)*var(--ts))!important; height:calc(var(--vh)*var(--ts))!important; min-width:0; overflow:hidden; border-radius:16px; background:#0c0d12; box-shadow:0 9px 24px -13px rgba(40,30,10,.5);
+  .hara-print-card{ width:calc(var(--vw)*var(--ts))!important; height:calc(var(--vh)*var(--ts))!important; min-width:0; overflow:hidden; border-radius:16px; background:var(--bg,#0c0d12); box-shadow:0 9px 24px -13px rgba(40,30,10,.5);
     position:static!important; inset:auto!important; display:block!important; transform:none!important; cursor:auto!important }
   .hara-print-card::after{ content:none!important }
   .hara-print-card .hara-card-inner{ width:var(--vw)!important; height:var(--vh)!important; transform:scale(var(--ts))!important; transform-origin:top left!important; overflow:hidden; pointer-events:none }
