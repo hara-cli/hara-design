@@ -250,9 +250,8 @@ async function deviceChrome(root) {
  <span class="title">${esc(title)}</span>
  ${isProto ? `<div class="seg" id="vseg">
   <button data-v="grid">▦ Grid</button>
-  <button data-v="flow" class="on">▶ Flow</button>
-  <button data-v="detail">⛶ Detail</button>
-  <button data-v="present">📱 真机</button>
+  <button data-v="flow">⇄ Flow</button>
+  <button data-v="detail" class="on">⛶ Detail</button>
  </div>` : showToggle ? `<div class="seg" id="seg">
   <button data-w="390">📱 Phone</button>
   <button data-w="834">▭ Tablet</button>
@@ -279,11 +278,11 @@ async function deviceChrome(root) {
  }
  if(seg)seg.addEventListener('click',function(e){var b=e.target.closest('button');if(b)set(parseInt(b.dataset.w,10));});
  // view modes (prototype): post {haraView}/{haraPresent} to the injected proto.js runtime in the iframe
- var vseg=document.getElementById('vseg'),curView='flow',present=false;
- function tellView(){try{pv.contentWindow.postMessage({haraView:curView,haraPresent:present},'*');}catch(e){}}
+ var vseg=document.getElementById('vseg'),curView='detail';
+ function tellView(){try{pv.contentWindow.postMessage({haraView:curView},'*');}catch(e){}}
  if(vseg)vseg.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
    [].forEach.call(vseg.children,function(x){x.classList.toggle('on',x===b);});
-   var v=b.dataset.v; if(v==='present'){present=true;curView='flow';}else{present=false;curView=v;} tellView();});
+   curView=b.dataset.v; tellView();});
  // ⬇ PDF — fetch + download in place with feedback (export takes a few seconds; don't navigate away silently)
  var pdfBtn=document.getElementById('pdf');
  if(pdfBtn)pdfBtn.addEventListener('click',function(){showToast('Generating PDF… (a few seconds)');

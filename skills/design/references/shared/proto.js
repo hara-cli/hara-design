@@ -31,7 +31,11 @@
     while (d.body.firstChild) vp.appendChild(d.body.firstChild); // move screens + app shell into the viewport
     frm.appendChild(chr); frm.appendChild(vp); stage.appendChild(frm); d.body.appendChild(stage);
     docEl.dataset.frame = frame; docEl.dataset.os = os; if (bare) docEl.dataset.chrome = "none";
-    docEl.dataset.view = parts.indexOf("showcase") >= 0 ? "grid" : "flow";
+    // wrap each screen's content so the board (grid/flow) can scale the WHOLE screen (wrap-then-scale);
+    // Detail leaves it full-size + scrollable.
+    screens.forEach(function (s) { var inner = mk("div", "hara-card-inner"); while (s.firstChild) inner.appendChild(s.firstChild); s.appendChild(inner); });
+    fitBoard();
+    docEl.dataset.view = parts.indexOf("showcase") >= 0 ? "grid" : "detail";
 
     // FIXED designer PDF layout (shown only in print): a cover + each screen framed on its own page with its
     // label. Export inlines proto + prints this — a consistent, designer-grade page-by-page PDF (not an
@@ -67,15 +71,59 @@
   function setView(v) {
     if (!screens.length) return;
     docEl.dataset.view = v;
-    if (v === "grid") screens.forEach(function (s) { s.hidden = false; s.classList.remove("is-active"); });
-    else show(cur() || screens[0].dataset.route, false);
+    if (v === "grid" || v === "flow") { // board: show every screen as a scaled card
+      screens.forEach(function (s) { s.hidden = false; s.classList.remove("is-active"); });
+      fitBoard(); requestAnimationFrame(drawArrows);
+    } else { // detail: one interactive screen in the device frame
+      if (overlay) { overlay.remove(); overlay = null; }
+      show(cur() || screens[0].dataset.route, false);
+    }
     post({ haraViewNow: v });
   }
+  // ── board scaling (Grid + Flow): --s = card width / device width (wrap-then-scale) ──
+  var CARD_W = 230;
+  function fitBoard() { var vw = parseFloat(getComputedStyle(docEl).getPropertyValue("--vw")) || 393; docEl.style.setProperty("--s", (CARD_W / vw).toFixed(4)); }
+  // ── Flow connection arrows: one curved SVG path per data-go link (source card → target card) ──
+  var SVGNS = "http://www.w3.org/2000/svg", overlay = null;
+  function flowLinks() {
+    var seen = {}, out = [], have = {};
+    screens.forEach(function (s) { have[s.dataset.route] = 1; });
+    screens.forEach(function (s) {
+      var src = s.dataset.route;
+      [].forEach.call(s.querySelectorAll("[data-go]"), function (g) {
+        var t = g.dataset.go, k = src + ">" + t;
+        if (t === "__back" || t === src || seen[k] || !have[t]) return;
+        seen[k] = 1; out.push([src, t]);
+      });
+    });
+    return out;
+  }
+  function drawArrows() {
+    if (overlay) { overlay.remove(); overlay = null; }
+    if (docEl.dataset.view !== "flow") return;
+    var stage = d.querySelector(".hara-stage"); if (!stage) return;
+    var sb = stage.getBoundingClientRect();
+    overlay = document.createElementNS(SVGNS, "svg");
+    overlay.setAttribute("class", "hara-arrows");
+    overlay.setAttribute("width", stage.scrollWidth); overlay.setAttribute("height", stage.scrollHeight);
+    overlay.innerHTML = '<defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6Z" fill="#7c8cff"/></marker></defs>';
+    function box(r) { var e = d.querySelector('[data-route="' + r + '"]'); if (!e) return null; var b = e.getBoundingClientRect(); return { x: b.left - sb.left + stage.scrollLeft, y: b.top - sb.top + stage.scrollTop, w: b.width, h: b.height }; }
+    flowLinks().forEach(function (l) {
+      var a = box(l[0]), b = box(l[1]); if (!a || !b) return;
+      var x1 = a.x + a.w, y1 = a.y + a.h / 2, x2 = b.x, y2 = b.y + b.h / 2;
+      if (x2 < x1) { x1 = a.x; x2 = b.x + b.w; }
+      var mx = (x1 + x2) / 2, p = document.createElementNS(SVGNS, "path");
+      p.setAttribute("d", "M" + x1 + "," + y1 + "C" + mx + "," + y1 + " " + mx + "," + y2 + " " + x2 + "," + y2);
+      p.setAttribute("fill", "none"); p.setAttribute("stroke", "#7c8cff"); p.setAttribute("stroke-width", "2"); p.setAttribute("marker-end", "url(#ah)"); p.setAttribute("opacity", ".7");
+      overlay.appendChild(p);
+    });
+    stage.appendChild(overlay);
+  }
+  addEventListener("resize", function () { fitBoard(); drawArrows(); });
   addEventListener("message", function (e) {
     if (!e.data) return;
     if (e.data.haraView) setView(e.data.haraView);
     if (e.data.haraGo === "next" || e.data.haraGo === "prev") step(e.data.haraGo === "next" ? 1 : -1);
-    if (typeof e.data.haraPresent !== "undefined") docEl.dataset.present = e.data.haraPresent ? "1" : "";
     if (e.data.haraTheme) docEl.dataset.theme = e.data.haraTheme;       // ④ dark/light (asset opts in via [data-theme] tokens)
     if (e.data.haraRoute) show(e.data.haraRoute, false);                // ④ share-link restore: jump to a route
     if (typeof e.data.haraWidth !== "undefined") docEl.style.setProperty("--vw", e.data.haraWidth ? e.data.haraWidth + "px" : ""); // ④ PC width
@@ -121,7 +169,6 @@
   });
   addEventListener("keydown", function (e) {
     if (e.key === "Escape") d.querySelectorAll("[data-modal].is-open").forEach(function (m) { m.classList.remove("is-open"); m.hidden = true; });
-    if (docEl.dataset.present === "1") { if (e.key === "ArrowRight") step(1); if (e.key === "ArrowLeft") step(-1); }
   });
 
   // ── 5. forms: fake happy-path success; empty required → inline error (no network) ──
