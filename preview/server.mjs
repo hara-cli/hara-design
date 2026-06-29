@@ -35,6 +35,8 @@ const wantPort = parseInt(arg("port", "4321"), 10);
 // of our stdout pipe. We never write stdout post-startup, but guard EPIPE so a stray write can't crash a
 // backgrounded preview.
 process.stdout.on("error", () => {});
+const catalog = process.argv.includes("--catalog"); // `hara-design systems` → browse the design-system catalog
+const systemsDir = join(here, "..", "skills", "design", "references", "design-systems");
 
 const MIME = {
   ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8",
@@ -113,6 +115,12 @@ const server = createServer(async (req, res) => {
     const abs = safeJoin(artifactDir, "index.html");
     if (abs && (await serveFile(res, abs, { injectReload: true }))) return;
   }
+  // GET / → in --catalog mode: the design-system catalog (click a card → copies its id to paste into hara)
+  if (path === "/" && catalog) {
+    res.writeHead(200, { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" });
+    res.end(await renderCatalog());
+    return;
+  }
   // GET / → device-preview chrome (single design: phone/tablet/desktop toggle) OR gallery (library root)
   if (path === "/") {
     if (existsSync(join(artifactDir, "index.html"))) {
@@ -173,7 +181,10 @@ async function deviceChrome(root) {
   const WIDTHS = { phone: 390, tablet: 834, desktop: 1280 };
   const fixed = Object.prototype.hasOwnProperty.call(WIDTHS, device);
   const defaultW = fixed ? WIDTHS[device] : 0; // 0 = Full. Default Full so a wide design is NEVER clipped at a fake 1280.
-  const showToggle = !fixed; // a declared single device isn't responsive → just show it that way (no device switcher)
+  // The device switcher is signal for exactly ONE case: a genuinely responsive web page you must check at 390 vs
+  // 1280. For fixed mockups, self-arranged showcases, decks, galleries it's noise — so it's OFF unless the design
+  // declares content="responsive". (phone/tablet/desktop → fixed width, no toggle; showcase/absent → Full, no toggle.)
+  const showToggle = device === "responsive";
   const initLabel = defaultW ? defaultW + "px" : "Full";
   return `<!doctype html><meta charset=utf-8><title>${esc(title)} · preview</title>
 <style>
@@ -236,6 +247,72 @@ async function deviceChrome(root) {
 function esc(s) {
   return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 }
+// Design-system CATALOG (--catalog): a visual grid of every system with its palette, so you pick by eye instead
+// of scanning INDEX.md. Click a card → copies its id to the clipboard (same emit-a-selection boundary as
+// click-to-reference; the web never commands the agent) → you paste "use the <id> system" into the CLI.
+async function renderCatalog() {
+  let ids = [];
+  try {
+    ids = (await readdir(systemsDir, { withFileTypes: true })).filter((d) => d.isDirectory()).map((d) => d.name).sort();
+  } catch {
+    /* none */
+  }
+  const cards = [];
+  for (const id of ids) {
+    let title = id;
+    let category = "";
+    const colors = [];
+    try {
+      const head = (await readFile(join(systemsDir, id, "DESIGN.md"), "utf8")).slice(0, 4000);
+      const tm = /^#\s+(.+)$/m.exec(head) || /^title:\s*(.+)$/im.exec(head);
+      if (tm) title = tm[1].trim().replace(/[`*]/g, "").replace(/^Design System Inspired by\s+/i, "").replace(/\s+Design System$/i, "");
+      const cm = /^category:\s*(.+)$/im.exec(head);
+      if (cm) category = cm[1].trim().replace(/[`*]/g, "");
+      const seen = new Set();
+      for (const h of head.match(/#[0-9a-fA-F]{6}\b/g) || []) {
+        const k = h.toLowerCase();
+        if (!seen.has(k)) { seen.add(k); colors.push(h); }
+        if (colors.length >= 6) break;
+      }
+    } catch {
+      /* card with just the id */
+    }
+    const chips = (colors.length ? colors : ["#2a2e38"]).map((c) => `<i style="background:${esc(c)}"></i>`).join("");
+    const q = esc((id + " " + title + " " + category).toLowerCase());
+    cards.push(
+      `<button class="card" data-id="${esc(id)}" data-q="${q}"><div class="sw">${chips}</div>` +
+        `<div class="m"><div class="t">${esc(title)}</div><div class="c">${esc(category)} · <code>${esc(id)}</code></div></div></button>`,
+    );
+  }
+  return `<!doctype html><meta charset=utf-8><title>Design systems · hara-design</title>
+<style>
+ :root{--bg:#0c0d10;--bar:#15171c;--fg:#e8eaed;--muted:#8b90a0;--border:#23262e;--accent:#5b8cff}
+ *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--fg);font:13px system-ui,-apple-system,sans-serif}
+ .bar{position:sticky;top:0;display:flex;align-items:center;gap:12px;padding:11px 16px;background:var(--bar);border-bottom:1px solid var(--border);z-index:2}
+ .bar b{font-weight:650} .bar .muted{color:var(--muted)} .bar .sp{flex:1}
+ #q{background:#0f1116;border:1px solid var(--border);color:var(--fg);border-radius:8px;padding:7px 11px;font:inherit;min-width:220px}
+ .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;padding:18px}
+ .card{text-align:left;cursor:pointer;background:#15171c;border:1px solid var(--border);border-radius:12px;overflow:hidden;padding:0;font:inherit;color:inherit;transition:border-color .12s,transform .12s}
+ .card:hover{border-color:var(--accent);transform:translateY(-2px)}
+ .sw{display:flex;height:64px} .sw i{flex:1;display:block}
+ .m{padding:11px 13px} .m .t{font-weight:560;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .m .c{color:var(--muted);margin-top:3px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .m code{color:#9fc1ff}
+ .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#15171c;border:1px solid var(--border);padding:10px 14px;border-radius:9px;max-width:80vw;box-shadow:0 16px 40px -20px #000;opacity:0;transition:opacity .2s;pointer-events:none}
+ .toast.show{opacity:1} .toast code{color:#9fc1ff} .toast b{color:var(--accent)}
+</style>
+<div class="bar"><b>Design systems</b><span class="muted">${ids.length} systems · click a card to copy its id</span><span class="sp"></span><input id="q" placeholder="filter by name / category / id…" autofocus></div>
+<div class="grid" id="grid">${cards.join("")}</div>
+<div class="toast" id="toast"></div>
+<script>
+ var grid=document.getElementById('grid'),q=document.getElementById('q'),toast=document.getElementById('toast'),tt;
+ grid.addEventListener('click',function(e){var b=e.target.closest('.card');if(!b)return;var id=b.dataset.id;
+   try{navigator.clipboard.writeText(id);}catch(_){}
+   toast.innerHTML='Copied <code>'+id+'</code> → paste into hara: <b>use the '+id+' system</b>';
+   toast.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show');},2800);});
+ q.addEventListener('input',function(){var v=q.value.toLowerCase();[].forEach.call(grid.children,function(c){c.style.display=c.dataset.q.indexOf(v)>=0?'':'none';});});
+</script>`;
+}
+
 async function renderGallery(root) {
   let entries;
   try {

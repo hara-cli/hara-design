@@ -225,14 +225,15 @@ Desktop / Full) — check Phone and Desktop, fix what breaks. P0: "responsive at
 recipe is a **fixed 390px iPhone frame** (mockup, not responsive) — for a product that must work on phone *and* web,
 use `web-prototype`/`dashboard` (responsive), not `mobile-app`.
 
-**Declare the preview width with a meta tag** so the preview opens correctly and isn't clipped:
-`<meta name="hara-preview" content="phone|tablet|desktop">` in the `<head>`.
-- A **fixed single-device** design (a phone app mockup, a fixed-width canvas) → set `content="phone"` (or
-  `tablet`/`desktop`). The preview then shows it **at exactly that width with NO device toggle** (the switcher is
-  pointless for a non-responsive design).
-- A **responsive** web design **or a wide showcase** (e.g. a gallery of screens) → **omit the meta**. The preview
-  defaults to **Full width** (never clips a wide layout at a fake 1280) and keeps the device toggle for checking
-  phone/desktop.
+**Declare the preview width with a meta tag** so the preview opens right (not clipped) and only shows the device
+toggle when it's actually useful. Put `<meta name="hara-preview" content="…">` in the `<head>`. **The device toggle
+is OFF by default** — it's noise for everything except a responsive page, so you must opt INTO it:
+- **Responsive web page** (must work at phone AND desktop) → `content="responsive"`. Defaults to Full **and shows the
+  Phone/Tablet/Desktop/Full toggle** so you (and the user) can check both ends. This is the ONLY value that shows it.
+- **Fixed single-device** design (a phone app mockup, fixed canvas) → `content="phone"` (or `tablet`/`desktop`):
+  renders at exactly that width, **no toggle**.
+- **Self-arranged showcase / gallery / deck** (lays itself out — like a grid of phone mockups) → `content="showcase"`
+  **or just omit the meta**: Full width, **no toggle** (the toggle is redundant; the design already arranges itself).
 
 ## Multi-screen / multi-device — use the shared frames, don't redraw
 For "same app across devices" or "screens 1→2→3 side by side": write each inner screen to

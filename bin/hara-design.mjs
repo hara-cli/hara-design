@@ -72,8 +72,10 @@ dir defaults to the newest .hara/design/<slug>/ under the current directory.`);
 // `hara-design open` would block forever — which HANGS an agent's turn when the design skill launches it
 // (the bug Jeff hit: "/design … working 100s"). So: spawn detached, read the chosen URL off stdout, open
 // the browser, print it, unref + exit. The server keeps running in the background; `hara-design stop` ends it.
-function startServer(dir, wantOpen, port) {
-  const child = spawn("node", [join(root, "preview", "server.mjs"), "--dir", dir, "--port", port], {
+function startServer(dir, wantOpen, port, catalog) {
+  const sargs = [join(root, "preview", "server.mjs"), "--dir", dir, "--port", port];
+  if (catalog) sargs.push("--catalog");
+  const child = spawn("node", sargs, {
     stdio: ["ignore", "pipe", "ignore"],
     detached: true,
   });
@@ -106,6 +108,9 @@ if (cmd === "init") {
 } else if (cmd === "gallery") {
   const dir = flag("global") ? join(homedir(), ".hara", "design") : resolve(positional() || join(process.cwd(), ".hara", "design"));
   startServer(dir, !flag("no-open"), opt("port", "4321"));
+} else if (cmd === "systems" || cmd === "templates") {
+  // visual design-system catalog — browse all systems by palette, click a card to copy its id for hara
+  startServer(process.cwd(), true, opt("port", "4321"), true);
 } else if (cmd === "stop") {
   // kill background preview server(s) started by `open`/`preview`/`gallery`
   const child = spawn("pkill", ["-f", join(root, "preview", "server.mjs")], { stdio: "ignore" });
