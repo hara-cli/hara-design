@@ -1,11 +1,12 @@
-# proto.js — the interactive-prototype contract
+# proto — the interactive-prototype contract (asset vs framework)
 
-hara-design produces **playable prototypes**, not static mockups. Whenever a design has any interactive
-control, **copy `proto.js` into the artifact dir** and load it (`<script src="proto.js"></script>` before
-`</body>`), then wire controls with `data-*` attributes below. `proto.js` is **inert** if no hooks are present,
-so a pure static page costs nothing.
-
-> A design = a self-contained **directory**. Shipping `proto.js` beside `index.html` keeps it self-contained.
+hara-design produces **playable prototypes**, not static mockups. **You author only the ASSET** — `<section
+data-route data-screen-label>` screens + design-system tokens + the `data-*` hooks below + one
+`<meta name="hara-preview">`. **The FRAMEWORK is injected by the preview** (the device bezel per platform, the
+flow/grid/detail/真机 views, and the `proto.js` runtime): you never write a bezel, a status bar, view-mode CSS, or
+`proto.js`/`proto.css`. proto is **inert** if a page has no `data-route`/`data-*` hooks (a pure static page pays
+nothing). On **export**, the frozen `proto.js`+`proto.css` are copied beside the asset so the delivered dir runs
+standalone — still self-contained, but frozen, never agent-authored.
 
 ## The six primitives (wire markup, not bespoke JS)
 

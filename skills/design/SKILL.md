@@ -195,16 +195,20 @@ After a render, make iteration cheap:
 Color: prefer the chosen system's palette; extend with `oklch()`/`color-mix()`, don't invent hex. Pair a display
 face with a quieter body face (never the same family, except an intentional "tech/utility" mono-family direction).
 
-## Interactivity — ship a playable PROTOTYPE, not a dead mockup
+## Interactivity — author the ASSET; the FRAMEWORK is given (you never build the frame)
 **Default to an interactive prototype.** A design whose controls *look* clickable but do nothing is the #1 failure —
-never ship it. The moment a design has any interaction, **copy `references/shared/proto.js` into the artifact dir**
-and wire controls with `data-*` (full contract: `references/shared/proto.md`). Start from a scaffold — don't hand-roll
-the router:
-- **Mobile app / multi-screen** → start from **`references/shared/mobileflow-scaffold.html`** (phone frame + stacked
-  `<section data-route>` screens + bottom-tab + back). **Default = a playable FLOW** (tap a CTA → next screen slides in
-  inside the frame), NOT a static grid of mockups. (`<meta name="hara-preview" content="phone">`.)
-- **PC / responsive web app** → start from **`references/shared/webapp-scaffold.html`** (sidebar routes between
-  `<section data-route>` panels + in-page tabs + table-row→detail + modal). (`content="responsive"`.)
+never ship it. **You write ONLY the asset:** `<section class="screen" data-route="…" data-screen-label="…">` screens
++ the design-system `:root` tokens + `data-*` interaction hooks + one `<meta name="hara-preview" content="…">`.
+**Do NOT author a device bezel, a status bar, view-mode CSS, or `proto.js`** — the preview *injects* the fixed
+framework (the device frame, the flow/grid/detail/真机 views, and the `data-*` runtime). Authoring a frame just
+fights it. Full contract: `references/shared/proto.md`. Start from a scaffold (asset-only, frame-free):
+- **Mobile app / multi-screen** → **`references/shared/mobileflow-scaffold.html`** (stacked `<section data-route>`
+  screens + bottom-tab + back, dark theme). **Default = a playable FLOW** (tap a CTA → next screen), NOT a static grid.
+- **PC / web app** → **`references/shared/webapp-scaffold.html`** (sidebar routes between `<section data-route>`
+  panels + tabs + table-row→detail + modal).
+- **Platform intent** = the `hara-preview` meta value (the framework mounts the matching frame): `mobile` (+`ios`/
+  `android`) · `miniprogram` (微信小程序) · `mweb` (mobile web) · `web` (PC, +`none` for a bare card). Mobile app →
+  `mobile ios`; 小程序 → `miniprogram`; PC web app → `web`.
 - **Static** (marketing/editorial, one page): HTML/CSS only — but still real hover/focus-visible/active states.
   `proto.js` is inert with no `data-*` hooks, so a static page costs nothing.
 - **Complex local state** → inline React (React 18 UMD + Babel; per-component style objects, never a bare `const

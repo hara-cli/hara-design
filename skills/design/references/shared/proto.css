@@ -1,0 +1,92 @@
+/* proto.css — hara-design's FIXED presentation framework (paired with proto.js). The design ASSET never ships
+   this; the preview injects it and export copies it frozen. It provides the device bezels (4 platforms), the
+   view modes (grid/flow/detail), and the chrome skeleton — so the asset is only <section data-route> + tokens +
+   data-* hooks, and the agent can't author the frame. Bezels are 100% CSS keyed off documentElement[data-frame].*/
+
+*,*::before,*::after{ box-sizing:border-box }
+html,body{ margin:0; height:100%; background:#0b0c10 }
+html{ --vw:393px; --vh:852px; --statusbar-h:48px }   /* proto.js overrides per data-frame */
+
+/* host proto.js builds: .hara-stage > .hara-frame > (.hara-chrome…) + .hara-viewport > [data-route] screens */
+.hara-stage{ min-height:100%; display:flex; align-items:flex-start; justify-content:center; padding:20px; background:#0b0c10 }
+.hara-frame{ position:relative; background:#000; }
+.hara-viewport{ position:relative; overflow:hidden; background:#fff; width:100%; height:100%; }
+.hara-chrome>*{ position:absolute; left:0; right:0; z-index:6; pointer-events:none; display:none }  /* shown per frame */
+/* NOTE: proto.css must not style the asset's visuals (bg/color/type) — those belong to the asset. It only
+   does framework LAYOUT (.hara-* + view-mode positioning of [data-route]). */
+
+/* ── FLOW (default): one device, active screen only ──────────────────────── */
+html[data-view="flow"] .hara-frame{ width:var(--vw); height:var(--vh); }
+html[data-view="flow"] [data-route]{ position:absolute; inset:0; overflow:auto; }
+html[data-view="flow"] [data-route]:not(.is-active){ display:none }
+html[data-view="flow"] .hara-screen-pad{ padding-top:var(--statusbar-h) }
+
+/* ── DETAIL: one screen, enlarged, fully interactive ─────────────────────── */
+html[data-view="detail"] .hara-frame{ width:min(440px,96vw); height:min(900px,90vh); }
+html[data-view="detail"] [data-route]{ position:absolute; inset:0; overflow:auto }
+html[data-view="detail"] [data-route]:not(.is-active){ display:none }
+
+/* ── GRID (宏观全览): all screens as a board of mini device cards ─────────── */
+html[data-view="grid"] .hara-stage{ display:block; padding:28px }
+html[data-view="grid"] .hara-frame{ width:auto; height:auto; background:transparent; display:grid;
+  grid-template-columns:repeat(auto-fill, calc(var(--vw) * .8)); gap:34px; justify-content:center; }
+html[data-view="grid"] .hara-chrome{ display:none }
+html[data-view="grid"] [data-route]{ position:relative; inset:auto; display:block;
+  width:calc(var(--vw) * .8); height:calc(var(--vh) * .8); overflow:hidden; border-radius:22px;
+  background:#fff; box-shadow:0 18px 50px -24px #000; cursor:pointer; transition:transform .15s; }
+html[data-view="grid"] [data-route]:hover{ transform:translateY(-5px) }
+html[data-view="grid"] [data-route]::after{ content:attr(data-screen-label); position:absolute; left:0; right:0; bottom:0;
+  padding:7px 11px; font:11px/1.4 system-ui; color:#e9ebf2; background:linear-gradient(transparent,rgba(0,0,0,.8)); }
+
+/* ════ PLATFORM BEZELS (data-frame) ════ */
+
+/* MOBILE app — iOS (default) / Android (data-os) */
+html[data-frame="mobile"]{ --statusbar-h:50px }
+html[data-frame="mobile"][data-view="flow"] .hara-frame,
+html[data-frame="mobile"][data-view="detail"] .hara-frame{ border-radius:54px; padding:13px; box-shadow:0 36px 90px -34px #000 }
+html[data-frame="mobile"] .hara-viewport{ border-radius:42px }
+html[data-frame="mobile"] .hara-statusbar{ display:flex; top:0; height:var(--statusbar-h); align-items:flex-end; justify-content:space-between; padding:0 28px 7px; font:600 14px system-ui; color:#000; mix-blend-mode:difference }
+html[data-frame="mobile"][data-os="ios"]:not([data-view="grid"]) .hara-frame::before{ content:""; position:absolute; top:25px; left:50%; transform:translateX(-50%); width:124px; height:36px; background:#000; border-radius:20px; z-index:7 }
+html[data-frame="mobile"][data-os="ios"] .hara-home{ display:block; position:absolute; bottom:9px; left:50%; transform:translateX(-50%); width:134px; height:5px; border-radius:3px; background:rgba(0,0,0,.32); z-index:7 }
+html[data-frame="mobile"][data-os="android"]:not([data-view="grid"]) .hara-frame::before{ content:""; position:absolute; top:14px; left:50%; transform:translateX(-50%); width:11px; height:11px; background:#000; border-radius:50%; z-index:7 }
+
+/* WeChat MINI-PROGRAM — capsule, nav bar, NO url bar */
+html[data-frame="miniprogram"]{ --vw:375px; --vh:667px; --statusbar-h:64px }
+html[data-frame="miniprogram"][data-view="flow"] .hara-frame,
+html[data-frame="miniprogram"][data-view="detail"] .hara-frame{ border-radius:44px; padding:11px; box-shadow:0 36px 90px -34px #000 }
+html[data-frame="miniprogram"] .hara-viewport{ border-radius:34px }
+html[data-frame="miniprogram"] .hara-statusbar{ display:flex; top:0; height:20px; align-items:center; justify-content:space-between; padding:0 22px; font:600 12px system-ui; color:#000 }
+html[data-frame="miniprogram"] .hara-capsule{ display:block; top:24px; right:7px; left:auto; width:87px; height:32px; border:.5px solid rgba(0,0,0,.12); border-radius:16px; background:rgba(255,255,255,.6); z-index:7 }
+html[data-frame="miniprogram"] .hara-capsule::before{ content:"•••"; position:absolute; left:16px; top:50%; transform:translateY(-50%); letter-spacing:1px; font-size:13px; color:#333 }
+html[data-frame="miniprogram"] .hara-capsule::after{ content:""; position:absolute; right:18px; top:50%; transform:translateY(-50%); width:13px; height:13px; border:1.5px solid #333; border-radius:50%; }
+
+/* MOBILE WEB — phone + Safari URL bar */
+html[data-frame="mweb"]{ --vw:390px; --vh:844px; --statusbar-h:88px }
+html[data-frame="mweb"][data-view="flow"] .hara-frame,
+html[data-frame="mweb"][data-view="detail"] .hara-frame{ border-radius:50px; padding:12px; box-shadow:0 36px 90px -34px #000 }
+html[data-frame="mweb"] .hara-viewport{ border-radius:40px }
+html[data-frame="mweb"] .hara-statusbar{ display:flex; top:0; height:44px; align-items:flex-end; justify-content:space-between; padding:0 26px 5px; font:600 14px system-ui; color:#000 }
+html[data-frame="mweb"] .hara-urlbar{ display:flex; top:44px; height:44px; align-items:center; gap:8px; padding:6px 12px; background:#f2f2f4; border-bottom:1px solid #e2e2e6 }
+html[data-frame="mweb"] .hara-urlbar .pill{ flex:1; display:flex; align-items:center; gap:6px; justify-content:center; height:32px; background:#fff; border-radius:9px; font:13px system-ui; color:#333 }
+
+/* PC / WEB — browser window chrome (traffic lights + url) or bare (data-chrome=none) */
+html[data-frame="web"]{ --vw:min(1280px,94vw); --vh:min(800px,86vh); --statusbar-h:0px }
+html[data-frame="web"][data-view="flow"] .hara-frame,
+html[data-frame="web"][data-view="detail"] .hara-frame{ border-radius:12px; overflow:hidden; box-shadow:0 40px 100px -40px #000; background:#fff }
+html[data-frame="web"][data-view="flow"] .hara-frame{ width:var(--vw); height:var(--vh) }
+html[data-frame="web"] .hara-viewport{ border-radius:0 }
+html[data-frame="web"] .hara-titlebar{ display:flex; top:0; height:40px; align-items:center; gap:8px; padding:0 14px; background:#ebedf0; border-bottom:1px solid #dcdfe4; position:relative }
+html[data-frame="web"] .hara-titlebar .dots{ display:flex; gap:7px } html[data-frame="web"] .hara-titlebar .dots i{ width:12px; height:12px; border-radius:50% }
+html[data-frame="web"] .hara-titlebar .url{ flex:1; max-width:420px; margin:0 auto; height:26px; background:#fff; border-radius:7px; font:12px system-ui; color:#667; display:flex; align-items:center; justify-content:center }
+html[data-frame="web"][data-view="flow"] .hara-screen-pad{ padding-top:40px }   /* clear the titlebar */
+html[data-frame="web"][data-chrome="none"] .hara-titlebar{ display:none }
+html[data-frame="web"][data-chrome="none"][data-view="flow"] .hara-screen-pad{ padding-top:0 }
+html[data-frame="web"][data-view="grid"] .hara-frame{ grid-template-columns:repeat(auto-fill, 360px) } html[data-frame="web"][data-view="grid"] [data-route]{ width:360px; height:225px }
+
+/* present mode (真机): fullscreen flow, no page scroll behind */
+html[data-present="1"]{ overflow:hidden } html[data-present="1"] .hara-stage{ min-height:100vh; align-items:center }
+
+.proto-toast{ position:fixed; left:50%; bottom:6%; transform:translateX(-50%); background:#222633; color:#fff;
+  padding:11px 16px; border-radius:11px; font:14px system-ui; opacity:0; transition:opacity .2s; pointer-events:none; z-index:9999 }
+.proto-toast.show{ opacity:1 }
+@media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important } }

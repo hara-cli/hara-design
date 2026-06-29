@@ -1,100 +1,63 @@
 <!doctype html>
 <!--
-  MOBILE FLOW scaffold — a PLAYABLE phone prototype (screens route inside ONE document).
-  Copy this + proto.js into the artifact dir, then replace the screens with the real flow.
-  Wire every control (data-go / data-toggle / data-open / data-form / data-toast). No dead controls.
-  8-item check: [x] tab switch [x] screen→screen [x] press [x] input echoes [x] toggle [x] modal [x] list→detail [x] toast
+  MOBILE FLOW asset — ONLY the design: screens + tokens + data-* hooks. NO device bezel, NO proto.js, NO view CSS:
+  the preview INJECTS the framework (iPhone frame, flow/grid/detail, runtime) — you never author it. Copy this,
+  replace the screens, wire every control. 8-item check:
+  [x] tab switch [x] screen→screen [x] press [x] input echoes [x] toggle [x] modal [x] list→detail [x] toast
 -->
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="hara-preview" content="phone" />   <!-- fixed 390 phone, no device toggle -->
-<title>App Flow — prototype</title>
+<meta name="hara-preview" content="mobile ios" />   <!-- platform intent → the framework mounts the iOS frame -->
+<title>App Flow</title>
 <style>
   :root{ --bg:#0c0d12; --card:#15171f; --line:#23262e; --fg:#eef0f4; --muted:#8b90a0; --accent:#6c8cff; }
   *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent }
-  html,body{ margin:0; height:100%; background:#07080c; color:var(--fg); font:15px/1.5 -apple-system,"PingFang SC",system-ui,sans-serif }
-  /* device frame */
-  .phone{ width:390px; height:844px; margin:0 auto; background:var(--bg); position:relative; overflow:hidden; display:flex; flex-direction:column }
-  .statusbar{ height:50px; display:flex; align-items:flex-end; justify-content:space-between; padding:0 26px 6px; font-size:14px; font-weight:600; flex:0 0 auto }
-  .statusbar [aria-hidden]{ color:var(--fg) }
-  main{ flex:1; position:relative; overflow:hidden }
-  .screen{ position:absolute; inset:0; overflow-y:auto; padding:8px 20px 88px; background:var(--bg) }
-  .screen[hidden]{ display:none }
-  .screen.anim{ animation:slide .28s ease both } @keyframes slide{ from{ opacity:0; transform:translateX(16px) } to{ opacity:1; transform:none } }
-  @media (prefers-reduced-motion:reduce){ .screen.anim{ animation:none } }
-  /* in [data-view=grid/zoom] the preview shows all screens laid out; flow shows one */
-  html[data-view="grid"] main{ position:static; overflow:auto } html[data-view="grid"] .screen{ position:relative; inset:auto; display:block !important; border-bottom:1px solid var(--line) }
-  h1{ font-size:26px; margin:14px 0 4px } .sub{ color:var(--muted); margin:0 0 18px }
-  .topbar{ display:flex; align-items:center; gap:12px; min-height:36px }
-  .back{ all:unset; cursor:pointer; width:36px; height:36px; display:grid; place-items:center; border-radius:50%; background:var(--card); font-size:18px }
+  /* screens fill the injected viewport; .pad clears the status bar (framework sets --statusbar-h via proto.css) */
+  .screen{ background:var(--bg); color:var(--fg); font:15px/1.5 -apple-system,"PingFang SC",system-ui,sans-serif }
+  .pad{ padding:60px 20px 92px } h1{ font-size:26px; margin:10px 0 4px } .sub{ color:var(--muted); margin:0 0 18px }
+  .topbar{ display:flex; align-items:center; gap:12px; min-height:36px } .back{ all:unset; cursor:pointer; width:36px; height:36px; display:grid; place-items:center; border-radius:50%; background:var(--card); font-size:18px }
   .card{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; margin:10px 0 }
-  .row{ display:flex; align-items:center; gap:12px; padding:12px; border-radius:12px; cursor:pointer } .row:active{ background:var(--card) }
-  button,.btn{ font:inherit } .btn-primary{ all:unset; display:block; text-align:center; background:linear-gradient(120deg,var(--accent),#9a6cff); color:#fff; font-weight:700; padding:15px; border-radius:14px; cursor:pointer; margin-top:14px }
-  .btn-primary:active{ transform:scale(.985) }
-  input,textarea{ width:100%; background:var(--card); border:1px solid var(--line); color:var(--fg); border-radius:12px; padding:13px; font:inherit }
-  input:focus,textarea:focus{ outline:2px solid var(--accent); border-color:transparent }
-  label{ display:block; color:var(--muted); font-size:13px; margin:14px 0 6px }
-  [data-error]{ color:#ff6b6b; font-size:13px; margin-top:8px }
-  .switch{ all:unset; cursor:pointer; width:46px; height:28px; border-radius:99px; background:var(--line); position:relative; flex:0 0 auto }
-  .switch::after{ content:""; position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%; background:#fff; transition:left .18s }
-  .switch.is-open{ background:var(--accent) } .switch.is-open::after{ left:21px }
-  /* bottom tab bar */
-  .tabbar{ position:absolute; left:0; right:0; bottom:0; height:72px; display:flex; background:rgba(12,13,18,.92); border-top:1px solid var(--line); backdrop-filter:blur(12px) }
-  .tabbar [data-go]{ all:unset; flex:1; display:grid; place-items:center; gap:3px; cursor:pointer; color:var(--muted); font-size:11px; padding-top:10px }
-  .tabbar [data-go].is-active{ color:var(--accent) } .tabbar .ic{ font-size:20px }
-  /* sheet */
-  [data-modal]{ position:absolute; inset:0; background:rgba(0,0,0,.5); display:flex; align-items:flex-end; z-index:9 } [data-modal][hidden]{ display:none }
-  [data-modal] .sheet{ background:var(--bg); width:100%; border-radius:20px 20px 0 0; padding:22px 20px 30px; border-top:1px solid var(--line) }
-  .proto-toast{ position:fixed; left:50%; bottom:96px; transform:translateX(-50%); background:#222633; color:#fff; padding:11px 16px; border-radius:11px; font-size:14px; opacity:0; transition:opacity .2s; pointer-events:none; z-index:20 }
-  .proto-toast.show{ opacity:1 }
+  .btn-primary{ all:unset; display:block; text-align:center; background:linear-gradient(120deg,var(--accent),#9a6cff); color:#fff; font-weight:700; padding:15px; border-radius:14px; cursor:pointer; margin-top:14px } .btn-primary:active{ transform:scale(.985) }
+  input{ width:100%; background:var(--card); border:1px solid var(--line); color:var(--fg); border-radius:12px; padding:13px; font:inherit } input:focus{ outline:2px solid var(--accent); border-color:transparent }
+  label{ display:block; color:var(--muted); font-size:13px; margin:14px 0 6px } [data-error]{ color:#ff6b6b; font-size:13px; margin-top:8px }
+  .switch{ all:unset; cursor:pointer; width:46px; height:28px; border-radius:99px; background:var(--line); position:relative; flex:0 0 auto } .switch::after{ content:""; position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%; background:#fff; transition:left .18s } .switch.is-open{ background:var(--accent) } .switch.is-open::after{ left:21px }
+  .tabbar{ position:absolute; left:0; right:0; bottom:0; height:72px; display:flex; background:rgba(12,13,18,.94); border-top:1px solid var(--line) } .tabbar [data-go]{ all:unset; flex:1; display:grid; place-items:center; gap:3px; cursor:pointer; color:var(--muted); font-size:11px; padding-top:10px } .tabbar [data-go].is-active{ color:var(--accent) } .tabbar .ic{ font-size:20px }
+  [data-modal]{ position:absolute; inset:0; background:rgba(0,0,0,.5); display:flex; align-items:flex-end; z-index:9 } [data-modal][hidden]{ display:none } [data-modal] .sheet{ background:var(--bg); color:var(--fg); width:100%; border-radius:20px 20px 0 0; padding:22px 20px 30px; border-top:1px solid var(--line) }
 </style>
 </head>
 <body>
-<div class="phone">
-  <div class="statusbar"><span aria-hidden="true">9:41</span><span aria-hidden="true">􀙇 􀜤 􀛨</span></div>
-  <main>
-    <!-- ░ HOME ░ -->
-    <section class="screen is-active" data-route="home">
-      <h1>Your App</h1>
-      <p class="sub">Replace these screens with the real flow.</p>
+  <!-- ░ HOME ░ -->
+  <section class="screen" data-route="home" data-screen-label="01 · Home">
+    <div class="pad">
+      <h1>Your App</h1><p class="sub">Replace these screens with the real flow.</p>
       <div class="card">A primary action starts the flow.</div>
       <a class="btn-primary" data-go="create">Start →</a>
-      <div class="card row" data-go="detail">📄 An item · tap to open detail</div>
-    </section>
-    <!-- ░ CREATE (form) ░ -->
-    <section class="screen" data-route="create" hidden>
+      <div class="card" data-go="detail" style="cursor:pointer">📄 An item · tap to open detail</div>
+    </div>
+    <nav class="tabbar"><button data-go="home" class="is-active"><span class="ic">􀎟</span>Home</button><button data-go="create"><span class="ic">􀁌</span>Create</button><button data-go="detail"><span class="ic">􀉪</span>Items</button></nav>
+  </section>
+  <!-- ░ CREATE (form + toggle + sheet) ░ -->
+  <section class="screen" data-route="create" data-screen-label="02 · Create">
+    <div class="pad">
       <div class="topbar"><button class="back" data-go="__back" aria-label="Back">‹</button><strong>Create</strong></div>
       <form data-form>
-        <label>Name</label>
-        <input required placeholder="Type something…" />
-        <label style="display:flex;justify-content:space-between;align-items:center">Enable option
-          <span class="switch" data-toggle="opt1" role="switch" aria-expanded="false" id="opt1"></span></label>
+        <label>Name</label><input required placeholder="Type something…" />
+        <label style="display:flex;justify-content:space-between;align-items:center">Enable option <span class="switch" data-toggle="opt1" role="switch" aria-expanded="false" id="opt1"></span></label>
         <p data-error hidden>Please fill the required field.</p>
         <button class="btn-primary" type="submit">Save</button>
       </form>
       <a class="btn-primary" style="background:var(--card);color:var(--fg)" data-open="sheet1">Open a sheet</a>
-    </section>
-    <!-- ░ DETAIL ░ -->
-    <section class="screen" data-route="detail" hidden>
-      <div class="topbar"><button class="back" data-go="__back" aria-label="Back">‹</button><strong>Detail</strong></div>
+    </div>
+    <div data-modal id="sheet1" hidden><div class="sheet"><h1 style="font-size:20px">A bottom sheet</h1><p class="sub">Tap the backdrop or close to dismiss.</p><a class="btn-primary" data-close>Got it</a></div></div>
+  </section>
+  <!-- ░ DETAIL ░ -->
+  <section class="screen" data-route="detail" data-screen-label="03 · Detail">
+    <div class="pad"><div class="topbar"><button class="back" data-go="__back" aria-label="Back">‹</button><strong>Detail</strong></div>
       <div class="card">Detail content for the tapped item.</div>
       <a class="btn-primary" data-toast="Done ✓">Confirm</a>
-    </section>
-  </main>
-  <!-- bottom tabs -->
-  <nav class="tabbar">
-    <button data-go="home" class="is-active"><span class="ic">􀎟</span>Home</button>
-    <button data-go="create"><span class="ic">􀁌</span>Create</button>
-    <button data-go="detail"><span class="ic">􀉪</span>Items</button>
-  </nav>
-  <!-- sheet -->
-  <div data-modal id="sheet1" hidden><div class="sheet">
-    <h1 style="font-size:20px">A bottom sheet</h1><p class="sub">Tap the backdrop or close to dismiss.</p>
-    <a class="btn-primary" data-close>Got it</a>
-  </div></div>
-</div>
-<script src="proto.js"></script>
+    </div>
+  </section>
 </body>
 </html>

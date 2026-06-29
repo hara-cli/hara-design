@@ -39,6 +39,7 @@ const wantPort = parseInt(arg("port", "4321"), 10);
 process.stdout.on("error", () => {});
 const catalog = process.argv.includes("--catalog"); // `hara-design systems` → browse the design-system catalog
 const systemsDir = join(here, "..", "skills", "design", "references", "design-systems");
+const sharedDir = join(here, "..", "skills", "design", "references", "shared"); // frozen framework: proto.js / proto.css
 
 const MIME = {
   ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8",
@@ -79,7 +80,11 @@ async function serveFile(res, absPath, { injectReload = false } = {}) {
   const type = MIME[ext] || "application/octet-stream";
   if (injectReload && ext === ".html") {
     let html = buf.toString("utf8");
-    html = html.includes("</body>") ? html.replace("</body>", `${LIVERELOAD}</body>`) : html + LIVERELOAD;
+    // a prototype asset (has <section data-route>) gets the frozen framework injected — the bezel, view modes,
+    // and interaction runtime the agent never authors. A plain static page gets neither (proto is inert anyway).
+    const proto = /\sdata-route\s*=/.test(html) ? `<link rel="stylesheet" href="/__proto.css"><script src="/__proto.js"></script>` : "";
+    const inject = LIVERELOAD + proto;
+    html = html.includes("</body>") ? html.replace("</body>", `${inject}</body>`) : html + inject;
     buf = Buffer.from(html, "utf8");
   }
   res.writeHead(200, { "content-type": type, "cache-control": "no-store" });
@@ -100,6 +105,10 @@ const server = createServer(async (req, res) => {
     res.writeHead(200, { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" });
     res.end(await readFile(join(here, "refpick.js")));
     return;
+  }
+  // the FROZEN framework runtime — injected into prototype assets so the agent never authors the frame
+  if (path === "/__proto.js" || path === "/__proto.css") {
+    if (await serveFile(res, join(sharedDir, path.slice(3)))) return;
   }
   if (path === "/__reload") {
     res.writeHead(200, { "content-type": "text/event-stream", "cache-control": "no-cache", connection: "keep-alive" });
