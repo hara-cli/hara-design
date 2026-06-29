@@ -249,9 +249,8 @@ async function deviceChrome(root) {
 <div class="bar">
  <span class="title">${esc(title)}</span>
  ${isProto ? `<div class="seg" id="vseg">
-  <button data-v="grid">▦ Grid</button>
-  <button data-v="flow">⇄ Flow</button>
-  <button data-v="detail" class="on">⛶ Detail</button>
+  <button data-v="grid" class="on">▦ Grid</button>
+  <button data-v="detail">⛶ Detail</button>
  </div>` : showToggle ? `<div class="seg" id="seg">
   <button data-w="390">📱 Phone</button>
   <button data-w="834">▭ Tablet</button>
@@ -278,11 +277,10 @@ async function deviceChrome(root) {
  }
  if(seg)seg.addEventListener('click',function(e){var b=e.target.closest('button');if(b)set(parseInt(b.dataset.w,10));});
  // view modes (prototype): post {haraView}/{haraPresent} to the injected proto.js runtime in the iframe
- var vseg=document.getElementById('vseg'),curView='detail';
+ var vseg=document.getElementById('vseg'),curView='grid';
  function tellView(){try{pv.contentWindow.postMessage({haraView:curView},'*');}catch(e){}}
- if(vseg)vseg.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
-   [].forEach.call(vseg.children,function(x){x.classList.toggle('on',x===b);});
-   curView=b.dataset.v; tellView();});
+ function setActive(v){curView=v;if(vseg)[].forEach.call(vseg.children,function(x){x.classList.toggle('on',x.dataset.v===v);});}
+ if(vseg)vseg.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;setActive(b.dataset.v);tellView();});
  // ⬇ PDF — fetch + download in place with feedback (export takes a few seconds; don't navigate away silently)
  var pdfBtn=document.getElementById('pdf');
  if(pdfBtn)pdfBtn.addEventListener('click',function(){showToast('Generating PDF… (a few seconds)');
@@ -298,7 +296,7 @@ async function deviceChrome(root) {
  if(thm)thm.addEventListener('click',function(){theme=theme==='dark'?'light':'dark';thm.textContent=theme==='dark'?'☾':'☀';try{pv.contentWindow.postMessage({haraTheme:theme},'*');}catch(e){}syncHash();});
  if(a11y)a11y.addEventListener('click',function(){linting=!linting;a11y.classList.toggle('on',linting);try{pv.contentWindow.postMessage({haraLint:linting},'*');}catch(e){}});
  if(share)share.addEventListener('click',function(){var u=location.origin+location.pathname+hashStr();try{navigator.clipboard.writeText(u);}catch(e){}showToast('Link copied → <code>'+hashStr()+'</code>');});
- window.addEventListener('message',function(e){if(e.data&&e.data.haraRoute){route=e.data.haraRoute;if(e.data.haraViewNow)curView=e.data.haraViewNow;syncHash();}});
+ window.addEventListener('message',function(e){if(!e.data)return;if(e.data.haraViewNow)setActive(e.data.haraViewNow);if(e.data.haraRoute){route=e.data.haraRoute;syncHash();}});
  function restore(){var h=location.hash.slice(1);if(!h)return;var p=h.split('/'),v=p[0],r=p[1],t=p[2];
    if(t==='light'){theme='light';if(thm)thm.textContent='☀';}
    if(v){curView=v;if(vseg)[].forEach.call(vseg.children,function(x){x.classList.toggle('on',x.dataset.v===v);});}
@@ -307,7 +305,7 @@ async function deviceChrome(root) {
  function tellFrame(){try{pv.contentWindow.postMessage({haraInspect:inspecting},'*');}catch(e){}}
  insp.addEventListener('click',function(){inspecting=!inspecting;insp.classList.toggle('on',inspecting);tellFrame();
    if(inspecting)showToast('Inspect on — click an element to copy a reference for hara');});
- pv.addEventListener('load',function(){tellFrame();if(vseg){if(location.hash.slice(1))restore();else tellView();}}); // re-arm + restore shared state
+ pv.addEventListener('load',function(){tellFrame();if(vseg&&location.hash.slice(1))restore();}); // re-arm; proto.js picks the default view + posts it back, share-links restore
  function showToast(html){toast.innerHTML=html;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show');},3200);}
  window.addEventListener('message',function(e){if(e.data&&e.data.haraCopied){showToast('Copied → paste into hara: <code>'+String(e.data.haraCopied).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];})+'</code>');}});
  var DEFAULT_W=${defaultW}, SHOW_TOGGLE=${showToggle};

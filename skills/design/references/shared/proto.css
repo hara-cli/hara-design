@@ -23,22 +23,22 @@ html[data-view="detail"] [data-route]:not(.is-active){ display:none }
 html[data-view="detail"] .hara-screen-pad{ padding-top:var(--statusbar-h) }
 
 /* ── BOARD: shared by GRID + FLOW — wrap-then-scale device cards ── */
-html[data-view="grid"] .hara-stage, html[data-view="flow"] .hara-stage{ display:block; padding:34px; overflow:auto }
-html[data-view="grid"] .hara-frame, html[data-view="flow"] .hara-frame{ width:auto; height:auto; background:transparent; display:block; overflow:visible }
-html[data-view="grid"] .hara-viewport, html[data-view="flow"] .hara-viewport{ position:static; overflow:visible; background:transparent;
-  display:grid; grid-template-columns:repeat(auto-fill, calc(var(--vw)*var(--s))); gap:clamp(30px,5vw,76px); justify-content:center; align-items:start }
-html[data-view="grid"] .hara-chrome, html[data-view="flow"] .hara-chrome{ display:none }
-html[data-view="grid"] [data-route], html[data-view="flow"] [data-route]{
+html[data-view="grid"] .hara-stage{ display:block; padding:34px; overflow:auto }
+html[data-view="grid"] .hara-frame{ width:auto; height:auto; background:transparent; display:block; overflow:visible }
+html[data-view="grid"] .hara-viewport{ position:static; overflow:visible; background:transparent;
+  display:grid; grid-template-columns:repeat(auto-fill, calc(var(--vw)*var(--s))); gap:clamp(30px,5vw,80px); justify-content:center; align-items:start }
+html[data-view="grid"] .hara-chrome{ display:none }
+/* each screen = a DARK device card (a phone is black for every design) so a short/light screen reads as
+   "screen in a device", never an empty white card. Click a card → Detail. */
+html[data-view="grid"] [data-route]{
   position:relative; inset:auto; display:block; overflow:hidden; cursor:pointer;
   width:calc(var(--vw)*var(--s)); height:calc(var(--vh)*var(--s));
-  border-radius:24px; background:#fff; box-shadow:0 18px 50px -24px #000; transition:transform .15s, box-shadow .15s }
-html[data-view="grid"] [data-route]:hover, html[data-view="flow"] [data-route]:hover{ transform:translateY(-5px); box-shadow:0 26px 64px -22px #000 }
-html[data-view="grid"] .hara-card-inner, html[data-view="flow"] .hara-card-inner{ width:var(--vw); height:var(--vh); transform:scale(var(--s)); overflow:hidden; pointer-events:none }
-html[data-view="grid"] [data-route]::after, html[data-view="flow"] [data-route]::after{
+  border-radius:26px; background:#0c0d12; box-shadow:0 18px 50px -24px #000, 0 0 0 1px rgba(255,255,255,.05); transition:transform .15s, box-shadow .15s }
+html[data-view="grid"] [data-route]:hover{ transform:translateY(-5px); box-shadow:0 28px 66px -22px #000, 0 0 0 2px var(--accent,#6c8cff) }
+html[data-view="grid"] .hara-card-inner{ width:var(--vw); min-height:var(--vh); transform:scale(var(--s)); overflow:hidden; pointer-events:none }
+html[data-view="grid"] [data-route]::after{
   content:attr(data-screen-label); position:absolute; left:0; right:0; bottom:0; z-index:2; padding:8px 11px;
-  font:11px/1.4 system-ui; color:#e9ebf2; background:linear-gradient(transparent,rgba(0,0,0,.82)) }
-/* FLOW connection-arrow overlay (proto.js draws it) */
-.hara-arrows{ position:absolute; inset:0; pointer-events:none; z-index:1; overflow:visible }
+  font:11px/1.4 system-ui; color:#e9ebf2; background:linear-gradient(transparent,rgba(0,0,0,.85)) }
 
 /* ════ PLATFORM BEZELS (DETAIL only — the board shows bare cards) ════ */
 html[data-frame="mobile"]{ --statusbar-h:50px }

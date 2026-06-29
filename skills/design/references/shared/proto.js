@@ -7,6 +7,7 @@
 (function () {
   "use strict";
   var d = document, docEl = d.documentElement, hist = [];
+  var CARD_W = 240; // board card width (px) — declared up top so fitBoard() has it during init
   var screens = [].slice.call(d.querySelectorAll("[data-route]"));
 
   // ── 1. Build the device host from the hara-preview meta (framework, not asset) ──
@@ -64,62 +65,24 @@
     post({ haraRoute: t.dataset.route, haraScreenLabel: t.dataset.screenLabel || "", haraView: docEl.dataset.view });
   }
   function cur() { var a = d.querySelector("[data-route].is-active") || screens[0]; return a ? a.dataset.route : ""; }
-  if (screens.length) show((location.hash || "").slice(1) || screens[0].dataset.route, false);
+  if (screens.length) { var hv0 = (location.hash || "").slice(1); setView(hv0 ? "detail" : screens.length > 1 ? "grid" : "detail"); if (hv0) show(hv0, false); }
   addEventListener("hashchange", function () { var r = location.hash.slice(1); if (r && r !== cur()) show(r, false); });
 
   // ── 3. view modes (the chrome toggles these via postMessage {haraView}) ──
   function setView(v) {
     if (!screens.length) return;
     docEl.dataset.view = v;
-    if (v === "grid" || v === "flow") { // board: show every screen as a scaled card
+    if (v === "grid") { // OpenDesign-style board: every screen as a scaled card; click a card → Detail
       screens.forEach(function (s) { s.hidden = false; s.classList.remove("is-active"); });
-      fitBoard(); requestAnimationFrame(drawArrows);
+      fitBoard();
     } else { // detail: one interactive screen in the device frame
-      if (overlay) { overlay.remove(); overlay = null; }
       show(cur() || screens[0].dataset.route, false);
     }
     post({ haraViewNow: v });
   }
-  // ── board scaling (Grid + Flow): --s = card width / device width (wrap-then-scale) ──
-  var CARD_W = 230;
+  // board scaling: --s = card width / device width (wrap-then-scale)
   function fitBoard() { var vw = parseFloat(getComputedStyle(docEl).getPropertyValue("--vw")) || 393; docEl.style.setProperty("--s", (CARD_W / vw).toFixed(4)); }
-  // ── Flow connection arrows: one curved SVG path per data-go link (source card → target card) ──
-  var SVGNS = "http://www.w3.org/2000/svg", overlay = null;
-  function flowLinks() {
-    var seen = {}, out = [], have = {};
-    screens.forEach(function (s) { have[s.dataset.route] = 1; });
-    screens.forEach(function (s) {
-      var src = s.dataset.route;
-      [].forEach.call(s.querySelectorAll("[data-go]"), function (g) {
-        var t = g.dataset.go, k = src + ">" + t;
-        if (t === "__back" || t === src || seen[k] || !have[t]) return;
-        seen[k] = 1; out.push([src, t]);
-      });
-    });
-    return out;
-  }
-  function drawArrows() {
-    if (overlay) { overlay.remove(); overlay = null; }
-    if (docEl.dataset.view !== "flow") return;
-    var stage = d.querySelector(".hara-stage"); if (!stage) return;
-    var sb = stage.getBoundingClientRect();
-    overlay = document.createElementNS(SVGNS, "svg");
-    overlay.setAttribute("class", "hara-arrows");
-    overlay.setAttribute("width", stage.scrollWidth); overlay.setAttribute("height", stage.scrollHeight);
-    overlay.innerHTML = '<defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6Z" fill="#7c8cff"/></marker></defs>';
-    function box(r) { var e = d.querySelector('[data-route="' + r + '"]'); if (!e) return null; var b = e.getBoundingClientRect(); return { x: b.left - sb.left + stage.scrollLeft, y: b.top - sb.top + stage.scrollTop, w: b.width, h: b.height }; }
-    flowLinks().forEach(function (l) {
-      var a = box(l[0]), b = box(l[1]); if (!a || !b) return;
-      var x1 = a.x + a.w, y1 = a.y + a.h / 2, x2 = b.x, y2 = b.y + b.h / 2;
-      if (x2 < x1) { x1 = a.x; x2 = b.x + b.w; }
-      var mx = (x1 + x2) / 2, p = document.createElementNS(SVGNS, "path");
-      p.setAttribute("d", "M" + x1 + "," + y1 + "C" + mx + "," + y1 + " " + mx + "," + y2 + " " + x2 + "," + y2);
-      p.setAttribute("fill", "none"); p.setAttribute("stroke", "#7c8cff"); p.setAttribute("stroke-width", "2"); p.setAttribute("marker-end", "url(#ah)"); p.setAttribute("opacity", ".7");
-      overlay.appendChild(p);
-    });
-    stage.appendChild(overlay);
-  }
-  addEventListener("resize", function () { fitBoard(); drawArrows(); });
+  addEventListener("resize", fitBoard);
   addEventListener("message", function (e) {
     if (!e.data) return;
     if (e.data.haraView) setView(e.data.haraView);
@@ -151,7 +114,7 @@
   // ── 4. one delegated click handler for every primitive ──
   d.addEventListener("click", function (e) {
     // grid: click a screen card (not an inner control) → jump into flow at that screen
-    if (docEl.dataset.view === "grid") { var card = e.target.closest("[data-route]"); if (card) { setView("flow"); show(card.dataset.route, false); return; } }
+    if (docEl.dataset.view === "grid") { var card = e.target.closest("[data-route]"); if (card) { setView("detail"); show(card.dataset.route, false); return; } }
     var go = e.target.closest("[data-go]");
     if (go) { e.preventDefault(); var r = go.dataset.go; if (r === "__back") { var p = hist.pop(); if (p) show(p, false); } else show(r, true); return; }
     var tab = e.target.closest("[data-tab]");
