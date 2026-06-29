@@ -195,16 +195,28 @@ After a render, make iteration cheap:
 Color: prefer the chosen system's palette; extend with `oklch()`/`color-mix()`, don't invent hex. Pair a display
 face with a quieter body face (never the same family, except an intentional "tech/utility" mono-family direction).
 
-## Interactivity — design is interactive, not just static pages
-Decide the interaction tier from the brief and **build the behavior in** — don't ship a flat mockup when the brief implies interaction.
-- **Static** (marketing/editorial): HTML/CSS only — but still add real **hover / focus-visible / active** states (the seeds do).
-- **Stateful** (dashboards, apps, anything with tabs / accordions / modals / forms / toggles): add behavior. Use
-  **vanilla JS** for simple state (toggle a class, `data-*` attrs, `localStorage`); use **inline React** (React 18 UMD +
-  Babel standalone) when state/event flow is complex. React rules: each `<script type="text/babel">` has its own scope →
-  share via `Object.assign(window, { … })`; **name style objects per component** (never a bare `const styles`); no `type="module"`.
-- **Flow** (multi-screen journeys / "tap to navigate"): make it **playable** — hash-routing or show/hide screens on click,
-  or device frames (`/frames/<dev>.html?screen=/screens/x.html`) wired with links. Side-by-side frames alone = a static
-  comp of a flow; if it must navigate, add the click→screen logic.
+## Interactivity — ship a playable PROTOTYPE, not a dead mockup
+**Default to an interactive prototype.** A design whose controls *look* clickable but do nothing is the #1 failure —
+never ship it. The moment a design has any interaction, **copy `references/shared/proto.js` into the artifact dir**
+and wire controls with `data-*` (full contract: `references/shared/proto.md`). Start from a scaffold — don't hand-roll
+the router:
+- **Mobile app / multi-screen** → start from **`references/shared/mobileflow-scaffold.html`** (phone frame + stacked
+  `<section data-route>` screens + bottom-tab + back). **Default = a playable FLOW** (tap a CTA → next screen slides in
+  inside the frame), NOT a static grid of mockups. (`<meta name="hara-preview" content="phone">`.)
+- **PC / responsive web app** → start from **`references/shared/webapp-scaffold.html`** (sidebar routes between
+  `<section data-route>` panels + in-page tabs + table-row→detail + modal). (`content="responsive"`.)
+- **Static** (marketing/editorial, one page): HTML/CSS only — but still real hover/focus-visible/active states.
+  `proto.js` is inert with no `data-*` hooks, so a static page costs nothing.
+- **Complex local state** → inline React (React 18 UMD + Babel; per-component style objects, never a bare `const
+  styles`; no `type="module"`). But for the common cases (route/tab/toggle/modal/form/select/toast) `proto.js`'s
+  `data-*` is enough — prefer it.
+
+**⛔ No Dead Controls (P0).** Every element that LOOKS interactive must either be **wired** (a `data-*` above or a real
+`href`) or be **visibly static** (`data-static` + `aria-disabled="true"` + a disabled style, or a `· soon` tag). No
+control may look live and do nothing. Decorative chrome (status-bar glyphs, the bezel) is `aria-hidden`.
+
+**The 8-item flow checklist** — a prototype missing one isn't a prototype; fix before "ready":
+`nav/tab switch · screen→screen · press feedback · input echoes · toggle works · modal opens/closes · list→detail · ≥1 toast`
 
 **Live knobs (Tweaks)** — to let the user explore variants WITHOUT re-prompting, use the `tweaks` recipe: a small in-page
 panel that rewrites CSS vars live (`--accent`, type `--scale`, spacing `--density`, `--mode` light/dark, `--motion`) and
@@ -235,15 +247,20 @@ is OFF by default** — it's noise for everything except a responsive page, so y
 - **Self-arranged showcase / gallery / deck** (lays itself out — like a grid of phone mockups) → `content="showcase"`
   **or just omit the meta**: Full width, **no toggle** (the toggle is redundant; the design already arranges itself).
 
-## Multi-screen / multi-device — use the shared frames, don't redraw
-For "same app across devices" or "screens 1→2→3 side by side": write each inner screen to
-`<artifact dir>/screens/<n>-<name>.html`, then in `index.html` embed the device frames with a **root-absolute**
-screen path:
+## Multi-screen — default to a playable FLOW, not a static board
+**Default = a playable flow** (one device frame, tap a CTA → next screen): build it as `<section data-route>`
+screens in ONE document with `references/shared/proto.js` (start from `mobileflow-scaffold.html` /
+`webapp-scaffold.html`). Reliable, deep-linkable, browser-back works — and it's what "show me the flow" means. The
+preview offers flow / grid / single-screen views over the same screens.
+
+A **static all-screens BOARD** (side-by-side mockups, no navigation) is the *secondary*, on-request view — only
+when the user explicitly wants "all screens at once for a deck/overview." Build that with the shared frames:
 ```html
 <iframe src="/frames/iphone-15-pro.html?screen=/screens/01-onboarding.html" width="390" height="844" loading="lazy"></iframe>
 ```
-Frames available: `iphone-15-pro.html` (390×844), `android-pixel.html` (412×900), `ipad-pro.html`,
-`macbook.html`, `browser-chrome.html`. The single-screen `mobile-app` recipe already inlines an iPhone frame.
+Frames: `iphone-15-pro.html` (390×844), `android-pixel.html` (412×900), `ipad-pro.html`, `macbook.html`,
+`browser-chrome.html`. **Don't ship a grid of dead mockups when the user asked for a flow** — that's a Figma
+screenshot, not a prototype.
 
 ## Decks
 For lots of ready slide looks, browse the **PPT theme templates** under `references/skills/html-ppt-*` (40+ themes
