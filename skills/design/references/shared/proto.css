@@ -90,3 +90,18 @@ html[data-present="1"]{ overflow:hidden } html[data-present="1"] .hara-stage{ mi
   padding:11px 16px; border-radius:11px; font:14px system-ui; opacity:0; transition:opacity .2s; pointer-events:none; z-index:9999 }
 .proto-toast.show{ opacity:1 }
 @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important } }
+
+/* ── FIXED designer PDF (print): hide the live frame; show a cover + each screen framed on its own page ── */
+.hara-print{ display:none }
+@media print{
+  @page{ size:A4 portrait; margin:0 }
+  html,body{ background:#fff!important; height:auto!important }
+  .hara-stage{ display:none!important }
+  .hara-print{ display:block }
+  .hara-print-cover{ height:296mm; display:flex; flex-direction:column; justify-content:center; padding:0 28mm; background:#0c0d12; color:#fff; break-after:page }
+  .hara-print-cover .t{ font:800 42px/1.1 system-ui } .hara-print-cover .s{ color:#8b90a0; margin-top:12px; font:15px system-ui; letter-spacing:.04em }
+  .hara-print-page{ height:296mm; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; break-after:page; padding:16mm; background:#f6f7fa }
+  .hara-print-bezel{ width:380px; height:800px; border-radius:48px; padding:12px; background:#000; overflow:hidden; box-shadow:0 30px 80px -34px #000 }
+  .hara-print-bezel [data-route]{ display:block!important; position:relative!important; inset:auto!important; width:100%!important; height:100%!important; overflow:hidden; border-radius:38px }
+  .hara-print-label{ font:600 13px system-ui; color:#555; letter-spacing:.04em }
+}

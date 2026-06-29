@@ -32,6 +32,19 @@
     frm.appendChild(chr); frm.appendChild(vp); stage.appendChild(frm); d.body.appendChild(stage);
     docEl.dataset.frame = frame; docEl.dataset.os = os; if (bare) docEl.dataset.chrome = "none";
     docEl.dataset.view = parts.indexOf("showcase") >= 0 ? "grid" : "flow";
+
+    // FIXED designer PDF layout (shown only in print): a cover + each screen framed on its own page with its
+    // label. Export inlines proto + prints this — a consistent, designer-grade page-by-page PDF (not an
+    // agent-improvised deck). Built once from clones; never interactive.
+    var pr = mk("div", "hara-print");
+    pr.innerHTML = '<div class="hara-print-cover"><div class="t">' + esc((d.title || "Design")) + '</div><div class="s">' + esc(parts.join(" ")) + " · " + screens.length + " screens</div></div>";
+    screens.forEach(function (s) {
+      var pg = mk("div", "hara-print-page"), bz = mk("div", "hara-print-bezel"), lb = mk("div", "hara-print-label");
+      var clone = s.cloneNode(true); clone.hidden = false; clone.classList.add("is-active");
+      bz.appendChild(clone); lb.textContent = s.dataset.screenLabel || s.dataset.route;
+      pg.appendChild(bz); pg.appendChild(lb); pr.appendChild(pg);
+    });
+    d.body.appendChild(pr);
   }
 
   // ── 2. routing ──
