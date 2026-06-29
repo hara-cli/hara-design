@@ -76,7 +76,28 @@
     if (e.data.haraView) setView(e.data.haraView);
     if (e.data.haraGo === "next" || e.data.haraGo === "prev") step(e.data.haraGo === "next" ? 1 : -1);
     if (typeof e.data.haraPresent !== "undefined") docEl.dataset.present = e.data.haraPresent ? "1" : "";
+    if (e.data.haraTheme) docEl.dataset.theme = e.data.haraTheme;       // ④ dark/light (asset opts in via [data-theme] tokens)
+    if (e.data.haraRoute) show(e.data.haraRoute, false);                // ④ share-link restore: jump to a route
+    if (typeof e.data.haraWidth !== "undefined") docEl.style.setProperty("--vw", e.data.haraWidth ? e.data.haraWidth + "px" : ""); // ④ PC width
+    if (typeof e.data.haraLint !== "undefined") lint(e.data.haraLint);  // ④ contrast a11y check
   });
+
+  // ④ contrast lint — outline text nodes below WCAG AA (4.5:1) against their effective background
+  function lint(on) {
+    [].forEach.call(d.querySelectorAll("[data-contrast-fail]"), function (el) { el.style.outline = ""; el.removeAttribute("data-contrast-fail"); });
+    if (!on) { toast("a11y off"); return; }
+    var bad = 0;
+    [].forEach.call(d.querySelectorAll(".hara-viewport *, .hara-print *"), function (el) {
+      if (el.children.length || !el.textContent.trim() || el.offsetParent === null) return;
+      var fg = rgb(getComputedStyle(el).color), bg = bgOf(el);
+      if (fg && bg && ratio(fg, bg) < 4.5) { el.style.outline = "2px solid #ff5b5b"; el.setAttribute("data-contrast-fail", ""); bad++; }
+    });
+    toast(bad ? "⚠ " + bad + " low-contrast text node" + (bad > 1 ? "s" : "") : "✓ contrast OK (AA)");
+  }
+  function bgOf(el) { while (el && el !== d.documentElement) { var c = rgb(getComputedStyle(el).backgroundColor); if (c && c[3] !== 0) return c; el = el.parentElement; } return [12, 13, 18, 1]; }
+  function rgb(s) { var m = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/.exec(s || ""); return m ? [+m[1], +m[2], +m[3], m[4] === undefined ? 1 : +m[4]] : null; }
+  function lum(c) { var a = [c[0], c[1], c[2]].map(function (v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2]; }
+  function ratio(a, b) { var l1 = lum(a), l2 = lum(b); return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05); }
   function step(n) { var ks = screens.map(function (s) { return s.dataset.route; }); var i = ks.indexOf(cur()); var j = Math.max(0, Math.min(ks.length - 1, i + n)); show(ks[j], false); }
 
   // ── 4. one delegated click handler for every primitive ──

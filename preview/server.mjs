@@ -260,7 +260,10 @@ async function deviceChrome(root) {
   <button data-w="0" class="on">↔ Full</button>
  </div>` : ""}
  <button class="ins" id="insp" title="Click an element to copy a reference you can paste into hara">🔎 Inspect</button>
- <a class="ins" href="/__export" style="text-decoration:none" title="Download this design as a PDF">⬇ PDF</a>
+ ${isProto ? `<button class="ins" id="thm" title="Toggle dark / light (the design opts in via [data-theme] tokens)">☾</button>
+ <button class="ins" id="a11y" title="Check color contrast (WCAG AA)">⚠</button>
+ <button class="ins" id="share" title="Copy a link that reopens this exact screen + view">🔗</button>` : ""}
+ <a class="ins" href="/__export" style="text-decoration:none" title="Download this design as a PDF (designer page-per-screen)">⬇ PDF</a>
  <span class="sp"></span><span class="w" id="w">${initLabel}</span>
 </div>
 <div class="stage"><div class="frame ${defaultW ? "" : "full"}" id="frame" style="width:${defaultW ? defaultW + "px" : "100%"}"><iframe id="pv" src="/__artifact"></iframe></div></div>
@@ -281,11 +284,24 @@ async function deviceChrome(root) {
  if(vseg)vseg.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
    [].forEach.call(vseg.children,function(x){x.classList.toggle('on',x===b);});
    var v=b.dataset.v; if(v==='present'){present=true;curView='flow';}else{present=false;curView=v;} tellView();});
+ // ④ theme · a11y · share-link
+ var thm=document.getElementById('thm'),a11y=document.getElementById('a11y'),share=document.getElementById('share');
+ var theme='dark',linting=false,route='';
+ function hashStr(){return '#'+curView+'/'+route+(theme==='light'?'/light':'');}
+ function syncHash(){try{history.replaceState(null,'',hashStr());}catch(e){}}
+ if(thm)thm.addEventListener('click',function(){theme=theme==='dark'?'light':'dark';thm.textContent=theme==='dark'?'☾':'☀';try{pv.contentWindow.postMessage({haraTheme:theme},'*');}catch(e){}syncHash();});
+ if(a11y)a11y.addEventListener('click',function(){linting=!linting;a11y.classList.toggle('on',linting);try{pv.contentWindow.postMessage({haraLint:linting},'*');}catch(e){}});
+ if(share)share.addEventListener('click',function(){var u=location.origin+location.pathname+hashStr();try{navigator.clipboard.writeText(u);}catch(e){}showToast('Link copied → <code>'+hashStr()+'</code>');});
+ window.addEventListener('message',function(e){if(e.data&&e.data.haraRoute){route=e.data.haraRoute;if(e.data.haraViewNow)curView=e.data.haraViewNow;syncHash();}});
+ function restore(){var h=location.hash.slice(1);if(!h)return;var p=h.split('/'),v=p[0],r=p[1],t=p[2];
+   if(t==='light'){theme='light';if(thm)thm.textContent='☀';}
+   if(v){curView=v;if(vseg)[].forEach.call(vseg.children,function(x){x.classList.toggle('on',x.dataset.v===v);});}
+   try{pv.contentWindow.postMessage({haraView:curView,haraRoute:r,haraTheme:theme},'*');}catch(e){}}
  var inspecting=false;
  function tellFrame(){try{pv.contentWindow.postMessage({haraInspect:inspecting},'*');}catch(e){}}
  insp.addEventListener('click',function(){inspecting=!inspecting;insp.classList.toggle('on',inspecting);tellFrame();
    if(inspecting)showToast('Inspect on — click an element to copy a reference for hara');});
- pv.addEventListener('load',function(){tellFrame();if(vseg)tellView();}); // re-arm after live-reload
+ pv.addEventListener('load',function(){tellFrame();if(vseg){if(location.hash.slice(1))restore();else tellView();}}); // re-arm + restore shared state
  function showToast(html){toast.innerHTML=html;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show');},3200);}
  window.addEventListener('message',function(e){if(e.data&&e.data.haraCopied){showToast('Copied → paste into hara: <code>'+String(e.data.haraCopied).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];})+'</code>');}});
  var DEFAULT_W=${defaultW}, SHOW_TOGGLE=${showToggle};
