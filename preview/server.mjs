@@ -160,13 +160,21 @@ const server = createServer(async (req, res) => {
 // (src=/__artifact, which live-reloads), so the user sees mobile + desktop effects with one click.
 async function deviceChrome(root) {
   let title = "Preview";
+  let device = ""; // <meta name="hara-preview" content="phone|tablet|desktop"> → fixed width, no toggle (not responsive)
   try {
-    const head = (await readFile(join(root, "index.html"), "utf8")).slice(0, 2000);
-    const m = /<title>([^<]*)<\/title>/i.exec(head);
-    if (m && m[1].trim()) title = m[1].trim();
+    const head = (await readFile(join(root, "index.html"), "utf8")).slice(0, 4000);
+    const tm = /<title>([^<]*)<\/title>/i.exec(head);
+    if (tm && tm[1].trim()) title = tm[1].trim();
+    const dm = /<meta\s+name=["']hara-preview["']\s+content=["']([^"']+)["']/i.exec(head);
+    if (dm) device = dm[1].trim().toLowerCase();
   } catch {
-    /* default title */
+    /* defaults */
   }
+  const WIDTHS = { phone: 390, tablet: 834, desktop: 1280 };
+  const fixed = Object.prototype.hasOwnProperty.call(WIDTHS, device);
+  const defaultW = fixed ? WIDTHS[device] : 0; // 0 = Full. Default Full so a wide design is NEVER clipped at a fake 1280.
+  const showToggle = !fixed; // a declared single device isn't responsive → just show it that way (no device switcher)
+  const initLabel = defaultW ? defaultW + "px" : "Full";
   return `<!doctype html><meta charset=utf-8><title>${esc(title)} · preview</title>
 <style>
  :root{--bg:#0c0d10;--bar:#15171c;--fg:#e8eaed;--muted:#8b90a0;--border:#23262e;--accent:#5b8cff}
@@ -190,16 +198,16 @@ async function deviceChrome(root) {
 </style>
 <div class="bar">
  <span class="title">${esc(title)}</span>
- <div class="seg" id="seg">
+ ${showToggle ? `<div class="seg" id="seg">
   <button data-w="390">📱 Phone</button>
   <button data-w="834">▭ Tablet</button>
-  <button data-w="1280" class="on">🖥 Desktop</button>
-  <button data-w="0">↔ Full</button>
- </div>
+  <button data-w="1280">🖥 Desktop</button>
+  <button data-w="0" class="on">↔ Full</button>
+ </div>` : ""}
  <button class="ins" id="insp" title="Click an element to copy a reference you can paste into hara">🔎 Inspect</button>
- <span class="sp"></span><span class="w" id="w">1280px</span>
+ <span class="sp"></span><span class="w" id="w">${initLabel}</span>
 </div>
-<div class="stage"><div class="frame" id="frame" style="width:1280px"><iframe id="pv" src="/__artifact"></iframe></div></div>
+<div class="stage"><div class="frame ${defaultW ? "" : "full"}" id="frame" style="width:${defaultW ? defaultW + "px" : "100%"}"><iframe id="pv" src="/__artifact"></iframe></div></div>
 <div class="toast" id="toast"></div>
 <script>
  var frame=document.getElementById('frame'),wl=document.getElementById('w'),seg=document.getElementById('seg');
@@ -207,10 +215,10 @@ async function deviceChrome(root) {
  function set(w){
    if(w&&w>0){frame.style.width=w+'px';frame.classList.remove('full');wl.textContent=w+'px';}
    else{frame.style.width='100%';frame.classList.add('full');wl.textContent='Full';}
-   [].forEach.call(seg.children,function(b){b.classList.toggle('on',String(w)===b.dataset.w);});
+   if(seg)[].forEach.call(seg.children,function(b){b.classList.toggle('on',String(w)===b.dataset.w);});
    try{localStorage.setItem('hara-design-w',String(w));}catch(e){}
  }
- seg.addEventListener('click',function(e){var b=e.target.closest('button');if(b)set(parseInt(b.dataset.w,10));});
+ if(seg)seg.addEventListener('click',function(e){var b=e.target.closest('button');if(b)set(parseInt(b.dataset.w,10));});
  var inspecting=false;
  function tellFrame(){try{pv.contentWindow.postMessage({haraInspect:inspecting},'*');}catch(e){}}
  insp.addEventListener('click',function(){inspecting=!inspecting;insp.classList.toggle('on',inspecting);tellFrame();
@@ -218,8 +226,9 @@ async function deviceChrome(root) {
  pv.addEventListener('load',tellFrame); // re-arm after live-reload
  function showToast(html){toast.innerHTML=html;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show');},3200);}
  window.addEventListener('message',function(e){if(e.data&&e.data.haraCopied){showToast('Copied → paste into hara: <code>'+String(e.data.haraCopied).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];})+'</code>');}});
- var s=parseInt((function(){try{return localStorage.getItem('hara-design-w');}catch(e){return null;}})()||'1280',10);
- set(isNaN(s)?1280:s);
+ var DEFAULT_W=${defaultW}, SHOW_TOGGLE=${showToggle};
+ if(SHOW_TOGGLE){var s=parseInt((function(){try{return localStorage.getItem('hara-design-w');}catch(e){return null;}})()||String(DEFAULT_W),10);set(isNaN(s)?DEFAULT_W:s);}
+ else{set(DEFAULT_W);} // fixed device declared via hara-preview meta → show at that width, ignore the global toggle pref
 </script>`;
 }
 

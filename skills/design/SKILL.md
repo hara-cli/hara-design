@@ -220,10 +220,19 @@ Unless the brief is explicitly mobile-only or a fixed canvas, every web design m
 **desktop (~1280px+)** — not just "it reflows." Deliberately design both: fluid type (`clamp()`), grids that
 collapse to one column on phone, touch-friendly spacing, no horizontal scroll, readable hierarchy at both widths
 (the recipe seeds ship a `@media (max-width: 920px)` breakpoint — keep it working, add more if needed).
-**Verify both before finalizing**: the preview has a device toggle (Phone / Tablet / Desktop / Full) in its
-toolbar — check the design at Phone and Desktop, fix what breaks. This is part of the quality gate (P0: "responsive
-at 390 and 1280"). Note: the `mobile-app` recipe is a **fixed 390px iPhone frame** (mockup, not responsive) — for a
-product that must work on phone *and* web, use `web-prototype`/`dashboard` (responsive), not `mobile-app`.
+**Verify both before finalizing**: for a responsive design the preview shows a device toggle (Phone / Tablet /
+Desktop / Full) — check Phone and Desktop, fix what breaks. P0: "responsive at 390 and 1280". Note: the `mobile-app`
+recipe is a **fixed 390px iPhone frame** (mockup, not responsive) — for a product that must work on phone *and* web,
+use `web-prototype`/`dashboard` (responsive), not `mobile-app`.
+
+**Declare the preview width with a meta tag** so the preview opens correctly and isn't clipped:
+`<meta name="hara-preview" content="phone|tablet|desktop">` in the `<head>`.
+- A **fixed single-device** design (a phone app mockup, a fixed-width canvas) → set `content="phone"` (or
+  `tablet`/`desktop`). The preview then shows it **at exactly that width with NO device toggle** (the switcher is
+  pointless for a non-responsive design).
+- A **responsive** web design **or a wide showcase** (e.g. a gallery of screens) → **omit the meta**. The preview
+  defaults to **Full width** (never clips a wide layout at a fake 1280) and keeps the device toggle for checking
+  phone/desktop.
 
 ## Multi-screen / multi-device — use the shared frames, don't redraw
 For "same app across devices" or "screens 1→2→3 side by side": write each inner screen to
