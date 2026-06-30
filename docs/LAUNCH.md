@@ -71,6 +71,22 @@ Built in the open. Tell us what to add to the catalog.
 
 ---
 
+## Demo GIF — 30s shot list (#11, the gating asset)
+
+Record a real screen capture (CleanShot/QuickTime) — VHS can't capture the browser preview, which is the payoff.
+Keep it real (no faked output). Target ~30s, then convert to GIF (or keep mp4 + a GIF poster).
+
+1. **0–3s** — terminal, dark theme. Type `hara` (REPL opens) — or `claude` to make the "any agent" point.
+2. **3–8s** — type the brief and hit enter:
+   `a dark, modern-minimal landing page for a developer log-search tool — use the linear-app design system`
+3. **8–16s** — agent works (speed up 2–3×): it picks the system, writes `index.html`, prints the preview URL.
+4. **16–24s** — **cut to the browser**: the landing page renders live; a small scroll shows it's a real, polished page.
+5. **24–30s** — quick beat: flip to **Grid** view (all screens) or a tap-through on an app prototype, then end on the
+   `hara-design` mark + `github.com/hara-cli/hara-design`.
+
+Optional 2-shot variant for the "works anywhere" angle: same brief, once in Claude Code, once in hara — split or sequential.
+Capture at ≥2x retina, crop tight to the terminal+browser, keep total file < 8MB for HN/X inline play.
+
 ## awesome-list one-liner (for #13)
 
 `[hara-design](https://github.com/hara-cli/hara-design) — Turn your coding agent (hara, Claude Code, Codex) into a design tool: plain-language → playable, on-brand HTML prototypes in 150 design systems, previewed live. Apache-2.0.`
