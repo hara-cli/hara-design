@@ -10,7 +10,7 @@
 // or the installed plugin copy regardless of where you run it.
 
 import { spawn, execFileSync } from "node:child_process";
-import { existsSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readdirSync, statSync, lstatSync, readlinkSync, mkdirSync, symlinkSync, rmSync, cpSync, realpathSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { homedir } from "node:os";
 import { fileURLToPath } from "node:url";
@@ -54,7 +54,12 @@ function defaultDir() {
 function usage() {
   console.log(`hara-design — local helper for the design plugin
 
-  hara-design install                              register this package as the hara design plugin
+  hara-design install            [--claude|--codex] install the design skill into a CLI:
+                                                     (no flag) → register as a hara plugin
+                                                     --claude  → link skills/design → ~/.claude/skills/design
+                                                     --codex   → link skills/design → ~/.agents/skills/design
+                                   add --copy to copy instead of symlink · --force to replace an existing dir
+  hara-design uninstall          [--claude|--codex] undo the matching install (safe: only removes our own link/copy)
   hara-design init    [name]                       scaffold THIS directory as a design project (basic webpage)
   hara-design preview [dir] [--port N] [--open]    live preview server on a design dir
   hara-design open    [dir] [--port N]             preview + open the browser
@@ -103,6 +108,116 @@ function startServer(dir, wantOpen, port, catalog) {
   setTimeout(() => finish(null), 5000); // safety net: detach even if the URL line never arrives
 }
 
+// ── Skill install adapters (Claude Code + Codex) ──────────────────────────────
+// The bundled skill is skills/design/ (CLI-agnostic SKILL.md + references/). We expose it to a
+// host CLI by placing it where that CLI discovers user skills. Symlink by default (so `npm update`
+// / a fresh build is picked up with no re-install); --copy makes a standalone copy.
+const skillSrc = join(root, "skills", "design"); // the source skill dir shipped in this package
+
+// ~/.claude/skills/design  — Claude Code user skill dir.
+function claudeSkillDir() { return join(homedir(), ".claude", "skills", "design"); }
+// ~/.agents/skills/design  — Codex user-installed skill dir (verified against codex-rs skill loader:
+// user scope discovers $HOME/.agents/skills and follows symlinked skill directories).
+function codexSkillDir() { return join(homedir(), ".agents", "skills", "design"); }
+
+// Is `p` a symlink that already points at our source skill dir? (idempotency check)
+function pointsAtSource(p) {
+  try {
+    if (!lstatSync(p).isSymbolicLink()) return false;
+    return realpathSync(p) === realpathSync(skillSrc);
+  } catch { return false; }
+}
+
+// Check the `hara-design` command itself is reachable on PATH; print a hint if not.
+function checkOnPath() {
+  try { execFileSync("bash", ["-c", "command -v hara-design"], { stdio: "ignore" }); return true; }
+  catch { return false; }
+}
+
+function installSkillInto(dest, label) {
+  if (!existsSync(skillSrc)) {
+    console.error(`Cannot find the bundled skill at ${skillSrc} — is this a complete install of @nanhara/hara-design?`);
+    process.exit(1);
+  }
+  const useCopy = flag("copy");
+  const force = flag("force");
+
+  // Already correctly linked → nothing to do (idempotent).
+  if (!useCopy && pointsAtSource(dest)) {
+    console.log(`✓ ${label}: already linked  (${dest} → ${skillSrc})`);
+    return printNextSteps(dest, label);
+  }
+
+  // Something is already at `dest`. NEVER blind-delete a user's files.
+  if (existsSync(dest) || isBrokenSymlink(dest)) {
+    const isOurs = pointsAtSource(dest) || isBrokenOurSymlink(dest);
+    if (!force && !isOurs) {
+      console.error(`✗ ${label}: ${dest} already exists and is not managed by hara-design.`);
+      console.error(`  Refusing to overwrite. Re-run with --force to replace it, or move it aside first.`);
+      process.exit(1);
+    }
+    // Ours (stale link) or --force: safe to remove and recreate.
+    try { rmSync(dest, { recursive: true, force: true }); }
+    catch (e) { console.error(`✗ ${label}: could not remove existing ${dest}: ${e.message}`); process.exit(1); }
+  }
+
+  mkdirSync(dirname(dest), { recursive: true });
+  try {
+    if (useCopy) {
+      cpSync(skillSrc, dest, { recursive: true, dereference: true });
+      console.log(`✓ ${label}: copied skill → ${dest}`);
+    } else {
+      symlinkSync(skillSrc, dest, "dir");
+      console.log(`✓ ${label}: linked skill  ${dest} → ${skillSrc}`);
+    }
+  } catch (e) {
+    console.error(`✗ ${label}: install failed: ${e.message}`);
+    process.exit(1);
+  }
+  printNextSteps(dest, label);
+}
+
+function isBrokenSymlink(p) {
+  try { lstatSync(p); return !existsSync(p); } catch { return false; }
+}
+function isBrokenOurSymlink(p) {
+  // a dangling symlink we can't resolve — treat as ours only if its target string is our source
+  try { return lstatSync(p).isSymbolicLink() && readlinkSync(p) === skillSrc; } catch { return false; }
+}
+
+function uninstallSkillFrom(dest, label) {
+  if (!existsSync(dest) && !isBrokenSymlink(dest)) {
+    console.log(`${label}: nothing installed at ${dest}.`);
+    return;
+  }
+  const ours = pointsAtSource(dest) || isBrokenOurSymlink(dest);
+  if (!ours && !flag("force")) {
+    console.error(`✗ ${label}: ${dest} is not a hara-design link (looks like your own files). Not removing.`);
+    console.error(`  If you really want it gone, remove it yourself or re-run with --force.`);
+    process.exit(1);
+  }
+  try { rmSync(dest, { recursive: true, force: true }); console.log(`✓ ${label}: removed ${dest}`); }
+  catch (e) { console.error(`✗ ${label}: could not remove ${dest}: ${e.message}`); process.exit(1); }
+}
+
+function printNextSteps(dest, label) {
+  console.log("");
+  console.log(`Next steps (${label}):`);
+  if (label === "Claude Code") {
+    console.log(`  • Restart Claude Code (or start a new session) so it picks up the new skill.`);
+    console.log(`  • Then ask it to "design a landing page…", or invoke /design.`);
+  } else {
+    console.log(`  • Start a new Codex session so it discovers the skill under ~/.agents/skills/.`);
+    console.log(`  • Then ask it to "design a landing page…", or reference $design.`);
+  }
+  console.log(`  • The 'design' skill launches preview/export via the 'hara-design' command on your PATH.`);
+  if (!checkOnPath()) {
+    console.log("");
+    console.log(`  ⚠ 'hara-design' is not on your PATH yet. Install it globally so the skill can call it:`);
+    console.log(`      npm i -g @nanhara/hara-design`);
+  }
+}
+
 if (cmd === "init") {
   const child = spawn("node", [join(root, "scripts", "init.mjs"), ...(positional() ? [positional()] : [])], { stdio: "inherit" });
   child.on("exit", (code) => process.exit(code ?? 0));
@@ -136,14 +251,23 @@ if (cmd === "init") {
   const child = spawn("node", args, { stdio: "inherit" });
   child.on("exit", (code) => process.exit(code ?? 0));
 } else if (cmd === "install") {
-  // register this package as a hara plugin (handy after `npm i -g @nanhara/hara-design`)
-  const child = spawn("hara", ["plugin", "add", `file:${root}`], { stdio: "inherit" });
-  child.on("error", () => { console.error("`hara` not found — install hara first: npm i -g @nanhara/hara"); process.exit(1); });
-  child.on("exit", (code) => process.exit(code ?? 0));
+  // Install the bundled `design` skill into a CLI. Default (no flag) = register as a hara plugin.
+  // --claude → ~/.claude/skills/design ; --codex → ~/.agents/skills/design (codex's user skill dir).
+  if (flag("claude")) installSkillInto(claudeSkillDir(), "Claude Code");
+  else if (flag("codex")) installSkillInto(codexSkillDir(), "Codex");
+  else {
+    const child = spawn("hara", ["plugin", "add", `file:${root}`], { stdio: "inherit" });
+    child.on("error", () => { console.error("`hara` not found — install hara first: npm i -g @nanhara/hara"); process.exit(1); });
+    child.on("exit", (code) => process.exit(code ?? 0));
+  }
 } else if (cmd === "uninstall") {
-  const child = spawn("hara", ["plugin", "remove", "design"], { stdio: "inherit" });
-  child.on("error", () => { console.error("`hara` not found."); process.exit(1); });
-  child.on("exit", (code) => process.exit(code ?? 0));
+  if (flag("claude")) uninstallSkillFrom(claudeSkillDir(), "Claude Code");
+  else if (flag("codex")) uninstallSkillFrom(codexSkillDir(), "Codex");
+  else {
+    const child = spawn("hara", ["plugin", "remove", "design"], { stdio: "inherit" });
+    child.on("error", () => { console.error("`hara` not found."); process.exit(1); });
+    child.on("exit", (code) => process.exit(code ?? 0));
+  }
 } else {
   usage();
   process.exit(cmd ? 1 : 0);

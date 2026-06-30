@@ -22,31 +22,49 @@ you (hara CLI) ──talk──▶ hara (the design engine)
               preview/server.mjs ──live-reload──▶ your browser
 ```
 
-## Local workflow — install · open · develop · export
+## Install — works in hara, Claude Code, or Codex
 
-**1. Install** — two equivalent paths. Both give the `design` skill **and** the `hara-design` command.
+The same `design` skill runs under any agent CLI. They all share **one core**: the `hara-design` command
+(preview / export / handoff) + the `skills/design/` skill (SKILL.md + 150 design systems + recipes). Pick your host:
+
+| Host | Install |
+|---|---|
+| **hara** | `hara plugin add github:hara-cli/hara-design` |
+| **Claude Code** | `npm i -g @nanhara/hara-design` then `hara-design install --claude` |
+| **Codex** | `npm i -g @nanhara/hara-design` then `hara-design install --codex` |
 
 ```bash
-# A) via hara (recommended) — installs the skill into ~/.hara/plugins/design AND
-#    links the `hara-design` command into ~/.hara/bin
+# hara — installs the skill into ~/.hara/plugins/design AND links `hara-design` into ~/.hara/bin
 hara plugin add github:hara-cli/hara-design
-# one-time, so the command is on PATH:
-echo 'export PATH="$HOME/.hara/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
+echo 'export PATH="$HOME/.hara/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc   # one-time, command on PATH
+# (developing a clone: hara plugin add file:~/work/projects/hara/hara-design)
 
-# B) via npm — global command, then register the plugin
+# Claude Code — global command, then link the skill into ~/.claude/skills/design
 npm i -g @nanhara/hara-design
-hara-design install                # = hara plugin add (registers the skill)
+hara-design install --claude       # symlinks skills/design → ~/.claude/skills/design (restart Claude Code)
+
+# Codex — global command, then link the skill into ~/.agents/skills/design (Codex's user skill dir)
+npm i -g @nanhara/hara-design
+hara-design install --codex        # symlinks skills/design → ~/.agents/skills/design (new Codex session)
 ```
-Developing locally (a clone): `hara plugin add file:~/work/projects/hara/hara-design` (also links the command).
+
+`install --claude` / `--codex` **symlink** the skill (a later `npm update` is picked up automatically); add
+`--copy` for a standalone copy, `--force` to replace an existing dir. They never delete files they didn't create.
+Undo with `hara-design uninstall --claude` / `--codex`. Bare `hara-design install` (no flag) registers the hara plugin.
+After install, the `design` skill always launches preview/export via the `hara-design` command on your PATH, so
+**every host needs `hara-design` reachable** — `npm i -g @nanhara/hara-design` (Claude Code / Codex) or hara's `~/.hara/bin` link.
 
 > **Where does `hara-design` come from?** It's **this plugin/package** — *not* bundled with `hara` (the CLI) itself.
 > `hara plugin add` links it into `~/.hara/bin`; `npm i -g @nanhara/hara-design` installs it the npm way. You don't
 > strictly need it: inside hara just use `/design` (the agent calls the scripts by path); for manual preview/export
 > you can always run `node ~/.hara/plugins/design/{preview/server.mjs,scripts/export.mjs}` directly.
 
-Verify: `hara doctor` lists `design` under skills + plugins; `hara-design` runs from your shell.
+Verify: `hara doctor` lists `design` under skills + plugins (hara); for Claude Code / Codex, the new session lists
+the `design` skill and `hara-design` runs from your shell.
 
-**2. Design — talk to hara** (in any hara session):
+## Local workflow — open · develop · export
+
+**1. Design — talk to your agent** (in any hara / Claude Code / Codex session):
 ```
 hara
 > a dark, modern-minimal landing page for a developer log-search tool, use the linear-app design system
@@ -61,7 +79,7 @@ and starts the live preview — open the printed `http://127.0.0.1:<port>`.
   hara-design init [name]   # scaffold THIS dir: a basic index.html + README, ready to design & deliver
   ```
 
-**3. Open / preview / browse**:
+**2. Open / preview / browse**:
 ```bash
 hara-design open                 # newest .hara/design/<slug> under cwd, opens the browser
 hara-design preview ./path/to/dir --port 4321
@@ -69,11 +87,11 @@ hara-design gallery [--global]   # browse ALL your designs (read-only library); 
 ```
 The preview hot-reloads on every file change; the gallery lists every design with a live thumbnail (click to open & edit).
 
-**4. Develop / iterate** — just talk to hara ("make the hero bigger, narrow the sidebar"); each edit auto-reloads
-the browser. Before finalizing, hara self-checks against the recipe's **P0 checklist + a 5-dimension critique**
+**3. Develop / iterate** — just talk to your agent ("make the hero bigger, narrow the sidebar"); each edit auto-reloads
+the browser. Before finalizing, the skill self-checks against the recipe's **P0 checklist + a 5-dimension critique**
 (anti-AI-slop). Add your own systems/recipes under `skills/design/references/` (then `npm run build-index`).
 
-**5. Export & handoff**:
+**4. Export & handoff**:
 ```bash
 # Self-contained interactive HTML (frozen proto inlined; opens anywhere, no server/Chrome)
 hara-design export  .hara/design/<slug>/index.html [--out out.html]

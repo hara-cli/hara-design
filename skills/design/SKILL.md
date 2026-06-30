@@ -23,7 +23,7 @@ from `<skill dir>/references/`:
 ├── skills/<recipe>/              ← per-output recipe: SKILL.md + assets/template.html + references/{layouts,checklist}.md
 └── craft/{anti-ai-slop,color,typography}.md
 ```
-(If you ever can't resolve it, find it: `find ~/.hara <project>/.hara -path '*/design/references/design-systems/INDEX.md' 2>/dev/null`.)
+(If you ever can't resolve it, find it: `find ~/.hara ~/.claude ~/.agents ~/.codex <project>/.hara -path '*/design/references/design-systems/INDEX.md' 2>/dev/null`.)
 Device frames for multi-screen prototypes are served at `/frames/<device>.html` (see "Multi-screen" below).
 
 > **These references were authored for a web tool. Two translations always apply** (the rest is followed as-is):
@@ -64,13 +64,14 @@ the user says "just build / no questions", or they already gave answers. When sk
   them pick a number). State the mood + your pick in one sentence.
 - **"I'll name one"** → use that system id (honor it over inference).
 - **"match a brand / screenshot"** → extract real values *before* planning: read their attached files or fetch
-  `<brand>.com` (use the `web_fetch`/bash tools), `grep -E '#[0-9a-fA-F]{3,8}'` their CSS for hex, eyeball
+  `<brand>.com` (use your web-fetch tool — e.g. `WebFetch`/`web_fetch` — or `curl` via bash), `grep -E '#[0-9a-fA-F]{3,8}'` their CSS for hex, eyeball
   screenshots for type; write a short `brand-spec.md` (6 color tokens + display/body/mono fonts + 3–5 posture
   rules); never guess colors from memory.
 Then read that system's `DESIGN.md` in full before building.
 
 ### Stage 3 — Plan (use your task list)
-Lay out a 5–10 step plan with the task tool (the user sees it live and can redirect cheaply). Standard template
+Lay out a 5–10 step plan with your task-list tool (e.g. `TodoWrite`, or whatever todo/plan tool your agent has;
+the user sees it live and can redirect cheaply). Standard template
 (adapt the middle):
 ```
 1. Read chosen DESIGN.md + the recipe's template.html / layouts.md / checklist.md
@@ -127,7 +128,7 @@ This first step should be quick: open the preview, one line of status, one quest
 Each design (its `index.html` + assets + any `handoff/`) is self-contained and git-trackable — the **directory is
 the deliverable**. Two homes: *embedded* `.hara/design/<slug>/` inside a code project, or a *standalone design
 project* (the whole dir IS the design). To start a standalone project, scaffold the current dir:
-`hara-design init [name]` (basic starter `index.html` + README) — then design it by talking to hara.
+`hara-design init [name]` (basic starter `index.html` + README) — then design it by talking to your agent.
 
 ### Resume / open / browse (edit anytime)
 Designs persist on disk. To reopen one and keep editing: `hara-design open` (newest) or `hara-design preview
@@ -153,8 +154,8 @@ hara-design preview <dir>          # serve a specific design dir
 ```
 Give the user the printed URL. It is **already backgrounded** — do NOT wrap it in `&`, `sleep`, or a background job,
 and do NOT wait on it (that's the old hang). Every later write/edit hot-reloads the browser — to iterate, just edit
-the file. `hara-design stop` ends it. Don't `web_fetch` localhost; to inspect your own output use the
-Playwright/computer tools against `127.0.0.1:<port>`.
+the file. `hara-design stop` ends it. Don't fetch localhost with a web-fetch tool; to inspect your own output use a
+browser/computer-automation tool (e.g. Playwright) against `127.0.0.1:<port>`.
 
 ---
 
