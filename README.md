@@ -1,12 +1,12 @@
 # hara-design
 
-**Design in the [hara](https://github.com/hara-cli/hara) CLI.** Talk to hara in your terminal; it generates
-self-contained HTML — landing pages, dashboards, app prototypes, decks — in any of **150 brand-grade design
-systems**, and you preview it **live in your browser**. You drive entirely from the CLI; the web is view-only
-(no web-side chat).
+**Design from your terminal — in [hara](https://github.com/hara-cli/hara), Claude Code, or Codex.** Describe what
+you want; your agent generates self-contained, interactive HTML — landing pages, dashboards, app prototypes, decks
+— in any of **150 brand-grade design systems**, previewed **live in your browser**. You drive entirely from the
+CLI; the web is a view-only preview (no web-side chat).
 
-It ships as a hara **plugin**: one `design` skill + a tiny live-reload preview server + a catalog of design
-systems, skill recipes, craft rules, and device frames.
+It ships as an installable **skill**: the `design` skill + a tiny live-reload preview server + a catalog of design
+systems, skill recipes, craft rules, and device frames — one shared core, a thin adapter per CLI.
 
 ![A landing page the design skill generated from a one-line brief in the linear-app design system](docs/demo-nimbus.png)
 
