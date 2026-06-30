@@ -106,7 +106,7 @@
   // ── 4. one delegated click handler for every primitive ──
   d.addEventListener("click", function (e) {
     // grid: click a screen card (not an inner control) → jump into flow at that screen
-    if (docEl.dataset.view === "grid") { var card = e.target.closest("[data-route]"); if (card) { setView("detail"); show(card.dataset.route, false); return; } }
+    if (docEl.dataset.view === "grid") { var card = e.target.closest("[data-route]"); if (card && screens.indexOf(card) >= 0) { setView("detail"); show(card.dataset.route, false); return; } } // screens only — <html> also carries data-route
     var go = e.target.closest("[data-go]");
     if (go) { e.preventDefault(); var r = go.dataset.go; if (r === "__back") { var p = hist.pop(); if (p) show(p, false); } else show(r, true); return; }
     var tab = e.target.closest("[data-tab]");
@@ -140,7 +140,9 @@
   function toast(msg) { if (!tEl) { tEl = mk("div", "proto-toast"); d.body.appendChild(tEl); } tEl.textContent = msg; tEl.classList.add("show"); clearTimeout(tTimer); tTimer = setTimeout(function () { tEl.classList.remove("show"); }, 2400); }
   function mk(t, c) { var n = d.createElement(t); n.className = c; return n; }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
-  function post(o) { try { parent.postMessage(o, "*"); } catch (_) {} }
+  // Only talk to a REAL host (the preview chrome). Standalone (parent === window) → no-op, else the preview-protocol
+  // messages loop back into our own message listener and fight local view changes (the exported-file Grid↔真机 bug).
+  function post(o) { if (window.parent === window) return; try { parent.postMessage(o, "*"); } catch (_) {} }
   // standalone export: when opened directly (no host chrome — not in the preview iframe), self-mount a minimal
   // Grid/真机 toggle so the exported single file is fully usable. In the preview, parent !== window so the host owns it.
   if (screens.length > 1 && window.parent === window) {
