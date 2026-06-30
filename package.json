@@ -1,13 +1,29 @@
 {
   "name": "@nanhara/hara-design",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Design in the hara CLI — generate self-contained HTML in 151 brand-grade design systems, preview live, export to PDF / assets / design tokens. A hara plugin.",
   "license": "Apache-2.0",
   "type": "module",
   "homepage": "https://github.com/hara-cli/hara-design#readme",
-  "repository": { "type": "git", "url": "git+https://github.com/hara-cli/hara-design.git" },
-  "bugs": { "url": "https://github.com/hara-cli/hara-design/issues" },
-  "keywords": ["hara", "design", "design-systems", "design-tokens", "html", "preview", "cli", "ai", "agent", "plugin"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hara-cli/hara-design.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hara-cli/hara-design/issues"
+  },
+  "keywords": [
+    "hara",
+    "design",
+    "design-systems",
+    "design-tokens",
+    "html",
+    "preview",
+    "cli",
+    "ai",
+    "agent",
+    "plugin"
+  ],
   "bin": {
     "hara-design": "bin/hara-design.mjs"
   },
