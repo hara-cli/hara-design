@@ -1,6 +1,6 @@
 # hara-design — launch copy (draft)
 
-Gating asset: a 30s demo GIF (same skill in hara / Claude Code / Codex → live preview). Embed it where `[GIF]` is marked.
+Gating asset: a 30s demo GIF (same skill in hara / Claude Code / Codex → live preview). Embed it where `[GIF → docs/demo.gif]` is marked.
 Cadence (苏秦): Week 0 prep (GIF + README first-screen + awesome PRs) → Week 1 Tue: Show HN + same-day X + r/ClaudeAI → Thu: Reddit/Discord → Week 2: dev.to → Month 2+: Product Hunt. HN and PH on different days.
 
 ---
@@ -25,7 +25,7 @@ It began as a fork of open-design and is Apache-2.0. The part I think is neat: t
 
 Repo: https://github.com/hara-cli/hara-design
 
-[GIF]
+[GIF → docs/demo.gif]
 
 Feedback welcome — especially on the design-system catalog and the prototype interaction model.
 
@@ -120,7 +120,7 @@ Install: `npm i -g @nanhara/hara-design && hara-design install --claude` (also w
 The part I like: the agent writes only the screens + design tokens; a frozen framework is injected, so multi-screen designs are actually *tappable* (real flows in a device frame), not static mockups. Apache-2.0, no account, bring your own model.
 
 Repo: https://github.com/hara-cli/hara-design
-[GIF]
+[GIF → docs/demo.gif]
 
 Feedback welcome — especially on the design-system catalog. (Don't post to r/programming — too broad.)
 

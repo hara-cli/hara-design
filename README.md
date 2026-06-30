@@ -8,9 +8,9 @@ CLI; the web is a view-only preview (no web-side chat).
 It ships as an installable **skill**: the `design` skill + a tiny live-reload preview server + a catalog of design
 systems, skill recipes, craft rules, and device frames — one shared core, a thin adapter per CLI.
 
-![A landing page the design skill generated from a one-line brief in the linear-app design system](docs/demo-nimbus.png)
+![A multi-screen app prototype in the device frame, and the Grid board of every screen](https://raw.githubusercontent.com/hara-cli/hara-design/master/docs/demo.gif)
 
-> Above: generated end-to-end from a one-line brief in the `linear-app` system, rendered live in the preview.
+> A multi-screen prototype previewed live — flip between the device (**Play**) and the **Grid** board of every screen. Generated from a brief, rendered in the preview.
 
 ```
 you (hara CLI) ──talk──▶ hara (the design engine)
