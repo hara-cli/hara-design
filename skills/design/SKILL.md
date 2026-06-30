@@ -203,7 +203,7 @@ face with a quieter body face (never the same family, except an intentional "tec
 never ship it. **You write ONLY the asset:** `<section class="screen" data-route="…" data-screen-label="…">` screens
 + the design-system `:root` tokens + `data-*` interaction hooks + one `<meta name="hara-preview" content="…">`.
 **Do NOT author a device bezel, a status bar, view-mode CSS, or `proto.js`** — the preview *injects* the fixed
-framework (the device frame, the flow/grid/detail/Device views, and the `data-*` runtime). Authoring a frame just
+framework (the device frame, the Grid + Play views, and the `data-*` runtime). Authoring a frame just
 fights it. Full contract: `references/shared/proto.md`. Start from a scaffold (asset-only, frame-free):
 - **Mobile app / multi-screen** → **`references/shared/mobileflow-scaffold.html`** (stacked `<section data-route>`
   screens + bottom-tab + back, dark theme). **Default = a playable FLOW** (tap a CTA → next screen), NOT a static grid.
@@ -281,7 +281,7 @@ slides in a row; headlines ≥36px, body ≥22px.
 
 ## Export & handoff (when the user wants to ship it for real)
 The CLI helper is `hara-design` (or `node <skill dir>/../../{scripts,preview}/…`):
-- **HTML**: `hara-design export <artifact dir>/index.html` — bundles a **self-contained interactive HTML** (the frozen proto.css/js inlined): the prototype opens anywhere (double-click, email, static host), fully interactive (device frame, Grid board + Device tap-through, forms/modals), no server or Chrome. proto.js self-mounts a Grid/Device toggle when opened standalone.
+- **HTML**: `hara-design export <artifact dir>/index.html` — bundles a **self-contained interactive HTML** (the frozen proto.css/js inlined): the prototype opens anywhere (double-click, email, static host), fully interactive (device frame, Grid board + Play tap-through, forms/modals), no server or Chrome. proto.js self-mounts a Grid/Play toggle when opened standalone.
 - **Client proposal PDF** (share the design with a client / non-technical stakeholder — product narrative + the
   screens explained + design rationale + roadmap): use the **`design-proposal`** recipe
   (`references/skills/design-proposal/`) — fill its `template.html`, embed screen PNGs, then `hara-design export

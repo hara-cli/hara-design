@@ -250,7 +250,7 @@ async function deviceChrome(root) {
  <span class="title">${esc(title)}</span>
  ${isProto ? `<div class="seg" id="vseg">
   <button data-v="grid" class="on">▦ Grid</button>
-  <button data-v="detail">📱 Device</button>
+  <button data-v="detail">▶ Play</button>
  </div>` : showToggle ? `<div class="seg" id="seg">
   <button data-w="390">📱 Phone</button>
   <button data-w="834">▭ Tablet</button>
