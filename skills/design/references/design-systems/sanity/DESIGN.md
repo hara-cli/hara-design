@@ -1,6 +1,7 @@
 ---
 id: sanity
 category: Backend & Data
+mood: Editorial & Refined
 palette: ["#0b0b0b", "#212121", "#353535", "#797979", "#b9b9b9", "#ededed", "#ffffff", "#0052ef", "#f36458", "#000000"]
 fonts: ["waldenburgNormal", "IBM Plex Mono", "Helvetica"]
 ---

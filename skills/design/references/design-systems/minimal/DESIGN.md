@@ -1,6 +1,7 @@
 ---
 id: minimal
 category: Modern & Minimal
+mood: Minimal & Precise
 palette: ["#0C0C09", "#312C85", "#16A34A", "#D97706", "#DC2626", "#F4F4F1"]
 ---
 # Design System Inspired by Minimal

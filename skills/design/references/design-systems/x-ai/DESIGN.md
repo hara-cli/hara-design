@@ -1,6 +1,7 @@
 ---
 id: x-ai
 category: AI & LLM
+mood: Minimal & Precise
 palette: ["#1f2228", "#ffffff", "#000000"]
 fonts: ["GeistMono", "universalSans"]
 ---

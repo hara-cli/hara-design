@@ -1,6 +1,7 @@
 ---
 id: arc
 category: Productivity & SaaS
+mood: Bold & Expressive
 palette: ["#ff7e5f", "#feb47b", "#7f5af0", "#e84393", "#16f2b3", "#0db4f7", "#1a1a1f", "#54545a", "#8c8c93", "#fafafa"]
 fonts: ["Argent CF", "Inter", "Berkeley Mono"]
 ---

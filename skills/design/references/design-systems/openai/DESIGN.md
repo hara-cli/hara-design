@@ -1,6 +1,7 @@
 ---
 id: openai
 category: AI & LLM
+mood: Minimal & Precise
 palette: ["#ffffff", "#0d0d0d", "#e5e5e5", "#1a1a1a", "#fafafa", "#f5f5f5", "#ececec", "#10a37f", "#0a7a5e", "#e8f5f0"]
 fonts: ["Signifier", "Söhne", "Söhne Mono"]
 ---

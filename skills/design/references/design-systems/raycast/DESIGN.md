@@ -1,6 +1,7 @@
 ---
 id: raycast
 category: Developer Tools
+mood: Tech & Utility
 palette: ["#07080a", "#FF6363", "#ffffff", "#55b3ff", "#5fc992", "#ffbc33", "#101111", "#121212", "#0d0d0d", "#1b1c1e"]
 fonts: ["Inter", "SF Pro Text", "GeistMono"]
 ---

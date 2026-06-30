@@ -1,6 +1,7 @@
 ---
 id: ollama
 category: AI & LLM
+mood: Minimal & Precise
 palette: ["#000000", "#ffffff", "#262626", "#090909", "#fafafa", "#e5e5e5", "#737373", "#525252", "#a3a3a3", "#404040"]
 fonts: ["SF Pro Rounded"]
 ---

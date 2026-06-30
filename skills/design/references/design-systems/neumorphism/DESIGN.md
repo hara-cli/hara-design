@@ -1,6 +1,7 @@
 ---
 id: neumorphism
 category: Morphism & Effects
+mood: Warm & Soft
 palette: ["#006666", "#F1F2F5", "#00A63D", "#FE9900", "#FF2157", "#E7E5E4", "#1E2938"]
 ---
 # Design System Inspired by Neumorphism

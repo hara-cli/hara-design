@@ -1,6 +1,7 @@
 ---
 id: enterprise
 category: Professional & Corporate
+mood: Minimal & Precise
 palette: ["#072C2C", "#FF5F03", "#16A34A", "#D97706", "#DC2626", "#EDEADE", "#111827"]
 ---
 # Design System Inspired by Enterprise

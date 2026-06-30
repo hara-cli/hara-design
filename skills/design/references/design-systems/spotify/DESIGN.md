@@ -1,6 +1,7 @@
 ---
 id: spotify
 category: Media & Consumer
+mood: Bold & Expressive
 palette: ["#121212", "#181818", "#1f1f1f", "#1ed760", "#f3727f", "#ffa42b", "#539df5", "#ffffff", "#b3b3b3", "#cbcbcb"]
 ---
 # Design System Inspired by Spotify

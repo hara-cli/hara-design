@@ -1,6 +1,7 @@
 ---
 id: supabase
 category: Backend & Data
+mood: Tech & Utility
 palette: ["#0f0f0f", "#171717", "#3ecf8e", "#00c573", "#898989", "#fafafa", "#2e2e2e", "#363636", "#393939", "#242424"]
 ---
 # Design System Inspired by Supabase

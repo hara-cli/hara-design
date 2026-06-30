@@ -1,6 +1,7 @@
 ---
 id: fantasy
 category: Creative & Artistic
+mood: Bold & Expressive
 palette: ["#0250CC", "#FDC800", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
 ---
 # Design System Inspired by Fantasy

@@ -1,6 +1,7 @@
 ---
 id: replicate
 category: AI & LLM
+mood: Minimal & Precise
 palette: ["#ea2804", "#202020", "#2b9a66", "#000", "#dd4425", "#24292e", "#ffffff", "#fcfcfc", "#646464", "#4e4e4e"]
 fonts: ["rb-freigeist-neue", "basier-square", "jetbrains-mono"]
 ---

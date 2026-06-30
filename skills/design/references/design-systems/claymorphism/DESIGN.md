@@ -1,6 +1,7 @@
 ---
 id: claymorphism
 category: Morphism & Effects
+mood: Warm & Soft
 palette: ["#3B82F6", "#FFFFFF", "#16A34A", "#D97706", "#DC2626", "#1C398E"]
 ---
 # Design System Inspired by Claymorphism

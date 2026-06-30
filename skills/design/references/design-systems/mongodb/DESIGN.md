@@ -1,6 +1,7 @@
 ---
 id: mongodb
 category: Backend & Data
+mood: Tech & Utility
 palette: ["#001e2b", "#00ed64", "#b8c4c2", "#00684a", "#006cfa", "#3860be", "#1eaedb", "#1c2d38", "#3d4f58", "#21313c"]
 ---
 # Design System Inspired by MongoDB

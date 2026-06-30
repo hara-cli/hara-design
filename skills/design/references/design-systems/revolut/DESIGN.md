@@ -1,6 +1,7 @@
 ---
 id: revolut
 category: Fintech & Crypto
+mood: Tech & Utility
 palette: ["#e23b4a", "#ec7e00", "#00a87e", "#494fdf", "#e61e49", "#191c1f", "#ffffff", "#f4f4f4", "#4f55f1", "#376cd5"]
 ---
 # Design System Inspired by Revolut

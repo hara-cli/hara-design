@@ -119,6 +119,7 @@ components:
     typography: "{typography.label-md}"
     rounded: "{rounded.full}"
     padding: 4px
+mood: Bold & Expressive
 ---
 
 # Design System Inspired by Totality Festival

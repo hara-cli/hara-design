@@ -1,6 +1,7 @@
 ---
 id: neobrutalism
 category: Bold & Expressive
+mood: Brutalist & Retro
 palette: ["#FDC800", "#432DD7", "#16A34A", "#D97706", "#DC2626", "#FBFBF9", "#1C293C"]
 ---
 # Design System Inspired by Neobrutalism

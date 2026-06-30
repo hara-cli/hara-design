@@ -1,6 +1,7 @@
 ---
 id: notion
 category: Productivity & SaaS
+mood: Minimal & Precise
 palette: ["#ffffff", "#f6f5f4", "#31302e", "#615d59", "#a39e98", "#0075de", "#000000f2", "#213183", "#005bab", "#2a9d99"]
 fonts: ["NotionInter"]
 ---

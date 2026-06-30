@@ -1,6 +1,7 @@
 ---
 id: urdu
 category: Editorial / Personal / Publication
+mood: Editorial & Refined
 palette: ["#0F595E", "#F4F1EA", "#C05621", "#1A202C", "#4A5568", "#E2E8F0", "#0D3F45", "#2B7A82", "#A03F1C", "#E8754A"]
 ---
 # Urdu Modern (Indus Script System)

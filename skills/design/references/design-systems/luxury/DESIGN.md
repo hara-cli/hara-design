@@ -1,6 +1,7 @@
 ---
 id: luxury
 category: Professional & Corporate
+mood: Luxe & Premium
 palette: ["#FAFAFA", "#16A34A", "#D97706", "#DC2626", "#000000", "#FFFFFF"]
 ---
 # Design System Inspired by Luxury

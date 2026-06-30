@@ -1,6 +1,7 @@
 ---
 id: meta
 category: E-Commerce & Retail
+mood: Minimal & Precise
 palette: ["#0064E0", "#0143B5", "#004BB9", "#47A5FA", "#1877F2", "#D6311F", "#A121CE", "#6441D2", "#1B365D", "#C8E4E8"]
 ---
 # Design System Inspired by Meta (Store)

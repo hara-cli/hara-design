@@ -1,6 +1,7 @@
 ---
 id: cafe
 category: Creative & Artistic
+mood: Warm & Soft
 palette: ["#5D4432", "#E9E3DD", "#16A34A", "#D97706", "#DC2626", "#F9F7F5", "#3E2B1E"]
 ---
 # Design System Inspired by Cafe

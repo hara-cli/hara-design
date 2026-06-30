@@ -1,6 +1,7 @@
 ---
 id: tetris
 category: Themed & Unique
+mood: Brutalist & Retro
 palette: ["#1C202B", "#7107E7", "#16A34A", "#D97706", "#DC2626", "#DFE7FF", "#1C398E"]
 ---
 # Design System Inspired by Tetris

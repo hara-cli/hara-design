@@ -1,6 +1,7 @@
 ---
 id: bento
 category: Layout & Structure
+mood: Minimal & Precise
 palette: ["#FAD4C0", "#80A1C1", "#16A34A", "#D97706", "#DC2626", "#FFF5E6", "#111827"]
 ---
 # Design System Inspired by Bento

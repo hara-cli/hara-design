@@ -1,6 +1,7 @@
 ---
 id: miro
 category: Design & Creative
+mood: Bold & Expressive
 palette: ["#1c1c1e", "#5b76fe", "#00b473", "#ffffff", "#2a41b6", "#ffc6c6", "#600000", "#ffd8f4", "#c3faf5", "#187574"]
 ---
 # Design System Inspired by Miro

@@ -1,6 +1,7 @@
 ---
 id: mono
 category: Modern & Minimal
+mood: Tech & Utility
 palette: ["#37F712", "#00A6F4", "#00A63D", "#FE9900", "#FF2157", "#E7E5E4", "#78716B"]
 ---
 # Design System Inspired by Mono

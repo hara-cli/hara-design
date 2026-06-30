@@ -1,6 +1,7 @@
 ---
 id: theverge
 category: Media & Consumer
+mood: Editorial & Refined
 palette: ["#131313", "#3cffd0", "#5200ff", "#ffffff", "#2d2d2d", "#309875", "#3860be", "#1eaedb", "#3d00bf", "#313131"]
 fonts: ["Manuka", "PolySans", "PolySans Mono", "FK Roman Standard"]
 ---

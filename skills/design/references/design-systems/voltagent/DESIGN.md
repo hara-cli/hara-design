@@ -1,6 +1,7 @@
 ---
 id: voltagent
 category: AI & LLM
+mood: Tech & Utility
 palette: ["#050507", "#00d992", "#3d3a39", "#8b949e", "#b8b3b0", "#2fd6a1", "#10b981", "#818cf8", "#306cce", "#2554a0"]
 fonts: ["Inter", "SFMono-Regular"]
 ---

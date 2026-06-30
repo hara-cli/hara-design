@@ -1,6 +1,7 @@
 ---
 id: artistic
 category: Creative & Artistic
+mood: Bold & Expressive
 palette: ["#3B82F6", "#8B5CF6", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
 ---
 # Design System Inspired by Artistic

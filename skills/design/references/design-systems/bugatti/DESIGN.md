@@ -1,6 +1,7 @@
 ---
 id: bugatti
 category: Automotive
+mood: Luxe & Premium
 palette: ["#000000", "#ffffff", "#999999", "#000", "#0070cc"]
 ---
 # Design System Inspired by Bugatti

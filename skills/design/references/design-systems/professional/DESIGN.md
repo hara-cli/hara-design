@@ -1,6 +1,7 @@
 ---
 id: professional
 category: Professional & Corporate
+mood: Minimal & Precise
 palette: ["#FECE14", "#000000", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
 ---
 # Design System Inspired by Professional

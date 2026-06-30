@@ -1,6 +1,7 @@
 ---
 id: ferrari
 category: Automotive
+mood: Luxe & Premium
 palette: ["#DA291C", "#303030", "#8F8F8F", "#D2D2D2", "#FFF200", "#F6E500", "#FFFFFF", "#B01E0A", "#9D2211", "#000000"]
 fonts: ["FerrariSans"]
 ---

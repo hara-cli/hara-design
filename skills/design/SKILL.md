@@ -1,6 +1,6 @@
 ---
 name: design
-description: Design in the CLI — generate beautiful, self-contained HTML (landing pages, dashboards, app prototypes, slide decks, reports) in any of 151 brand-grade design systems, previewed live in the browser. USE WHEN the user asks to design / mock up / build a landing page / website / dashboard / UI / app screen / prototype / slide deck / pitch / poster / marketing page, or says /design.
+description: Design in the CLI — generate beautiful, self-contained HTML (landing pages, dashboards, app prototypes, slide decks, reports) in any of 150 brand-grade design systems, previewed live in the browser. USE WHEN the user asks to design / mock up / build a landing page / website / dashboard / UI / app screen / prototype / slide deck / pitch / poster / marketing page, or says /design.
 when_to_use: the user wants a designed HTML artifact (page, prototype, deck, dashboard) and will iterate on it; you generate + refine it from the CLI and they watch it live in their browser.
 ---
 
@@ -48,7 +48,7 @@ Got it — <one-line read of the brief>. Quick brief (answer what matters, I'll 
 2. Primary surface?  mobile / desktop / responsive / fixed 1920×1080
 3. Who's it for?  (audience)
 4. Visual tone?  (pick ≤2: editorial · modern-minimal · playful · tech/utility · luxury · brutalist · soft/warm)
-5. Brand?  pick a design system for me / I'll name one / match a brand or screenshot I'll share
+5. Brand?  pick a design system for me / pick a vibe (I'll narrow to a system) / I'll name one / match a brand or screenshot I'll share
 6. Roughly how much?  (e.g. 1 landing + 3 sections · 8 slides · 4 app screens)
 7. Anything else?  (real copy, must-use fonts, things to avoid)
 ```
@@ -59,6 +59,9 @@ the user says "just build / no questions", or they already gave answers. When sk
 ### Stage 2 — Direction (branch on the brand answer)
 - **"pick a design system for me"** → read `design-systems/INDEX.md`, choose the system whose tone/category best
   fits the brief (or offer 2–3 by id and let them pick a number). State your pick in one sentence.
+- **"pick a vibe" (or the user gave a tone in Q4 / wants a vibe)** → read `design-systems/MOODS.md` *first*: pick the
+  mood that matches their vibe, then choose the best-fit system *within that mood* (or offer 2–3 from it by id and let
+  them pick a number). State the mood + your pick in one sentence.
 - **"I'll name one"** → use that system id (honor it over inference).
 - **"match a brand / screenshot"** → extract real values *before* planning: read their attached files or fetch
   `<brand>.com` (use the `web_fetch`/bash tools), `grep -E '#[0-9a-fA-F]{3,8}'` their CSS for hex, eyeball

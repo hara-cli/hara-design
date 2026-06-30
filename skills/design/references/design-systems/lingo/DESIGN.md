@@ -1,6 +1,7 @@
 ---
 id: lingo
 category: Creative & Artistic
+mood: Bold & Expressive
 palette: ["#58CC02", "#CE82FF", "#FFC800", "#FF4B4B", "#FFFFFF", "#3C3C3C"]
 ---
 # Design System Inspired by Lingo

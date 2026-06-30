@@ -1,6 +1,7 @@
 ---
 id: bmw
 category: Automotive
+mood: Luxe & Premium
 palette: ["#1c69d4", "#0653b6", "#757575", "#ffffff", "#262626", "#bbbbbb"]
 ---
 # Design System Inspired by BMW

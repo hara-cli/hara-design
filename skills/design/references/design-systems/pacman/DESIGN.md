@@ -1,6 +1,7 @@
 ---
 id: pacman
 category: Themed & Unique
+mood: Brutalist & Retro
 palette: ["#2A3FE5", "#F4B9B0", "#16A34A", "#D97706", "#DC2626", "#000000", "#111827"]
 ---
 # Design System Inspired by Pacman

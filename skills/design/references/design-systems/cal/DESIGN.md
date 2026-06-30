@@ -1,6 +1,7 @@
 ---
 id: cal
 category: Productivity & SaaS
+mood: Minimal & Precise
 palette: ["#242424", "#898989", "#111111", "#ffffff", "#0099ff", "#3b82f6", "#0000ee", "#f5f5f5", "#000000", "#1e1f23"]
 fonts: ["Cal Sans", "Inter", "Cal Sans UI Variable Light", "Cal Sans UI Medium", "Roboto Mono", "Matter Regular"]
 ---

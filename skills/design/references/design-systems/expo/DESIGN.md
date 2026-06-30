@@ -1,6 +1,7 @@
 ---
 id: expo
 category: Developer Tools
+mood: Minimal & Precise
 palette: ["#f0f0f3", "#000000", "#60646c", "#b0b4ba", "#555860", "#1c2024", "#000", "#0d74ce", "#476cff", "#47c2ff"]
 fonts: ["Inter", "JetBrains Mono"]
 ---

@@ -1,6 +1,7 @@
 ---
 id: bold
 category: Bold & Expressive
+mood: Bold & Expressive
 palette: ["#0077BC", "#009866", "#16A34A", "#D97706", "#DC2626", "#111111", "#111827"]
 ---
 # Design System Inspired by Bold

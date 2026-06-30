@@ -1,6 +1,7 @@
 ---
 id: loom
 category: Themed & Unique
+mood: Minimal & Precise
 palette: ["#625DF5", "#FFFFFF", "#F7F7F8", "#E4E4E7", "#5048E5", "#1F1F23", "#6B6D76", "#9B9CA3", "#D64770", "#EF440C"]
 ---
 # Loom Design System

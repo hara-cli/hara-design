@@ -1,6 +1,7 @@
 ---
 id: glassmorphism
 category: Morphism & Effects
+mood: Minimal & Precise
 palette: ["#1856FF", "#3A344E", "#07CA6B", "#E89558", "#EA2143", "#FFFFFF", "#141414"]
 ---
 # Design System Inspired by Glassmorphism

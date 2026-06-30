@@ -1,6 +1,7 @@
 ---
 id: minimax
 category: AI & LLM
+mood: Tech & Utility
 palette: ["#ffffff", "#1456f0", "#3b82f6", "#60a5fa", "#ea5ec1", "#222222", "#18181b", "#181e25", "#3daeff", "#bfdbfe"]
 ---
 # Design System Inspired by MiniMax

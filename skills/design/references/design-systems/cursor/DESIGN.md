@@ -1,6 +1,7 @@
 ---
 id: cursor
 category: Developer Tools
+mood: Tech & Utility
 palette: ["#f2f1ed", "#26251e", "#e6e5e0", "#ebeae5", "#cf2d56", "#f54e00", "#ffffff", "#000000", "#c08532", "#1f8a65"]
 fonts: ["CursorGothic", "jjannon", "berkeleyMono", "CursorIcons16"]
 ---

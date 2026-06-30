@@ -1,6 +1,7 @@
 ---
 id: kraken
 category: Fintech & Crypto
+mood: Tech & Utility
 palette: ["#7132f5", "#5741d8", "#5b1ecf", "#101114", "#149e61", "#686b82", "#9497a9", "#ffffff", "#dedee5", "#026b3f"]
 ---
 # Design System Inspired by Kraken

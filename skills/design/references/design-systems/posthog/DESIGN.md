@@ -1,6 +1,7 @@
 ---
 id: posthog
 category: Backend & Data
+mood: Warm & Soft
 palette: ["#fdfdf8", "#F54E00", "#1e1f23", "#bfc1b7", "#eeefe9", "#4d4f46", "#23251d", "#F7A501", "#b17816", "#3b82f6"]
 fonts: ["IBM Plex Sans Variable"]
 ---

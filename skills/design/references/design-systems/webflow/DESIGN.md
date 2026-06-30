@@ -1,6 +1,7 @@
 ---
 id: webflow
 category: Design & Creative
+mood: Bold & Expressive
 palette: ["#146ef5", "#080808", "#7a3dff", "#ed52cb", "#00d722", "#ff6b00", "#ffae13", "#ee1d36", "#3b89ff", "#006acc"]
 ---
 # Design System Inspired by Webflow

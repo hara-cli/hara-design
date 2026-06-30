@@ -1,6 +1,7 @@
 ---
 id: perspective
 category: Layout & Structure
+mood: Minimal & Precise
 palette: ["#00BD7D", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
 ---
 # Design System Inspired by Perspective

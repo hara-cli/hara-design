@@ -1,6 +1,7 @@
 ---
 id: binance
 category: Fintech & Crypto
+mood: Tech & Utility
 palette: ["#222126", "#F0B90B", "#FFD000", "#F8D12F", "#D0980B", "#1EAEDB", "#FFFFFF", "#F5F5F5", "#2B2F36", "#1E2026"]
 ---
 # Design System Inspired by Binance.US

@@ -1,6 +1,7 @@
 ---
 id: doodle
 category: Creative & Artistic
+mood: Bold & Expressive
 palette: ["#49B6E5", "#263D5B", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
 ---
 # Design System Inspired by Doodle

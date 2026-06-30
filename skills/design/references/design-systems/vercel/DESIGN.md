@@ -1,6 +1,7 @@
 ---
 id: vercel
 category: Developer Tools
+mood: Minimal & Precise
 palette: ["#ffffff", "#171717", "#ff5b4f", "#de1d8d", "#0a72ef", "#000000", "#0070f3", "#7928ca", "#eb367f", "#0072f5"]
 fonts: ["Geist", "Geist Mono"]
 ---

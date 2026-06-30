@@ -1,6 +1,7 @@
 ---
 id: figma
 category: Design & Creative
+mood: Bold & Expressive
 palette: ["#000000", "#ffffff"]
 fonts: ["figmaSans", "figmaMono"]
 ---

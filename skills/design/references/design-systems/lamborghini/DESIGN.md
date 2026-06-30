@@ -1,6 +1,7 @@
 ---
 id: lamborghini
 category: Automotive
+mood: Luxe & Premium
 palette: ["#000000", "#FFC000", "#FFFFFF", "#917300", "#FFCE3E", "#29ABE2", "#3860BE", "#202020", "#181818", "#F8F8F8"]
 fonts: ["LamboType", "Open Sans"]
 ---

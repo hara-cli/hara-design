@@ -1,6 +1,7 @@
 ---
 id: discord
 category: Productivity & SaaS
+mood: Bold & Expressive
 palette: ["#313338", "#1e1f22", "#5865f2", "#2b2d31", "#4752c4", "#7289da", "#111214", "#ffffff", "#f2f3f5", "#e3e5e8"]
 fonts: ["gg sans", "Whitney", "gg mono"]
 ---

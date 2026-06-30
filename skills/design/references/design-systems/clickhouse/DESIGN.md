@@ -1,6 +1,7 @@
 ---
 id: clickhouse
 category: Backend & Data
+mood: Tech & Utility
 palette: ["#000000", "#414141", "#faff69", "#166534", "#f4f692", "#14572f", "#4f5100", "#161600", "#141414", "#343434"]
 fonts: ["Inter", "Basier", "Inconsolata"]
 ---

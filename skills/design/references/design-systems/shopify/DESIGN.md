@@ -1,6 +1,7 @@
 ---
 id: shopify
 category: E-Commerce & Retail
+mood: Luxe & Premium
 palette: ["#02090A", "#061A1C", "#102620", "#36F4A4", "#C1FBD4", "#D4F9E0", "#A1A1AA", "#3F3F46", "#FFFFFF", "#000000"]
 ---
 # Design System Inspired by Shopify

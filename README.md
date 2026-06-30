@@ -1,7 +1,7 @@
 # hara-design
 
 **Design in the [hara](https://github.com/hara-cli/hara) CLI.** Talk to hara in your terminal; it generates
-self-contained HTML — landing pages, dashboards, app prototypes, decks — in any of **151 brand-grade design
+self-contained HTML — landing pages, dashboards, app prototypes, decks — in any of **150 brand-grade design
 systems**, and you preview it **live in your browser**. You drive entirely from the CLI; the web is view-only
 (no web-side chat).
 
@@ -91,7 +91,7 @@ hara-design handoff .hara/design/<slug>/index.html --target tailwind   # or css 
 ## What's inside
 - `skills/design/SKILL.md` — the driver: the staged design quality workflow (brief → direction → plan → build →
   checklist → critique → emit), adapted to the CLI.
-- `skills/design/references/design-systems/` — **151** `DESIGN.md` systems + an `INDEX.md` (regenerate with
+- `skills/design/references/design-systems/` — **150** `DESIGN.md` systems + an `INDEX.md` (regenerate with
   `node scripts/build-ds-index.mjs`).
 - `skills/design/references/skills/` — **219** recipe `SKILL.md` (landing, dashboard, deck, mobile, report…).
 - `skills/design/references/craft/` — anti-AI-slop / color / typography rules.

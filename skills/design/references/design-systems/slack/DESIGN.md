@@ -1,6 +1,7 @@
 ---
 id: slack
 category: Productivity & SaaS
+mood: Warm & Soft
 palette: ["#4A154B", "#FFFFFF", "#F8F8F8", "#350d36", "#611f69", "#36C5F0", "#2EB67D", "#ECB22E", "#E01E5A", "#F1F1F1"]
 ---
 # Design System Inspired by Slack

@@ -1,6 +1,7 @@
 ---
 id: gradient
 category: Morphism & Effects
+mood: Bold & Expressive
 palette: ["#990FFA", "#E60076", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
 ---
 # Design System Inspired by Gradient

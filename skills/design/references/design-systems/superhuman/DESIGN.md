@@ -1,6 +1,7 @@
 ---
 id: superhuman
 category: Developer Tools
+mood: Tech & Utility
 palette: ["#1b1938", "#e9e5dd", "#cbb7fb", "#292827", "#714cb6", "#ffffff", "#dcd7d3", "#000000"]
 fonts: ["Super Sans VF", "Messina Sans"]
 ---

@@ -1,6 +1,7 @@
 ---
 id: coinbase
 category: Fintech & Crypto
+mood: Minimal & Precise
 palette: ["#0052ff", "#578bfa", "#0a0b0d", "#282b31", "#eef0f3", "#ffffff", "#0667d0", "#5b616e"]
 ---
 # Design System Inspired by Coinbase

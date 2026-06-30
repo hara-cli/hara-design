@@ -1,6 +1,7 @@
 ---
 id: vibrant
 category: Bold & Expressive
+mood: Bold & Expressive
 palette: ["#7C61D4", "#EAAE87", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#2F281D"]
 ---
 # Design System Inspired by Vibrant

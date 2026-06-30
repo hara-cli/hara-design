@@ -1,6 +1,7 @@
 ---
 id: kami
 category: Editorial & Print
+mood: Editorial & Refined
 palette: ["#f5f4ed", "#1B365D", "#ffffff", "#E4ECF5", "#2D5A8A", "#faf9f5", "#e8e6dc", "#30302e", "#141413", "#000000"]
 ---
 # Design System Inspired by kami (紙 / 纸)

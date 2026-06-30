@@ -1,6 +1,7 @@
 ---
 id: framer
 category: Design & Creative
+mood: Bold & Expressive
 palette: ["#000000", "#0099ff", "#ffffff", "#a6a6a6", "#090909", "#0000ee", "#1a1a1a", "#2d2d2d"]
 fonts: ["GT Walsheim Framer Medium", "Inter Variable", "Mona Sans", "Azeret Mono", "Open Runde"]
 ---

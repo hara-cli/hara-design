@@ -1,6 +1,7 @@
 ---
 id: mistral-ai
 category: AI & LLM
+mood: Minimal & Precise
 palette: ["#fa520f", "#ffd900", "#ffa110", "#fffaeb", "#fb6424", "#ff8105", "#ff8a00", "#ffb83e", "#ffd06a", "#ffe295"]
 fonts: ["Arial"]
 ---

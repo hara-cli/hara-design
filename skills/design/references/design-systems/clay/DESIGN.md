@@ -1,6 +1,7 @@
 ---
 id: clay
 category: Design & Creative
+mood: Warm & Soft
 palette: ["#faf9f7", "#dad4c8", "#eee9df", "#000000", "#ffffff", "#84e7a5", "#078a52", "#02492a", "#3bd3fd", "#0089ad"]
 ---
 # Design System Inspired by Clay

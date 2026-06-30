@@ -1,6 +1,7 @@
 ---
 id: wechat
 category: Social & Messaging
+mood: Warm & Soft
 palette: ["#07C160", "#10B160", "#059050", "#95EC69", "#FFFFFF", "#1A1A1A", "#EDEDED", "#F7F7F7", "#E0E0E0", "#888888"]
 ---
 # WeChat Design System
