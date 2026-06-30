@@ -155,13 +155,13 @@
   function mk(t, c) { var n = d.createElement(t); n.className = c; return n; }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   // Only talk to a REAL host (the preview chrome). Standalone (parent === window) → no-op, else the preview-protocol
-  // messages loop back into our own message listener and fight local view changes (the exported-file Grid↔真机 bug).
+  // messages loop back into our own message listener and fight local view changes (the exported-file Grid↔Device bug).
   function post(o) { if (window.parent === window) return; try { parent.postMessage(o, "*"); } catch (_) {} }
   // standalone export: when opened directly (no host chrome — not in the preview iframe), self-mount a minimal
-  // Grid/真机 toggle so the exported single file is fully usable. In the preview, parent !== window so the host owns it.
+  // Grid/Device toggle so the exported single file is fully usable. In the preview, parent !== window so the host owns it.
   if (screens.length > 1 && window.parent === window) {
     var eseg = mk("div", "hara-export-toggle");
-    ["grid", "detail"].forEach(function (v) { var b = mk("button", ""); b.dataset.v = v; b.textContent = v === "grid" ? "▦ Grid" : "📱 真机"; eseg.appendChild(b); });
+    ["grid", "detail"].forEach(function (v) { var b = mk("button", ""); b.dataset.v = v; b.textContent = v === "grid" ? "▦ Grid" : "📱 Device"; eseg.appendChild(b); });
     eseg.addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) setView(b.dataset.v); });
     d.body.appendChild(eseg);
     setView(docEl.dataset.view); // reflect the starting view in the toggle

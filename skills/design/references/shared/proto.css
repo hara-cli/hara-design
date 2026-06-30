@@ -1,8 +1,8 @@
 /* proto.css — hara-design's FIXED presentation framework (paired with proto.js). The design ASSET never ships
    this; the preview injects it and export copies it frozen. Provides the device bezels (4 platforms), the three
    view modes, and the chrome skeleton — so the asset is only <section data-route> + tokens + data-* hooks.
-   Three modes:  DETAIL = one screen in the device frame, interactive (the "play it").  GRID = all screens as a
-   scaled board (全览).  FLOW = that board + connection arrows from data-go (Figma-style prototype map). */
+   Two modes:  GRID = all screens as a scaled board (click a card → Device).  DETAIL ("Device") = one screen
+   in the device frame, fully interactive. */
 
 *,*::before,*::after{ box-sizing:border-box }
 html,body{ margin:0; height:100%; background:#0b0c10 }
@@ -81,7 +81,7 @@ html[data-frame="web"][data-chrome="none"][data-view="detail"] .hara-titlebar{ d
 @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important } }
 
 /* ── standalone EXPORT toggle — proto.js self-mounts this only when the file is opened directly (no host chrome),
-   so an exported single HTML can still flip Grid ⇄ 真机. Hidden inside the preview iframe (host chrome owns it). ── */
+   so an exported single HTML can still flip Grid ⇄ Device. Hidden inside the preview iframe (host chrome owns it). ── */
 .hara-export-toggle{ position:fixed; bottom:16px; right:16px; z-index:99999; display:flex; gap:2px; padding:3px; border-radius:11px; background:rgba(20,22,30,.86); backdrop-filter:blur(8px); box-shadow:0 6px 22px -10px #000 }
 .hara-export-toggle button{ border:0; cursor:pointer; font:600 12px system-ui; color:#c9cdd9; background:transparent; padding:6px 13px; border-radius:8px }
 .hara-export-toggle button.on{ background:#5b6cff; color:#fff }

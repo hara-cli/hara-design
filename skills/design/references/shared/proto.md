@@ -3,7 +3,7 @@
 hara-design produces **playable prototypes**, not static mockups. **You author only the ASSET** — `<section
 data-route data-screen-label>` screens + design-system tokens + the `data-*` hooks below + one
 `<meta name="hara-preview">`. **The FRAMEWORK is injected by the preview** (the device bezel per platform, the
-Grid board + 真机 views, and the `proto.js` runtime): you never write a bezel, a status bar, view-mode CSS, or
+Grid board + Device views, and the `proto.js` runtime): you never write a bezel, a status bar, view-mode CSS, or
 `proto.js`/`proto.css`. proto is **inert** if a page has no `data-route`/`data-*` hooks (a pure static page pays
 nothing). On **export**, the frozen `proto.js`+`proto.css` are copied beside the asset so the delivered dir runs
 standalone — still self-contained, but frozen, never agent-authored.
@@ -38,7 +38,7 @@ The screen→screen route change is the **one flourish** — `data-stagger`/`dat
 For richer one-offs (a freehand **canvas sketch** pad, etc.) see `components.md` — copy-paste vanilla snippets you drop straight into a screen.
 
 ## View modes (the preview drives these; you just author screens)
-The read-only preview toggles two layouts — **Grid** (a board of all screens as device cards; click a card → opens it) and **真机** (one screen in the device frame, tap CTAs to walk the flow). You don't build the toggle; just make each screen a `[data-route]` section. `proto.js` exposes the current screen on `document.documentElement.dataset.route` and a `window.__proto.current()` getter so the preview always knows which screen you're on. Export prints a one-page **一拼 contact sheet** (device thumbnails) — also framework, not authored.
+The read-only preview toggles two layouts — **Grid** (a board of all screens as device cards; click a card → opens it) and **Device** (one screen in the device frame, tap CTAs to walk the flow). You don't build the toggle; just make each screen a `[data-route]` section. `proto.js` exposes the current screen on `document.documentElement.dataset.route` and a `window.__proto.current()` getter so the preview always knows which screen you're on. Export prints a one-page **contact sheet** (device thumbnails) — also framework, not authored.
 
 ## The "No Dead Controls" rule (P0 — a prototype fails without it)
 **Every element that LOOKS interactive must either be wired (a `data-*` above or a real `href`) OR be visibly,
