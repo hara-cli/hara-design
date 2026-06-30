@@ -1,3 +1,9 @@
+---
+id: playstation
+category: Media & Consumer
+palette: ["#1eaedb", "#0070cc", "#d53b00", "#000000", "#ffffff", "#1883fd", "#0068bd", "#f5f7fa", "#f3f3f3", "#121314"]
+fonts: ["Arial", "helvetica"]
+---
 # Design System Inspired by PlayStation
 
 > Category: Media & Consumer

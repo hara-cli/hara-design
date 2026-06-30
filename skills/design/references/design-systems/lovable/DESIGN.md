@@ -1,3 +1,9 @@
+---
+id: lovable
+category: Developer Tools
+palette: ["#f7f4ed", "#1c1c1c", "#eceae4", "#fcfbf8", "#5f5f5d", "#3b82f6", "#ffffff"]
+fonts: ["Camera Plain Variable"]
+---
 # Design System Inspired by Lovable
 
 > Category: Developer Tools

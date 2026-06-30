@@ -1,3 +1,9 @@
+---
+id: nvidia
+category: Media & Consumer
+palette: ["#000000", "#ffffff", "#76b900", "#bff230", "#df6500", "#ef9100", "#feeeb2", "#e52020", "#650b0b", "#3f8500"]
+fonts: ["NVIDIA-EMEA", "Font Awesome 6 Pro", "Font Awesome 6 Sharp"]
+---
 # Design System Inspired by NVIDIA
 
 > Category: Media & Consumer

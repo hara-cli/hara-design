@@ -1,3 +1,9 @@
+---
+id: cisco
+category: Backend & Data
+palette: ["#049fd9", "#64bbe3", "#005073", "#2b5592", "#39393b", "#58585b", "#9e9ea2", "#e8ebf1", "#ffffff", "#abc233"]
+fonts: ["CiscoSansTT", "IBM Plex Mono"]
+---
 # Design System Inspired by Cisco
 
 > Category: Backend & Data

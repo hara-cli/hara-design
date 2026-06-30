@@ -1,3 +1,9 @@
+---
+id: webex
+category: Productivity & SaaS
+palette: ["#1170cf", "#0353a8", "#063a75", "#64b4fa", "#000000f2", "#000000b3", "#fffffff2", "#ffffffb3", "#ffffff", "#000000"]
+fonts: ["Momentum"]
+---
 # Design System Inspired by Webex
 
 > Category: Productivity & SaaS

@@ -1,3 +1,8 @@
+---
+id: friendly
+category: Creative & Artistic
+palette: ["#F2D9DC", "#D9F2D8", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
+---
 # Design System Inspired by Friendly
 
 > Category: Creative & Artistic

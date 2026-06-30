@@ -1,3 +1,9 @@
+---
+id: warp
+category: Developer Tools
+palette: ["#faf9f6", "#353534", "#868584", "#afaeac", "#666469", "#454545", "#ffffff"]
+fonts: ["Matter Regular", "Matter Medium", "Matter SQ Regular", "Inter", "Geist Mono", "Matter Mono Regular"]
+---
 # Design System Inspired by Warp
 
 > Category: Developer Tools

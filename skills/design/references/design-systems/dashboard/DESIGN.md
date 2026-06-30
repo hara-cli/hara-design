@@ -1,3 +1,8 @@
+---
+id: dashboard
+category: Professional & Corporate
+palette: ["#0C5CAB", "#0A4A8A", "#10B981", "#F59E0B", "#EF4444", "#09090B", "#FAFAFA"]
+---
 # Design System Inspired by Dashboard
 
 > Category: Professional & Corporate

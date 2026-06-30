@@ -1,3 +1,8 @@
+---
+id: renault
+category: Automotive
+palette: ["#EFDF00", "#1883FD", "#000000", "#FFFFFF", "#F8EB4C", "#D9D9D6", "#222222", "#F2F2F2", "#D1D1D1", "#8DC572"]
+---
 # Design System Inspired by Renault
 
 > Category: Automotive

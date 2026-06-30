@@ -1,3 +1,8 @@
+---
+id: luxury
+category: Professional & Corporate
+palette: ["#FAFAFA", "#16A34A", "#D97706", "#DC2626", "#000000", "#FFFFFF"]
+---
 # Design System Inspired by Luxury
 
 > Category: Professional & Corporate

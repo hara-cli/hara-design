@@ -1,3 +1,9 @@
+---
+id: replicate
+category: AI & LLM
+palette: ["#ea2804", "#202020", "#2b9a66", "#000", "#dd4425", "#24292e", "#ffffff", "#fcfcfc", "#646464", "#4e4e4e"]
+fonts: ["rb-freigeist-neue", "basier-square", "jetbrains-mono"]
+---
 # Design System Inspired by Replicate
 
 > Category: AI & LLM

@@ -1,3 +1,8 @@
+---
+id: expressive
+category: Bold & Expressive
+palette: ["#DB2777", "#2563EB", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
+---
 # Design System Inspired by Expressive
 
 > Category: Bold & Expressive

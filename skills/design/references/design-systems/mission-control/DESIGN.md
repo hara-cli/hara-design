@@ -1,3 +1,8 @@
+---
+id: mission-control
+category: Developer Tools
+palette: ["#0B1120", "#111827", "#1A2535", "#1E3A5F", "#FFB800", "#00D4FF", "#FF4757", "#E8F0FE", "#8BA3C7", "#4A6080"]
+---
 # Mission Control Design System
 
 > Category: Developer Tools

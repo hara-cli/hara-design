@@ -1,3 +1,9 @@
+---
+id: vodafone
+category: Media & Consumer
+palette: ["#e60000", "#25282b", "#ffffff", "#3860be", "#ac1811", "#f2f2f2", "#7e7e7e", "#333333", "#bebebe", "#000000"]
+fonts: ["Vodafone", "icomoon"]
+---
 # Design System Inspired by Vodafone
 
 > Category: Media & Consumer

@@ -1,3 +1,9 @@
+---
+id: tesla
+category: Automotive
+palette: ["#3E6AE1", "#FFFFFF", "#F4F4F4", "#171A20", "#393C41", "#5C5E62", "#8E8E8E", "#EEEEEE", "#D0D1D2"]
+fonts: ["Universal Sans Display", "Universal Sans Text"]
+---
 # Design System Inspired by Tesla
 
 > Category: Automotive

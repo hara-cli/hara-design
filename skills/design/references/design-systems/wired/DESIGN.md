@@ -1,3 +1,9 @@
+---
+id: wired
+category: Media & Consumer
+palette: ["#057dbc", "#000000", "#1a1a1a", "#ffffff", "#e2e8f0", "#757575", "#999999", "#4a5568", "#e53e3e", "#a0aec0"]
+fonts: ["helvetica", "Inter", "Monaco"]
+---
 # Design System Inspired by WIRED
 
 > Category: Media & Consumer

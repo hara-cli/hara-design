@@ -1,3 +1,9 @@
+---
+id: airbnb
+category: E-Commerce & Retail
+palette: ["#ff385c", "#222222", "#92174d", "#460479", "#e00b41", "#428bff", "#ffffff", "#f7f7f7", "#dddddd", "#3f3f3f"]
+fonts: ["Circular"]
+---
 # Design System Inspired by Airbnb
 
 > Category: E-Commerce & Retail

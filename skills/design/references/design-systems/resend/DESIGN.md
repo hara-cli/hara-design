@@ -1,3 +1,8 @@
+---
+id: resend
+category: Productivity & SaaS
+palette: ["#000000", "#f0f0f0", "#ffffff", "#ff5900", "#ff801f", "#ffa057", "#22ff99", "#11ff99", "#0075ff", "#0081fd"]
+---
 # Design System Inspired by Resend
 
 > Category: Productivity & SaaS

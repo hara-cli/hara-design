@@ -1,3 +1,8 @@
+---
+id: energetic
+category: Bold & Expressive
+palette: ["#EA580B", "#F59E0B", "#16A34A", "#D97706", "#DC2626", "#FFEDD5", "#FDBA74", "#EA580C"]
+---
 # Design System Inspired by Energetic
 
 > Category: Bold & Expressive

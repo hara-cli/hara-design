@@ -1,3 +1,9 @@
+---
+id: mastercard
+category: Fintech & Crypto
+palette: ["#F3F0EE", "#141413", "#EB001B", "#F79E1B", "#CF4500", "#F37338", "#9A3A0A", "#FCFBFA", "#FFFFFF", "#F4F4F4"]
+fonts: ["MarkForMC", "MarkOffcForMC", "SofiaSans"]
+---
 # Design System Inspired by Mastercard
 
 > Category: Fintech & Crypto

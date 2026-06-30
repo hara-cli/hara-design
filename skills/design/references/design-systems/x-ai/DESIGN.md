@@ -1,3 +1,9 @@
+---
+id: x-ai
+category: AI & LLM
+palette: ["#1f2228", "#ffffff", "#000000"]
+fonts: ["GeistMono", "universalSans"]
+---
 # Design System Inspired by xAI
 
 > Category: AI & LLM

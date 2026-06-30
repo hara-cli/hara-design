@@ -1,3 +1,8 @@
+---
+id: paper
+category: Retro & Nostalgic
+palette: ["#111111", "#8B5CF6", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
+---
 # Design System Inspired by Paper
 
 > Category: Retro & Nostalgic

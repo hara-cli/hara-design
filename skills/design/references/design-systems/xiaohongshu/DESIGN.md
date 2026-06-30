@@ -1,3 +1,8 @@
+---
+id: xiaohongshu
+category: Media & Consumer
+palette: ["#FFFFFF", "#F5F5F5", "#FF2442", "#FF2E4D", "#FDBC5F", "#FAFAFA", "#EAEAEA", "#02B940", "#EAF8EF", "#FF7D03"]
+---
 # Design System Inspired by Xiaohongshu
 
 > Category: Media & Consumer

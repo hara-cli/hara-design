@@ -1,3 +1,8 @@
+---
+id: bugatti
+category: Automotive
+palette: ["#000000", "#ffffff", "#999999", "#000", "#0070cc"]
+---
 # Design System Inspired by Bugatti
 
 > Category: Automotive

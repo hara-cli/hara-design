@@ -1,3 +1,9 @@
+---
+id: canva
+category: Design & Creative
+palette: ["#ffffff", "#7d2ae8", "#00c4cc", "#ff5757", "#f4f5f7", "#e8eaed", "#eef0fc", "#0e1318", "#3c4043", "#5f6368"]
+fonts: ["Canva Sans", "Canva Sans Display", "JetBrains Mono"]
+---
 # Design System Inspired by Canva
 
 > Category: Design & Creative

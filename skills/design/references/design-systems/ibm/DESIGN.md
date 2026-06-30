@@ -1,3 +1,9 @@
+---
+id: ibm
+category: Media & Consumer
+palette: ["#ffffff", "#161616", "#0f62fe", "#f4f4f4", "#262626", "#393939", "#525252", "#6f6f6f", "#8d8d8d", "#c6c6c6"]
+fonts: ["IBM Plex Sans", "IBM Plex Mono", "IBM Plex Serif", "ibm_icons"]
+---
 # Design System Inspired by IBM
 
 > Category: Media & Consumer

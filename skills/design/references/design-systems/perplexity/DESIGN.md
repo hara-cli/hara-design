@@ -1,3 +1,8 @@
+---
+id: perplexity
+category: AI & LLM
+palette: ["#0f0f10", "#19191a", "#232325", "#2e2e30", "#f0f0f0", "#9b9b9b", "#5c5c5e", "#a855f7", "#c084fc", "#3b1f5e"]
+---
 # Design System Inspired by Perplexity AI
 
 > Category: AI & LLM

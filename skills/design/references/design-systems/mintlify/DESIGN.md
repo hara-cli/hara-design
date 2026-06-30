@@ -1,3 +1,9 @@
+---
+id: mintlify
+category: Productivity & SaaS
+palette: ["#ffffff", "#0d0d0d", "#18E299", "#d4fae8", "#0fa76e", "#c37d0d", "#3772cf", "#d45656", "#333333", "#666666"]
+fonts: ["Inter", "Geist Mono"]
+---
 # Design System Inspired by Mintlify
 
 > Category: Productivity & SaaS

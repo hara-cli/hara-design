@@ -1,3 +1,8 @@
+---
+id: airtable
+category: Design & Creative
+palette: ["#181d26", "#1b61c9", "#ffffff", "#006400", "#333333", "#254fad", "#e0e2e6", "#f8fafc"]
+---
 # Design System Inspired by Airtable
 
 > Category: Design & Creative

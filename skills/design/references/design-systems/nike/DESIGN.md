@@ -1,3 +1,8 @@
+---
+id: nike
+category: E-Commerce & Retail
+palette: ["#111111", "#000000", "#FFFFFF", "#FAFAFA", "#F5F5F5", "#E5E5E5", "#28282A", "#1F1F21", "#39393B", "#707072"]
+---
 # Design System Inspired by Nike
 
 > Category: E-Commerce & Retail

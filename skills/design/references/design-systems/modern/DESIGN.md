@@ -1,3 +1,8 @@
+---
+id: modern
+category: Modern & Minimal
+palette: ["#553F83", "#111111", "#16A34A", "#D97706", "#DC2626", "#FFFFFF"]
+---
 # Design System Inspired by Modern
 
 > Category: Modern & Minimal

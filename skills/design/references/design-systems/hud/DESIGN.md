@@ -1,3 +1,8 @@
+---
+id: hud
+category: Themed & Unique
+palette: ["#0A0A0A", "#111316", "#1E2328", "#00FF41", "#7FFF00", "#5A9A5A", "#FFB800", "#FF3B3B"]
+---
 # HUD Design System
 
 > Category: Themed & Unique

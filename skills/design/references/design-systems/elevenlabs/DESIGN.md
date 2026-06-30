@@ -1,3 +1,8 @@
+---
+id: elevenlabs
+category: AI & LLM
+palette: ["#ffffff", "#f5f5f5", "#f5f2ef", "#777169", "#000000", "#4e4e4e", "#f6f6f6", "#7fffff", "#e5e5e5", "#fff"]
+---
 # Design System Inspired by ElevenLabs
 
 > Category: AI & LLM

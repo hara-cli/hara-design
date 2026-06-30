@@ -1,3 +1,8 @@
+---
+id: bmw-m
+category: Automotive
+palette: ["#000", "#0066b1", "#1c69d4", "#e22718", "#ffffff", "#0653b6", "#000000", "#0d0d0d", "#1a1a1a", "#262626"]
+---
 # Design System Inspired by BMW M
 
 > Category: Automotive

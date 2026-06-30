@@ -1,3 +1,8 @@
+---
+id: sentry
+category: Backend & Data
+palette: ["#1f1633", "#150f23", "#c2ef4e", "#79628c", "#362d59", "#6a5fc1", "#422082", "#ffb287", "#fa7faa", "#ffffff"]
+---
 # Design System Inspired by Sentry
 
 > Category: Backend & Data

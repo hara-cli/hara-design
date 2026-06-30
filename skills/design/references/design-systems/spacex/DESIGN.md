@@ -1,3 +1,8 @@
+---
+id: spacex
+category: Media & Consumer
+palette: ["#000000", "#f0f0fa"]
+---
 # Design System Inspired by SpaceX
 
 > Category: Media & Consumer

@@ -1,3 +1,9 @@
+---
+id: linear-app
+category: Productivity & SaaS
+palette: ["#08090a", "#f7f8f8", "#5e6ad2", "#7170ff", "#0f1011", "#191a1b", "#828fff", "#27a644", "#10b981", "#010102"]
+fonts: ["Inter Variable", "Berkeley Mono"]
+---
 # Design System Inspired by Linear
 
 > Category: Productivity & SaaS

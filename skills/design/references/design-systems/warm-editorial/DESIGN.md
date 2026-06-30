@@ -1,3 +1,8 @@
+---
+id: warm-editorial
+category: Starter
+palette: ["#FAF7F2", "#1C1A17", "#C0512F", "#2F5B4F", "#8A817A", "#FFFFFF"]
+---
 # Warm Editorial
 
 > Category: Starter

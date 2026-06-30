@@ -1,3 +1,8 @@
+---
+id: application
+category: Professional & Corporate
+palette: ["#9333EA", "#A855F7", "#10B981", "#F59E0B", "#EF4444", "#FFFFFF", "#09090B"]
+---
 # Design System Inspired by Application
 
 > Category: Professional & Corporate

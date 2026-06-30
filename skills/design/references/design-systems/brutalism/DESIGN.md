@@ -1,3 +1,8 @@
+---
+id: brutalism
+category: Bold & Expressive
+palette: ["#DD614C", "#DAA144", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
+---
 # Design System Inspired by Brutalism
 
 > Category: Bold & Expressive

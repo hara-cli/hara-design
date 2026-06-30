@@ -1,3 +1,9 @@
+---
+id: runwayml
+category: AI & LLM
+palette: ["#767d88", "#7d848e", "#000000", "#030303", "#1a1a1a", "#ffffff", "#fefefe", "#e9ecf2", "#27272a", "#404040"]
+fonts: ["abcNormal"]
+---
 # Design System Inspired by Runway
 
 > Category: AI & LLM

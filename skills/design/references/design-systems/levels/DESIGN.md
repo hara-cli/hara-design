@@ -1,3 +1,8 @@
+---
+id: levels
+category: Layout & Structure
+palette: ["#27272A", "#8B5CF6", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
+---
 # Design System Inspired by Levels
 
 > Category: Layout & Structure

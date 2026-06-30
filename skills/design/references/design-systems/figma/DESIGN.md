@@ -1,3 +1,9 @@
+---
+id: figma
+category: Design & Creative
+palette: ["#000000", "#ffffff"]
+fonts: ["figmaSans", "figmaMono"]
+---
 # Design System Inspired by Figma
 
 > Category: Design & Creative

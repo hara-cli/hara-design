@@ -1,3 +1,9 @@
+---
+id: duolingo
+category: Productivity & SaaS
+palette: ["#58cc02", "#ffffff", "#e5e5e5", "#ff9600", "#ce82ff", "#58a700", "#89e219", "#dbf8c5", "#cc7a00", "#1cb0f6"]
+fonts: ["Feather Bold", "Mona Sans", "JetBrains Mono"]
+---
 # Design System Inspired by Duolingo
 
 > Category: Productivity & SaaS

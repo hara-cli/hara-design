@@ -1,3 +1,8 @@
+---
+id: dramatic
+category: Bold & Expressive
+palette: ["#8B5CF6", "#F43F5E", "#16A34A", "#D97706", "#DC2626", "#09090B", "#FAFAFA"]
+---
 # Design System Inspired by Dramatic
 
 > Category: Bold & Expressive

@@ -1,3 +1,8 @@
+---
+id: contemporary
+category: Modern & Minimal
+palette: ["#C800DF", "#E60076", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
+---
 # Design System Inspired by Contemporary
 
 > Category: Modern & Minimal

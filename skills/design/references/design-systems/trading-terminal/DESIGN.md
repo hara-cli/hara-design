@@ -1,3 +1,8 @@
+---
+id: trading-terminal
+category: Themed & Unique
+palette: ["#00D4AA", "#FF4757", "#0D0D0D", "#141414", "#1A1A1A", "#2A2A2A", "#FFB800", "#808086", "#FFFFFF", "#AAAAAA"]
+---
 # Trading Terminal Design System
 
 > Category: Themed & Unique

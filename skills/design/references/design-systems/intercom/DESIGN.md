@@ -1,3 +1,8 @@
+---
+id: intercom
+category: Productivity & SaaS
+palette: ["#faf9f6", "#111111", "#ff5600", "#dedbd6", "#ffffff", "#fe4c02", "#65b5ff", "#0bdf50", "#c41c1c", "#ff2067"]
+---
 # Design System Inspired by Intercom
 
 > Category: Productivity & SaaS

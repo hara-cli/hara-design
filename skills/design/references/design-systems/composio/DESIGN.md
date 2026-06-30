@@ -1,3 +1,9 @@
+---
+id: composio
+category: Backend & Data
+palette: ["#0f0f0f", "#0007cd", "#00ffff", "#0089ff", "#0096ff", "#000000", "#2c2c2c", "#ffffff", "#444444", "#e0e0e0"]
+fonts: ["abcDiatype", "JetBrains Mono", "Menlo"]
+---
 # Design System Inspired by Composio
 
 > Category: Backend & Data

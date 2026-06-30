@@ -1,3 +1,8 @@
+---
+id: default
+category: Starter
+palette: ["#FAFAFA", "#111111", "#2F6FEB", "#6B6B6B", "#E5E5E5", "#FFFFFF", "#17A34A", "#EAB308", "#DC2626"]
+---
 # Neutral Modern
 
 > Category: Starter

@@ -1,3 +1,8 @@
+---
+id: editorial
+category: Creative & Artistic
+palette: ["#111111", "#F1F1F1", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
+---
 # Design System Inspired by Editorial
 
 > Category: Creative & Artistic

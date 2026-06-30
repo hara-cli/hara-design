@@ -1,3 +1,9 @@
+---
+id: stripe
+category: Fintech & Crypto
+palette: ["#ffffff", "#061b31", "#533afd", "#ea2261", "#f96bee", "#1c1e54", "#0d253d", "#ffd7ef", "#4434d4", "#2e2b8c"]
+fonts: ["sohne-var", "SourceCodePro"]
+---
 # Design System Inspired by Stripe
 
 > Category: Fintech & Crypto

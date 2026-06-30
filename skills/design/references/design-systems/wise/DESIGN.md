@@ -1,3 +1,8 @@
+---
+id: wise
+category: Fintech & Crypto
+palette: ["#0e0f0c", "#9fe870", "#163300", "#e2f6d5", "#cdffad", "#054d28", "#d03238", "#ffd11a", "#ffc091", "#454745"]
+---
 # Design System Inspired by Wise
 
 > Category: Fintech & Crypto

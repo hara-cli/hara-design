@@ -1,3 +1,9 @@
+---
+id: pinterest
+category: Media & Consumer
+palette: ["#e60023", "#91918c", "#62625b", "#e5e5e0", "#211922", "#103c25", "#0b2819", "#000000", "#ffffff", "#435ee5"]
+fonts: ["Pin Sans"]
+---
 # Design System Inspired by Pinterest
 
 > Category: Media & Consumer

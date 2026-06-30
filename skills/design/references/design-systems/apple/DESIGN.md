@@ -1,3 +1,9 @@
+---
+id: apple
+category: Media & Consumer
+palette: ["#000000", "#f5f5f7", "#0071e3", "#0066cc", "#2997ff", "#1d1d1f", "#ffffff", "#272729", "#262629", "#28282b"]
+fonts: ["SF Pro Display", "SF Pro Text"]
+---
 # Design System Inspired by Apple
 
 > Category: Media & Consumer

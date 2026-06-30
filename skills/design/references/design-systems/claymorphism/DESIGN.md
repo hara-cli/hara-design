@@ -1,3 +1,8 @@
+---
+id: claymorphism
+category: Morphism & Effects
+palette: ["#3B82F6", "#FFFFFF", "#16A34A", "#D97706", "#DC2626", "#1C398E"]
+---
 # Design System Inspired by Claymorphism
 
 > Category: Morphism & Effects

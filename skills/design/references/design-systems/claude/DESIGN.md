@@ -1,3 +1,9 @@
+---
+id: claude
+category: AI & LLM
+palette: ["#f5f4ed", "#c96442", "#5e5d59", "#87867f", "#4d4c48", "#f0eee6", "#e8e6dc", "#141413", "#30302e", "#d97757"]
+fonts: ["Anthropic Serif", "Anthropic Sans", "Anthropic Mono"]
+---
 # Design System Inspired by Claude (Anthropic)
 
 > Category: AI & LLM

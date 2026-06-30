@@ -1,3 +1,8 @@
+---
+id: gradient
+category: Morphism & Effects
+palette: ["#990FFA", "#E60076", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
+---
 # Design System Inspired by Gradient
 
 > Category: Morphism & Effects

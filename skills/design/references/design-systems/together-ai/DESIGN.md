@@ -1,3 +1,9 @@
+---
+id: together-ai
+category: AI & LLM
+palette: ["#010120", "#ef2cc1", "#fc4c02", "#bdbbff", "#00000066", "#ffffff", "#000000"]
+fonts: ["The Future", "PP Neue Montreal Mono"]
+---
 # Design System Inspired by Together AI
 
 > Category: AI & LLM

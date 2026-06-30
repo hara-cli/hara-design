@@ -1,3 +1,8 @@
+---
+id: corporate
+category: Professional & Corporate
+palette: ["#3B82F6", "#8B5CF6", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
+---
 # Design System Inspired by Corporate
 
 > Category: Professional & Corporate

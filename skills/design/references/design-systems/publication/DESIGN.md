@@ -1,3 +1,8 @@
+---
+id: publication
+category: Creative & Artistic
+palette: ["#A855F7", "#0A1829", "#16A34A", "#D97706", "#DC2626", "#FFFFFF"]
+---
 # Design System Inspired by Publication
 
 > Category: Creative & Artistic

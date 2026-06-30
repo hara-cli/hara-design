@@ -1,3 +1,9 @@
+---
+id: opencode-ai
+category: AI & LLM
+palette: ["#201d1d", "#fdfcfc", "#9a9898", "#007aff", "#ff3b30", "#30d158", "#ff9f0a", "#302c2c", "#646262", "#f1eeee"]
+fonts: ["Berkeley Mono"]
+---
 # Design System Inspired by OpenCode
 
 > Category: AI & LLM

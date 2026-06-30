@@ -1,3 +1,9 @@
+---
+id: cohere
+category: AI & LLM
+palette: ["#d9d9dd", "#e5e7eb", "#1863dc", "#000000", "#212121", "#17171c", "#4c6ee6", "#9b60aa", "#ffffff", "#fafafa"]
+fonts: ["CohereText", "Unica77 Cohere Web", "CohereMono", "CohereIconDefault"]
+---
 # Design System Inspired by Cohere
 
 > Category: AI & LLM

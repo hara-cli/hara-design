@@ -1,3 +1,8 @@
+---
+id: neon
+category: Morphism & Effects
+palette: ["#BBF351", "#00BCFF", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
+---
 # Design System Inspired by Neon
 
 > Category: Morphism & Effects

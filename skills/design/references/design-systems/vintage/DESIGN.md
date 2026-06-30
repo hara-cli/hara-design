@@ -1,3 +1,8 @@
+---
+id: vintage
+category: Retro & Nostalgic
+palette: ["#008080", "#C0C0C0", "#16A34A", "#D97706", "#DC2626", "#000000"]
+---
 # Design System Inspired by Vintage
 
 > Category: Retro & Nostalgic

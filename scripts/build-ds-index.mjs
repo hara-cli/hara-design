@@ -16,7 +16,19 @@ const dsRoot = join(here, "..", "skills", "design", "references", "design-system
 function cleanTitle(raw) {
   return raw.replace(/^Design System (Inspired by|for)\s+/i, "").trim();
 }
+// Read a single scalar key from a leading YAML frontmatter block (--- ... ---), if present.
+function frontmatterValue(raw, key) {
+  if (!/^---\r?\n/.test(raw)) return null;
+  const end = raw.indexOf("\n---", 3);
+  if (end === -1) return null;
+  const block = raw.slice(0, end);
+  const m = new RegExp(`^${key}:\\s*(.+?)\\s*$`, "im").exec(block);
+  return m ? m[1].trim() : null;
+}
 function extractCategory(raw) {
+  // Prefer machine-readable frontmatter (added by add-frontmatter.mjs); fall back to prose scan.
+  const fm = frontmatterValue(raw, "category");
+  if (fm) return fm;
   const m = /^>\s*Category:\s*(.+?)\s*$/im.exec(raw);
   return m?.[1] ?? "Uncategorized";
 }

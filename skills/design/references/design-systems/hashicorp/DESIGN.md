@@ -1,3 +1,8 @@
+---
+id: hashicorp
+category: Backend & Data
+palette: ["#15181e", "#0d0e12", "#7b42bc", "#ffcf25", "#14c6cb", "#1868f2", "#000000", "#f1f2f3", "#d5d7db", "#b2b6bd"]
+---
 # Design System Inspired by HashiCorp
 
 > Category: Backend & Data

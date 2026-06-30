@@ -1,3 +1,9 @@
+---
+id: github
+category: Developer Tools
+palette: ["#ffffff", "#0d1117", "#0969da", "#1a7f37", "#d0d7de", "#f6f8fa", "#eaeef2", "#1f2328", "#656d76", "#0550ae"]
+fonts: ["Apple Color Emoji"]
+---
 # Design System Inspired by GitHub
 
 > Category: Developer Tools

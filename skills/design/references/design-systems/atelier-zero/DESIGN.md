@@ -1,3 +1,8 @@
+---
+id: atelier-zero
+category: Editorial · Studio
+palette: ["#efe7d2", "#ece4cf", "#ddd2b6", "#f7f1de", "#15140f", "#2a2620", "#5a5448", "#8b8676", "#ed6f5c", "#f08e7c"]
+---
 # Atelier Zero
 
 > Category: Editorial · Studio

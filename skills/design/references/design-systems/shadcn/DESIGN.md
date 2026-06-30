@@ -1,3 +1,8 @@
+---
+id: shadcn
+category: Modern & Minimal
+palette: ["#000000", "#111111", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
+---
 # Design System Inspired by Shadcn
 
 > Category: Modern & Minimal

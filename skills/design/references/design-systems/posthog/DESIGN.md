@@ -1,3 +1,9 @@
+---
+id: posthog
+category: Backend & Data
+palette: ["#fdfdf8", "#F54E00", "#1e1f23", "#bfc1b7", "#eeefe9", "#4d4f46", "#23251d", "#F7A501", "#b17816", "#3b82f6"]
+fonts: ["IBM Plex Sans Variable"]
+---
 # Design System Inspired by PostHog
 
 > Category: Backend & Data

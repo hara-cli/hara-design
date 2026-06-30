@@ -1,3 +1,9 @@
+---
+id: starbucks
+category: E-Commerce & Retail
+palette: ["#f2f0eb", "#edebe9", "#006241", "#cba258", "#00754A", "#1E3932", "#2b5148", "#d4e9e2", "#dfc49d", "#faf6ee"]
+fonts: ["SoDoSans", "Helvetica Neue", "Lander Tall", "Kalam"]
+---
 # Design System Inspired by Starbucks
 
 > Category: E-Commerce & Retail

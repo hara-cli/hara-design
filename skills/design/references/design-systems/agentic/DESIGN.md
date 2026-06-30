@@ -1,3 +1,8 @@
+---
+id: agentic
+category: Themed & Unique
+palette: ["#FF5701", "#F6F6F1", "#16A34A", "#D97706", "#DC2626", "#FFFFFF", "#111827"]
+---
 # Design System Inspired by Agentic
 
 > Category: Themed & Unique

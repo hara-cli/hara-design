@@ -1,3 +1,8 @@
+---
+id: zapier
+category: Productivity & SaaS
+palette: ["#fffefb", "#201515", "#ff4f00", "#c5c0b1", "#939084", "#eceae3", "#fffdf9", "#36342e", "#b5b2aa", "#2d2d2e"]
+---
 # Design System Inspired by Zapier
 
 > Category: Productivity & SaaS

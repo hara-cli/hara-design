@@ -19,7 +19,7 @@ from `<skill dir>/references/`:
 ```
 <skill dir>/references/
 ├── design-systems/INDEX.md       ← scan this to pick a system; then read <id>/DESIGN.md
-├── design-systems/<id>/DESIGN.md ← the chosen system's full spec (palette, type, components, layout…)
+├── design-systems/<id>/DESIGN.md ← the chosen system's full spec. YAML frontmatter (`palette:`/`fonts:`/`category:`) gives exact, machine-readable token values — wire those into `:root`, don't eyeball hexes from the prose.
 ├── skills/<recipe>/              ← per-output recipe: SKILL.md + assets/template.html + references/{layouts,checklist}.md
 └── craft/{anti-ai-slop,color,typography}.md
 ```

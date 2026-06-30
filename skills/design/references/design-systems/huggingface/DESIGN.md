@@ -1,3 +1,9 @@
+---
+id: huggingface
+category: AI & LLM
+palette: ["#ffd21e", "#fafafa", "#0d1117", "#f3f4f6", "#e5e7eb", "#f59e0b", "#fff4cc", "#ffffff", "#374151", "#6b7280"]
+fonts: ["IBM Plex Mono"]
+---
 # Design System Inspired by Hugging Face
 
 > Category: AI & LLM
