@@ -30,6 +30,13 @@ Style the states yourself: `.is-active`, `.is-open`, `.is-selected`, `:focus-vis
 
 The screen→screen route change is the **one flourish** — `data-stagger`/`data-press` are subtle accents, not a reason to pile on more animation.
 
+**Data viz / components (opt-in, framework-rendered):**
+| Want | Markup |
+|---|---|
+| **Sparkline** | `<div data-sparkline="3,7,5,9,6,8" data-spark-color="#5b6cff" style="height:32px"></div>` → an inline SVG trend (gradient area + polyline), zero-dep. Great for dashboard stat cards. |
+
+For richer one-offs (a freehand **canvas sketch** pad, etc.) see `components.md` — copy-paste vanilla snippets you drop straight into a screen.
+
 ## View modes (the preview drives these; you just author screens)
 The read-only preview toggles two layouts — **Grid** (a board of all screens as device cards; click a card → opens it) and **真机** (one screen in the device frame, tap CTAs to walk the flow). You don't build the toggle; just make each screen a `[data-route]` section. `proto.js` exposes the current screen on `document.documentElement.dataset.route` and a `window.__proto.current()` getter so the preview always knows which screen you're on. Export prints a one-page **一拼 contact sheet** (device thumbnails) — also framework, not authored.
 

@@ -39,6 +39,20 @@
     // motion: data-stagger → its direct children rise in sequence (CSS keyframe; re-fires when a Detail screen
     // re-shows because it was display:none; honors prefers-reduced-motion). Author just adds the attribute.
     [].forEach.call(d.querySelectorAll("[data-stagger]"), function (g) { [].forEach.call(g.children, function (c, k) { c.style.setProperty("--hara-i", k); }); });
+    // data-sparkline="3,7,5,9,6,8" [data-spark-color] → an inline SVG sparkline (gradient area + polyline). Zero-dep,
+    // pure SVG+math (no chart lib). The element just needs a height; the svg fills it.
+    var sparkN = 0;
+    [].forEach.call(d.querySelectorAll("[data-sparkline]"), function (el) {
+      var pts = (el.dataset.sparkline || "").split(/[,\s]+/).map(Number).filter(function (n) { return !isNaN(n); });
+      if (pts.length < 2) return;
+      var w = 100, h = 32, pad = 2, max = Math.max.apply(null, pts), min = Math.min.apply(null, pts), rng = (max - min) || 1;
+      var poly = pts.map(function (v, i) { return ((i / (pts.length - 1)) * w).toFixed(1) + "," + (h - pad - ((v - min) / rng) * (h - pad * 2)).toFixed(1); }).join(" ");
+      var col = el.dataset.sparkColor || "currentColor", gid = "haraSpark" + (++sparkN);
+      el.innerHTML = '<svg viewBox="0 0 ' + w + " " + h + '" preserveAspectRatio="none" style="width:100%;height:100%;display:block;overflow:visible" aria-hidden="true">' +
+        '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + col + '" stop-opacity=".28"/><stop offset="1" stop-color="' + col + '" stop-opacity="0"/></linearGradient></defs>' +
+        '<polygon points="0,' + h + " " + poly + " " + w + "," + h + '" fill="url(#' + gid + ')"/>' +
+        '<polyline points="' + poly + '" fill="none" stroke="' + col + '" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    });
     docEl.dataset.view = parts.indexOf("showcase") >= 0 ? "grid" : "detail";
   }
 
