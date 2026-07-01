@@ -104,7 +104,12 @@ Gated, CSV-driven process — fire **with the launch wave** (post-GIF + initial 
 - **License**: Apache-2.0
 - **Description**: "Turns your coding agent into a design tool: describe a UI → a playable, on-brand, self-contained HTML prototype in one of 150 brand-grade design systems, previewed live. Installs as a skill in Claude Code (also Codex and the hara CLI); the agent authors only screens + tokens while a frozen framework injects the device frame and interactions."
 
-Process: fork → use their resource-add tooling / templates to append the row → run their validation script → PR per template. Also worth: awesome-ai-agents, awesome-llm-tools (lighter lists).
+⚠️ **Submission = WEB ISSUE FORM ONLY, by a human.** Their CONTRIBUTING is explicit: **do NOT open a PR** (ban risk), and **`gh` CLI can't submit** — recommendations must go through the GitHub web-UI issue form. A bot validates → maintainer reviews → bot auto-creates the PR. So Jeff submits it:
+- Form: https://github.com/hesreallyhim/awesome-claude-code/issues/new?template=recommend-resource.yml
+- Fields → Name: `hara-design` · Category: **Agent Skills** · Primary link: `https://github.com/hara-cli/hara-design` · Author: `hara-cli` / `https://github.com/hara-cli` · License: `Apache-2.0` · Description: the one-liner above.
+- They want evidence-based claims + ideally a demo → link/attach `docs/demo.gif`.
+
+Also worth (broader, lower bar): awesome-ai-agents, awesome-llm-tools.
 
 ---
 
