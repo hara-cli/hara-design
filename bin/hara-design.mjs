@@ -2,7 +2,7 @@
 // hara-design — local helper for the design plugin (preview + export without long node paths).
 //
 //   hara-design preview [dir] [--port N] [--open]   start the live-reload preview server on a design dir
-//   hara-design export  <index.html> [--out f.pdf]  print an artifact to PDF (headless Chrome)
+//   hara-design export  <index.html> [--out f.html]  bundle a self-contained interactive HTML (no Chrome)
 //   hara-design open    [dir] [--port N]            = preview --open
 //
 // `dir` defaults to: the newest .hara/design/<slug>/ under the cwd, else the cwd itself.
@@ -64,7 +64,7 @@ function usage() {
   hara-design preview [dir] [--port N] [--open]    live preview server on a design dir
   hara-design open    [dir] [--port N]             preview + open the browser
   hara-design gallery [dir] [--global] [--port N]  browse all designs under a library root (read-only)
-  hara-design export  <index.html> [--out f.pdf]   print an artifact to PDF
+  hara-design export  <index.html> [--out f.html]   bundle a self-contained interactive HTML
   hara-design handoff <index.html> [--target all|css|tailwind|swiftui|flutter] [--out dir]
                                                    emit an agent-consumable design handoff
                                                    (DTCG tokens + theme + components.md + HANDOFF.md)
@@ -236,7 +236,7 @@ if (cmd === "init") {
   child.on("error", () => { console.log("No preview server running."); process.exit(0); });
 } else if (cmd === "export") {
   const inFile = positional();
-  if (!inFile) { console.error("usage: hara-design export <index.html> [--out f.pdf]"); process.exit(2); }
+  if (!inFile) { console.error("usage: hara-design export <index.html> [--out f.html]"); process.exit(2); }
   const args = [join(root, "scripts", "export.mjs"), "--in", inFile];
   const out = opt("out");
   if (out) args.push("--out", out);

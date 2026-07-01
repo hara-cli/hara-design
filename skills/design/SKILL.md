@@ -283,7 +283,7 @@ slides in a row; headlines ≥36px, body ≥22px.
 ## Export & handoff (when the user wants to ship it for real)
 The CLI helper is `hara-design` (or `node <skill dir>/../../{scripts,preview}/…`):
 - **HTML**: `hara-design export <artifact dir>/index.html` — bundles a **self-contained interactive HTML** (the frozen proto.css/js inlined): the prototype opens anywhere (double-click, email, static host), fully interactive (device frame, Grid board + Play tap-through, forms/modals), no server or Chrome. proto.js self-mounts a Grid/Play toggle when opened standalone.
-- **Client proposal PDF** (share the design with a client / non-technical stakeholder — product narrative + the
+- **Client proposal** — a shareable, self-contained page (share the design with a client / non-technical stakeholder — product narrative + the
   screens explained + design rationale + roadmap): use the **`design-proposal`** recipe
   (`references/skills/design-proposal/`) — fill its `template.html`, embed screen PNGs, then `hara-design export
   proposal.html`. This is storytelling for a client, distinct from the code-handoff below.

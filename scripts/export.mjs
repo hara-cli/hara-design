@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Export a design artifact to a SELF-CONTAINED interactive HTML — `node scripts/export.mjs --in <index.html> [--out <file.html>]`.
 // Inlines the FROZEN framework (proto.css + proto.js) into the asset so the delivered file opens anywhere (double-click,
-// email, static host), fully interactive (device frame, Grid board, 真机 tap-through) — no preview server, no Chrome.
-// proto.js self-mounts a Grid/真机 toggle when opened standalone. A static page (no <section data-route>) is copied as-is.
+// email, static host), fully interactive (device frame, Grid board, Play tap-through) — no preview server, no Chrome.
+// proto.js self-mounts a Grid/Play toggle when opened standalone. A static page (no <section data-route>) is copied as-is.
 
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname, basename, join } from "node:path";
