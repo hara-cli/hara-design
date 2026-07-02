@@ -84,7 +84,7 @@ for (const m of MOODS) {
   out += `${m.vibe}\n\n`;
   out += `**When to pick:** ${m.when}\n\n`;
   for (const id of ids) {
-    const tone = toneOf(id);
+    const tone = (toneOf(id) || "").slice(0, 70).trim(); // differentiator, not documentation — DESIGN.md has the rest
     out += `- \`${id}\`${tone ? ` — ${tone}` : ""}\n`;
   }
   out += "\n";

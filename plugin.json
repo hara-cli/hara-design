@@ -1,6 +1,6 @@
 {
   "name": "design",
-  "version": "0.2.0",
+  "version": "0.3.4",
   "description": "Design in the hara CLI — generate self-contained HTML (landing pages, dashboards, app prototypes, decks) in 151 brand-grade design systems, preview live in your browser.",
   "skills": [
     "skills"

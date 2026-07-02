@@ -56,6 +56,16 @@ Got it — <one-line read of the brief>. Quick brief (answer what matters, I'll 
 picks fast but re-does slowly. **Only skip** when: it's a tweak to an existing design ("make the hero bigger"),
 the user says "just build / no questions", or they already gave answers. When skipping, go to Stage 3.
 
+> **No pre-reading.** During Stage 1 (the questions) read NOTHING from references/ — a real report had
+> the model burn 2–3 minutes reading the whole design-system index before even asking what to build.
+> References load at the stage that needs them, and only the branch that needs them.
+>
+> **Batch your reference reads.** Your runtime executes read tools IN PARALLEL when you request them
+> together — so fetch references in ONE round, not one-per-turn (on a slow endpoint each extra round
+> is a full model turn): Stage 2 → read `INDEX.md` **and** `MOODS.md` together (whichever branch, you
+> have both). Stage 3 → read the chosen `<id>/DESIGN.md` + the recipe's `SKILL.md` +
+> `assets/template.html` + `references/layouts.md` **in one batch of four**.
+
 ### Stage 2 — Direction (branch on the brand answer)
 - **"pick a design system for me"** → read `design-systems/INDEX.md`, choose the system whose tone/category best
   fits the brief (or offer 2–3 by id and let them pick a number). State your pick in one sentence.

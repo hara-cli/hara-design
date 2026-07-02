@@ -44,7 +44,9 @@ function summarize(raw) {
     .replace(/^>\s*/gm, "")
     .replace(/\s+/g, " ")
     .trim();
-  return (window.split(/\. /)[0] || window).slice(0, 160).trim();
+  // 90-char cap: the index exists to PICK a system, not to describe it — the details live in the
+  // chosen DESIGN.md. Shorter lines ≈ 35% smaller file ≈ faster first turn on slow endpoints.
+  return (window.split(/\. /)[0] || window).slice(0, 90).trim();
 }
 
 const rows = [];
