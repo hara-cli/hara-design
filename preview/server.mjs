@@ -429,7 +429,22 @@ async function renderGallery(root) {
 <div class="grid">${items}</div>${LIVERELOAD}`;
 }
 
-// debounced reload broadcast on any change in the artifact dir
+// Reload ONLY when a file the page could actually load changes. The watcher sees EVERYTHING in the
+// artifact dir — .git index churn, .hara session state, .DS_Store, editor swap files — and each used
+// to broadcast a full reload, so previewing from a busy project root made the page flash nonstop.
+// Filter: ignore dot-dirs/droppings outright; require a servable extension (the MIME map) otherwise.
+// A null filename (platform didn't say) reloads to stay safe.
+const IGNORE_RE = /(^|[\/\\])(\.git|\.hara|node_modules|\.DS_Store)([\/\\]|$)|(~|\.sw[po]|\.tmp)$/;
+function wantsReload(filename) {
+  if (!filename) return true;
+  const f = String(filename);
+  if (IGNORE_RE.test(f)) return false;
+  const dot = f.lastIndexOf(".");
+  const ext = dot >= 0 ? f.slice(dot).toLowerCase() : "";
+  return ext !== "" && ext in MIME;
+}
+
+// debounced reload broadcast on relevant changes in the artifact dir
 let timer = null;
 function broadcast() {
   for (const res of sseClients) {
@@ -440,17 +455,17 @@ function broadcast() {
     }
   }
 }
+// 250ms trailing debounce: an agent burst-editing several files lands as ONE reload after the burst.
+const onFsEvent = (_event, filename) => {
+  if (!wantsReload(filename)) return;
+  clearTimeout(timer);
+  timer = setTimeout(broadcast, 250);
+};
 try {
-  watch(artifactDir, { recursive: true }, () => {
-    clearTimeout(timer);
-    timer = setTimeout(broadcast, 80);
-  });
+  watch(artifactDir, { recursive: true }, onFsEvent);
 } catch {
   // recursive watch unsupported → fall back to watching the dir non-recursively
-  watch(artifactDir, () => {
-    clearTimeout(timer);
-    timer = setTimeout(broadcast, 80);
-  });
+  watch(artifactDir, onFsEvent);
 }
 
 function listen(port, triesLeft = 20) {

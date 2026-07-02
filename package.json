@@ -1,6 +1,6 @@
 {
   "name": "@nanhara/hara-design",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Design from your terminal — in hara, Claude Code, or Codex. Generate self-contained, interactive HTML in 150 brand-grade design systems, preview live, and export to standalone HTML or a design-token / framework handoff (Tailwind, CSS, SwiftUI, Flutter).",
   "license": "Apache-2.0",
   "type": "module",
