@@ -81,6 +81,9 @@ function startServer(dir, wantOpen, port, catalog) {
   // Free the requested port first so a re-open REPLACES a stale server (running servers don't pick up new code;
   // otherwise the old one keeps the port and you keep seeing old output — the bug Jeff kept hitting).
   try { execFileSync("bash", ["-c", `lsof -ti:${port} 2>/dev/null | xargs kill -9 2>/dev/null`], { stdio: "ignore", timeout: 4000 }); } catch { /* nothing on the port */ }
+  // And kill any server already previewing the SAME dir on another port — EADDRINUSE port-bumping used
+  // to leave strays accumulating (three background servers on one machine was a real report).
+  try { execFileSync("pkill", ["-f", `preview/server\.mjs --dir ${dir}( |$)`], { stdio: "ignore", timeout: 4000 }); } catch { /* none */ }
   const sargs = [join(root, "preview", "server.mjs"), "--dir", dir, "--port", port];
   if (catalog) sargs.push("--catalog");
   const child = spawn("node", sargs, {
@@ -222,7 +225,23 @@ if (cmd === "init") {
   const child = spawn("node", [join(root, "scripts", "init.mjs"), ...(positional() ? [positional()] : [])], { stdio: "inherit" });
   child.on("exit", (code) => process.exit(code ?? 0));
 } else if (cmd === "preview" || cmd === "open") {
-  startServer(resolve(positional() || defaultDir()), cmd === "open" || flag("open"), opt("port", "4321"));
+  const explicit = positional();
+  const dir = resolve(explicit || defaultDir());
+  // Guard (Dongqin's bug): with no explicit dir and nothing design-like here, defaultDir() used to
+  // fall back to cwd — launched from $HOME that meant serving AND recursively WATCHING the whole home
+  // directory ("no designs yet" page + the preview flashing on every unrelated file change).
+  const looksLikeDesign = existsSync(join(dir, "index.html")) || existsSync(join(dir, ".hara", "design"));
+  if (!explicit && !looksLikeDesign) {
+    console.error(`✗ No design found under ${dir}.`);
+    console.error(`  Start one:            hara-design init            (scaffold this directory)`);
+    console.error(`  Or preview a design:  hara-design open <dir>      (a dir with an index.html)`);
+    process.exit(2);
+  }
+  if (dir === homedir() && !existsSync(join(dir, "index.html"))) {
+    console.error("✗ Refusing to serve your home directory (recursive file-watching the whole home makes the preview flash nonstop). Pass a design dir.");
+    process.exit(2);
+  }
+  startServer(dir, cmd === "open" || flag("open"), opt("port", "4321"));
 } else if (cmd === "gallery") {
   const dir = flag("global") ? join(homedir(), ".hara", "design") : resolve(positional() || join(process.cwd(), ".hara", "design"));
   startServer(dir, !flag("no-open"), opt("port", "4321"));

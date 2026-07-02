@@ -461,11 +461,15 @@ const onFsEvent = (_event, filename) => {
   clearTimeout(timer);
   timer = setTimeout(broadcast, 250);
 };
-try {
-  watch(artifactDir, { recursive: true }, onFsEvent);
-} catch {
-  // recursive watch unsupported → fall back to watching the dir non-recursively
-  watch(artifactDir, onFsEvent);
+// Catalog mode renders the BUNDLED design systems — the artifact dir contributes nothing to that page,
+// so watching it (often the launch cwd) is pure flicker liability. No watch at all.
+if (!catalog) {
+  try {
+    watch(artifactDir, { recursive: true }, onFsEvent);
+  } catch {
+    // recursive watch unsupported → fall back to watching the dir non-recursively
+    watch(artifactDir, onFsEvent);
+  }
 }
 
 function listen(port, triesLeft = 20) {
