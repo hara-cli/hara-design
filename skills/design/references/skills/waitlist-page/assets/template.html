@@ -6,7 +6,11 @@
   <title>{{PRODUCT_NAME}} — Coming Soon</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family={{DISPLAY_FONT_URL}}:wght@700;800&family={{BODY_FONT_URL}}:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Non-blocking: `media=print` → the sheet is fetched but never blocks first paint; `onload` promotes it once
+       it arrives. Where Google Fonts is unreachable (e.g. mainland China) the page renders INSTANTLY on the system
+       fallback stack in --font-* below instead of hanging. Keep every --font-* var ending in a real system stack. -->
+  <link href="https://fonts.googleapis.com/css2?family={{DISPLAY_FONT_URL}}:wght@700;800&family={{BODY_FONT_URL}}:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family={{DISPLAY_FONT_URL}}:wght@700;800&family={{BODY_FONT_URL}}:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
   <style>
     :root {
       --bg: {{BG_EXPRESSION}};
@@ -22,8 +26,8 @@
       --deco-stroke: {{DECO_STROKE_EXPRESSION}};
       --logo-shadow: {{LOGO_SHADOW_EXPRESSION}};
       --logo-fg: {{LOGO_FG_EXPRESSION}};
-      --font-body: {{BODY_FONT_CSS}}, sans-serif;
-      --font-display: {{DISPLAY_FONT_CSS}}, serif;
+      --font-body: {{BODY_FONT_CSS}}, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --font-display: {{DISPLAY_FONT_CSS}}, 'Iowan Old Style', Charter, Georgia, 'Times New Roman', serif;
     }
 
     *, *::before, *::after {
