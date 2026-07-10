@@ -1,11 +1,20 @@
 {
   "name": "design",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Design in the hara CLI — generate self-contained HTML (landing pages, dashboards, app prototypes, decks) in 151 brand-grade design systems, preview live in your browser.",
   "skills": [
     "skills"
   ],
   "bin": {
     "hara-design": "bin/hara-design.mjs"
-  }
+  },
+  "panels": [
+    {
+      "id": "design-preview",
+      "title": "Design",
+      "command": "hara-design",
+      "args": ["preview"],
+      "port": 4321
+    }
+  ]
 }
