@@ -13,8 +13,13 @@
       "id": "design-preview",
       "title": "Design",
       "command": "hara-design",
-      "args": ["preview"],
-      "port": 4321
+      "args": [
+        "preview"
+      ],
+      "port": 4321,
+      "detect": [
+        ".hara/design"
+      ]
     }
   ]
 }
