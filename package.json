@@ -28,6 +28,7 @@
     "hara-design": "bin/hara-design.mjs"
   },
   "scripts": {
+    "test": "node --test test/*.test.mjs",
     "preview": "node preview/server.mjs",
     "export": "node scripts/export.mjs",
     "build-index": "node scripts/build-ds-index.mjs"

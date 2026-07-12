@@ -23,6 +23,7 @@ import { join, normalize, extname, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
 import { tmpdir } from "node:os";
+import { safeJoin } from "./safe-path.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const framesDir = join(here, "..", "frames");
@@ -53,12 +54,6 @@ const MIME = {
 };
 
 const LIVERELOAD = `<script src="/__livereload.js"></script><script src="/__refpick.js"></script>`;
-
-// keep the path inside its root — reject traversal
-function safeJoin(root, urlPath) {
-  const p = normalize(join(root, decodeURIComponent(urlPath)));
-  return p.startsWith(root) ? p : null;
-}
 
 const sseClients = new Set();
 
