@@ -77,7 +77,38 @@ dir defaults to the newest .hara/design/<slug>/ under the current directory.`);
 // `hara-design open` would block forever — which HANGS an agent's turn when the design skill launches it
 // (the bug Jeff hit: "/design … working 100s"). So: spawn detached, read the chosen URL off stdout, open
 // the browser, print it, unref + exit. The server keeps running in the background; `hara-design stop` ends it.
+// Staleness tripwire (deterministic, model-independent): if the served files are OLDER than the
+// repo's latest commit, they are likely stale generated artifacts — the agent/user gets told to
+// re-run the documented build steps instead of trusting a two-day-old gallery (real report:
+// pull → preview with the render/build steps skipped).
+function stalenessWarning(dir) {
+  try {
+    let newestMs = 0;
+    const walk = (p, depth) => {
+      for (const f of readdirSync(p)) {
+        if (f.startsWith(".")) continue;
+        const fp = join(p, f);
+        let st;
+        try { st = statSync(fp); } catch { continue; }
+        if (st.isDirectory()) { if (depth < 2) walk(fp, depth + 1); }
+        else if (st.mtimeMs > newestMs) newestMs = st.mtimeMs;
+      }
+    };
+    walk(dir, 0);
+    if (!newestMs) return "";
+    const out = execFileSync("git", ["-C", dir, "log", "-1", "--format=%ct"], { stdio: ["ignore", "pipe", "ignore"], timeout: 3000 }).toString().trim();
+    const commitMs = Number(out) * 1000;
+    if (commitMs && commitMs > newestMs + 60_000) {
+      const fmt = (ms) => new Date(ms).toLocaleString();
+      return `⚠ possibly STALE: served files last modified ${fmt(newestMs)}, but the repo's latest commit is ${fmt(commitMs)} — if these are generated artifacts, re-run the project's documented build/render steps (AGENTS.md / README) before trusting this preview.`;
+    }
+  } catch { /* not a git repo / git unavailable — no signal, stay quiet */ }
+  return "";
+}
+
 function startServer(dir, wantOpen, port, catalog) {
+  const stale = stalenessWarning(dir);
+  if (stale) console.log(stale);
   // Free the requested port first so a re-open REPLACES a stale server (running servers don't pick up new code;
   // otherwise the old one keeps the port and you keep seeing old output — the bug Jeff kept hitting).
   try { execFileSync("bash", ["-c", `lsof -ti:${port} 2>/dev/null | xargs kill -9 2>/dev/null`], { stdio: "ignore", timeout: 4000 }); } catch { /* nothing on the port */ }

@@ -92,7 +92,20 @@ async function serveFile(res, absPath, { injectReload = false } = {}) {
   return true;
 }
 
+// Idle auto-exit — preview servers from finished sessions used to run forever (port/process leak:
+// three stray servers on one machine was a real report). Any HTTP request (incl. livereload polls
+// from an open tab) counts as activity, so the server only dies once nobody is looking at it.
+const IDLE_EXIT_MS = 2 * 60 * 60 * 1000;
+let lastActivity = Date.now();
+setInterval(() => {
+  if (Date.now() - lastActivity > IDLE_EXIT_MS) {
+    console.log(`idle ${Math.round(IDLE_EXIT_MS / 60000)}min — preview server exiting (restart: hara-design preview)`);
+    process.exit(0);
+  }
+}, 60_000).unref();
+
 const server = createServer(async (req, res) => {
+  lastActivity = Date.now();
   const url = new URL(req.url, "http://127.0.0.1");
   const path = url.pathname;
 
