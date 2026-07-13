@@ -117,7 +117,7 @@ function startServer(dir, wantOpen, port, catalog) {
   try { execFileSync("pkill", ["-f", `preview/server\.mjs --dir ${dir}( |$)`], { stdio: "ignore", timeout: 4000 }); } catch { /* none */ }
   const sargs = [join(root, "preview", "server.mjs"), "--dir", dir, "--port", port];
   if (catalog) sargs.push("--catalog");
-  const child = spawn("node", sargs, {
+  const child = spawn(process.execPath, sargs, {
     stdio: ["ignore", "pipe", "ignore"],
     detached: true,
   });
@@ -252,8 +252,10 @@ function printNextSteps(dest, label) {
   }
 }
 
-if (cmd === "init") {
-  const child = spawn("node", [join(root, "scripts", "init.mjs"), ...(positional() ? [positional()] : [])], { stdio: "inherit" });
+if (!cmd || cmd === "help" || cmd === "--help" || cmd === "-h") {
+  usage();
+} else if (cmd === "init") {
+  const child = spawn(process.execPath, [join(root, "scripts", "init.mjs"), ...(positional() ? [positional()] : [])], { stdio: "inherit" });
   child.on("exit", (code) => process.exit(code ?? 0));
 } else if (cmd === "preview" || cmd === "open") {
   const explicit = positional();
@@ -290,7 +292,7 @@ if (cmd === "init") {
   const args = [join(root, "scripts", "export.mjs"), "--in", inFile];
   const out = opt("out");
   if (out) args.push("--out", out);
-  const child = spawn("node", args, { stdio: "inherit" });
+  const child = spawn(process.execPath, args, { stdio: "inherit" });
   child.on("exit", (code) => process.exit(code ?? 0));
 } else if (cmd === "handoff") {
   const inFile = positional();
@@ -298,7 +300,7 @@ if (cmd === "init") {
   const args = [join(root, "scripts", "handoff.mjs"), "--in", inFile];
   const out = opt("out"); if (out) args.push("--out", out);
   const target = opt("target"); if (target) args.push("--target", target);
-  const child = spawn("node", args, { stdio: "inherit" });
+  const child = spawn(process.execPath, args, { stdio: "inherit" });
   child.on("exit", (code) => process.exit(code ?? 0));
 } else if (cmd === "install") {
   // Install the bundled `design` skill into a CLI. Default (no flag) = register as a hara plugin.
@@ -320,5 +322,5 @@ if (cmd === "init") {
   }
 } else {
   usage();
-  process.exit(cmd ? 1 : 0);
+  process.exit(1);
 }

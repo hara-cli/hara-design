@@ -64,7 +64,12 @@ async function serveFile(res, absPath, { injectReload = false } = {}) {
   } catch {
     return false;
   }
-  if (st.isDirectory()) absPath = join(absPath, "index.html");
+  if (st.isDirectory()) {
+    // Re-check the implicit index so a valid directory containing an escaping index.html symlink
+    // cannot bypass the route's original safeJoin call.
+    absPath = safeJoin(absPath, "index.html");
+    if (!absPath) return false;
+  }
   let buf;
   try {
     buf = await readFile(absPath);
@@ -137,10 +142,10 @@ const server = createServer(async (req, res) => {
   // GET /__export → bundle the current design into a SELF-CONTAINED interactive HTML (frozen proto inlined) and
   // stream it as a download. Read-only — it neither edits the design nor drives the agent.
   if (path === "/__export") {
-    const src = join(artifactDir, "index.html");
-    if (!existsSync(src)) { res.writeHead(404, { "content-type": "text/plain" }); res.end("no index.html to export"); return; }
+    const src = safeJoin(artifactDir, "index.html");
+    if (!src) { res.writeHead(404, { "content-type": "text/plain" }); res.end("no index.html to export"); return; }
     const out = join(tmpdir(), `hara-design-${process.pid}-${Date.now()}.html`);
-    execFile("node", [join(here, "..", "scripts", "export.mjs"), "--in", src, "--out", out], { timeout: 60_000 }, async (err) => {
+    execFile(process.execPath, [join(here, "..", "scripts", "export.mjs"), "--in", src, "--out", out], { timeout: 60_000 }, async (err) => {
       if (err || !existsSync(out)) {
         res.writeHead(500, { "content-type": "text/plain" });
         res.end("HTML export failed");
@@ -168,9 +173,10 @@ const server = createServer(async (req, res) => {
   }
   // GET / → device-preview chrome (single design: phone/tablet/desktop toggle) OR gallery (library root)
   if (path === "/") {
-    if (existsSync(join(artifactDir, "index.html"))) {
+    const indexPath = safeJoin(artifactDir, "index.html");
+    if (indexPath) {
       res.writeHead(200, { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" });
-      res.end(await deviceChrome(artifactDir));
+      res.end(await deviceChrome(artifactDir, indexPath));
       return;
     }
     const gallery = await renderGallery(artifactDir);
@@ -211,12 +217,12 @@ const server = createServer(async (req, res) => {
 
 // Device-preview chrome: a toolbar (phone/tablet/desktop/full) wrapping the artifact in a resizable iframe
 // (src=/__artifact, which live-reloads), so the user sees mobile + desktop effects with one click.
-async function deviceChrome(root) {
+async function deviceChrome(root, indexPath) {
   let title = "Preview";
   let device = ""; // <meta name="hara-preview" content="phone|tablet|desktop"> → fixed width, no toggle (not responsive)
   let isProto = false; // a framework prototype (has <section data-route>): the injected proto.js mounts the device frame
   try {
-    const html = await readFile(join(root, "index.html"), "utf8");
+    const html = await readFile(indexPath, "utf8");
     const head = html.slice(0, 4000);
     const tm = /<title>([^<]*)<\/title>/i.exec(head);
     if (tm && tm[1].trim()) title = tm[1].trim();
@@ -399,7 +405,8 @@ async function renderGallery(root) {
   const cards = [];
   for (const e of entries) {
     if (!e.isDirectory()) continue;
-    const idx = join(root, e.name, "index.html");
+    const idx = safeJoin(join(root, e.name), "index.html");
+    if (!idx) continue;
     try {
       const st = await stat(idx);
       if (!st.isFile()) continue;

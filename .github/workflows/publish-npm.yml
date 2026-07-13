@@ -1,26 +1,64 @@
-# Publish @nanhara/hara-design to npm on a version tag (v*) — so "release to GitHub" (push a tag, or cut a
-# GitHub Release) ships to npm — plus a manual "Run workflow" button. hara-design is zero-dependency asset +
-# preview code, so there's no install/build/test step; npm publish packs the files in package.json `files`.
-#
-# Auth: the NPM_TOKEN repo secret (a granular token with publish rights to @nanhara AND "Bypass two-factor
-# authentication (2FA)" enabled — CI can't answer an OTP). setup-node writes an .npmrc using NODE_AUTH_TOKEN.
-# Idempotent: exits green if the version is already on npm.
+# Test every supported Node.js line on changes and publish @nanhara/hara-design only after
+# the complete quality matrix passes. Manual runs retain the idempotent publish path.
 name: publish-npm
 
 on:
   push:
+    branches: [master]
     tags: ["v*"]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: publish-npm-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
+  quality:
+    name: Quality (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 22, 24]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Validate release metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          package_version=$(node -p "require('./package.json').version")
+          plugin_version=$(node -p "require('./plugin.json').version")
+          if [[ "$package_version" != "$plugin_version" ]]; then
+            echo "package.json ($package_version) and plugin.json ($plugin_version) differ"
+            exit 1
+          fi
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            tag_version="${GITHUB_REF_NAME#v}"
+            if [[ "$tag_version" != "$package_version" ]]; then
+              echo "tag ($tag_version) and package version ($package_version) differ"
+              exit 1
+            fi
+          fi
+      - name: Test
+        run: npm test
+      - name: Inspect package contents
+        run: npm pack --dry-run
+
   publish:
+    name: Publish to npm
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    needs: quality
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
           registry-url: https://registry.npmjs.org/
